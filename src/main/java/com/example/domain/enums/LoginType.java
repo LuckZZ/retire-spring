@@ -1,18 +1,16 @@
 package com.example.domain.enums;
 
+/**
+ * 用户身份枚举
+ */
 public enum LoginType {
-    Admin(1,"管理员"),Zuzhang(2,"组长"),Zuyuan(3,"组员");
 
-    private int typeId;
+    Admin("管理员"),Zuzhang("组长");
+
     private String typeName;
 
-    LoginType(int typeId, String typeName) {
-        this.typeId = typeId;
+    LoginType(String typeName) {
         this.typeName = typeName;
-    }
-
-    public int getTypeId() {
-        return typeId;
     }
 
     public String getTypeName() {

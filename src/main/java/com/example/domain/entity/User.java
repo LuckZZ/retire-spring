@@ -1,5 +1,7 @@
 package com.example.domain.entity;
 
+import com.example.domain.enums.Gender;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -10,7 +12,7 @@ import java.sql.Date;
  * gender、tel、cel1、cel2、
  * mate、address、department、duties、work_time、
  * retire_time、birth、nation、exist、photo、
- * pass_time、politics
+ * pass_time、politics、createTinme
  */
 @Entity
 @Table(name="tb_user")
@@ -30,8 +32,7 @@ public class User implements Serializable,Cloneable{
     @Column(nullable = false)
     private String name;        //姓名非空
 
-    @ManyToOne
-    @JoinColumn(name="gender_id")
+    @Column
     private Gender gender;
 
     private String tel;
@@ -65,7 +66,17 @@ public class User implements Serializable,Cloneable{
     @JoinColumn(name = "politics_id")
     private Politics politics;
 
+    @Column
+    private String createTime;  //用户创建时间
     //set、get方法
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 
     public Integer getUserId() {
         return userId;
