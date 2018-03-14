@@ -40,7 +40,7 @@
                 </li>
 
                 <li class="sidebar-nav-link">
-                    <a href="/admin/grouperList">
+                    <a href="/grouper/grouperList">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 组长
                     </a>
                 </li>
@@ -55,29 +55,24 @@
         </li>
 
         <li class="sidebar-nav-link">
-            <a href="javascript:;" class="sidebar-nav-sub-title">
+            <a href="javascript:;" class="sidebar-nav-sub-title" id="groupManage">
                 <i class="am-icon-table sidebar-nav-link-logo"></i> 分组管理
                 <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
             </a>
             <ul class="sidebar-nav sidebar-nav-sub">
-                <li class="sidebar-nav-link">
+
+                <!--点击分组管理列出所有的组-->
+                <li class="sidebar-nav-link" th:each="admin:${admins}">
                     <a href="/group/groupList">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 第一组
                     </a>
                 </li>
 
-                <li class="sidebar-nav-link">
+        <!--        <li class="sidebar-nav-link">
                     <a href="/group/groupList">
-                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 第二组
+                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 第一组
                     </a>
-                </li>
-
-                <li class="sidebar-nav-link">
-                    <a href="/group/groupList">
-                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 第三组
-                    </a>
-                </li>
-
+                </li>-->
             </ul>
         </li>
 
@@ -107,7 +102,11 @@
                 <i class="am-icon-home sidebar-nav-link-logo"></i>年龄统计
             </a>
         </li>
-
+        <li class="sidebar-nav-link">
+            <a id="ab">
+                <i class="am-icon-home sidebar-nav-link-logo"></i>年龄统计
+            </a>
+        </li>
     </ul>
 </div>
 </div>

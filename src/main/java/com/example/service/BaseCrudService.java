@@ -10,7 +10,7 @@ import java.util.List;
  * @param <T>
  * @param <ID>
  */
-public interface BaseCrudService<T, ID extends Serializable> extends BaseReadService<T,ID>{
+public interface BaseCrudService<T, ID extends Serializable>{
 
     /**
      * 保存一个实体
@@ -24,4 +24,30 @@ public interface BaseCrudService<T, ID extends Serializable> extends BaseReadSer
      * @param id
      */
     void delete(ID id);
+
+    /**
+     * 根据id查出一条数据
+     * @param id
+     * @return
+     */
+    T findOne(ID id);
+
+    /**
+     * 查找出所有数据
+     * @return
+     */
+    List<T> findAll();
+
+    /**
+     * 查出总数量
+     * @return
+     */
+    long count();
+
+    /**
+     * 根据id查看是否存在
+     * @param id
+     * @return
+     */
+    boolean exists(ID id);
 }

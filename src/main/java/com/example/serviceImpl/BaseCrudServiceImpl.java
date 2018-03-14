@@ -20,7 +20,6 @@ import java.util.List;
 public class BaseCrudServiceImpl<T, ID extends Serializable, D extends JpaRepository<T,ID>> implements BaseCrudService<T,ID> {
     @Autowired
     D d;
-
     /**
      * 保存增加事务注解
      * @param entity

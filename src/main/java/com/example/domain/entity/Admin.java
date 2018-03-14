@@ -19,20 +19,15 @@ public class Admin {
     @Column(nullable = false)
     private String password;        //密码非空
     @Column(nullable = false)
-    private Integer typeId;         //登陆类型非空
-
     private String lastTime;        //最后登录日期
-
-    private User user;         //如果是管理员为空，组长非空
 
     public Admin() {
     }
 
-    public Admin(String jobNum, String name, String password, Integer typeId,String lastTime) {
+    public Admin(String jobNum, String name, String password, String lastTime) {
         this.jobNum = jobNum;
         this.name = name;
         this.password = password;
-        this.typeId = typeId;
         this.lastTime = lastTime;
     }
 
@@ -68,13 +63,6 @@ public class Admin {
         this.password = password;
     }
 
-    public Integer getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(Integer typeId) {
-        this.typeId = typeId;
-    }
 
     public String getName() {
         return name;
@@ -84,11 +72,4 @@ public class Admin {
         this.name = name;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

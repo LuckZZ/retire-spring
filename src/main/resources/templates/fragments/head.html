@@ -19,6 +19,18 @@
         <link rel="stylesheet" th:href="@{/assets/css/amazeui.datatables.min.css}" />
         <link rel="stylesheet" th:href="@{/assets/css/app.css}">
         <script th:src="@{/assets/js/jquery.min.js}"></script>
+        <script th:inline="javascript">
+            /*从后台获得数据*/
+            $(document).ready(function () {
+                $("#groupManage").click(function () {
+                    $.get("/group/groupList",function (data) {
+                        console.log(data);
+                        console.log(data.data);
+                        window.location.reload();
+                    });
+                });
+            });
+        </script>
     </div>
 </body>
 </html>

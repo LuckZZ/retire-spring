@@ -72,46 +72,12 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="gradeX">
+                                    <tr th:each="user:${users}">
                                         <td><input type="checkbox"/></td>
-                                        <td>1</td>
-                                        <td>123456</td>
-                                        <td>测试用户一</td>
-                                        <td>测试组一</td>
-                                        <td>
-                                            <div class="tpl-table-black-operation">
-                                                <a href="javascript:;">
-                                                    <i class="am-icon-pencil"></i> 编辑
-                                                </a>
-                                                <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                    <i class="am-icon-trash"></i> 删除
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="even gradeC">
-                                        <td><input type="checkbox"/></td>
-                                        <td>2</td>
-                                        <td>123456 </td>
-                                        <td>测试用户一</td>
-                                        <td>测试组一 </td>
-                                        <td>
-                                            <div class="tpl-table-black-operation">
-                                                <a href="javascript:;">
-                                                    <i class="am-icon-pencil"></i> 编辑
-                                                </a>
-                                                <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                    <i class="am-icon-trash"></i> 删除
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="gradeX">
-                                        <td><input type="checkbox"/></td>
-                                        <td>3</td>
-                                        <td>123456</td>
-                                        <td>测试用户一</td>
-                                        <td>测试组一 </td>
+                                        <td th:text="${user.userId}">1</td>
+                                        <td th:text="${user.jobNum}">123456</td>
+                                        <td th:text="${user.name}">张三</td>
+                                        <td th:text="${user.group.groupName}">组一</td>
                                         <td>
                                             <div class="tpl-table-black-operation">
                                                 <a href="javascript:;">

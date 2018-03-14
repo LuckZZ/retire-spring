@@ -29,4 +29,9 @@ public class IndexController {
         return "login";
     }
 
+    @RequestMapping("/demoAjax")
+    public String demoAjax(){
+        return "demoAjax";
+    }
+
 }
