@@ -13,4 +13,9 @@ public class ActivityController {
     public String activityList(){
         return "admin/activity_list";
     }
+    @RequestMapping("/draftList")
+    @LoggerManage(description = "草稿箱列表")
+    public String draft(){
+        return "admin/draft_list";
+    }
 }

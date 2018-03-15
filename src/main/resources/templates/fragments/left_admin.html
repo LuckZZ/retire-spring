@@ -60,13 +60,22 @@
                 <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
             </a>
             <ul class="sidebar-nav sidebar-nav-sub">
-
+                <li class="sidebar-nav-link" id="newGroup">
+                    <a href="/group/groupSave" id="groupSave" th:class="(${activeId} eq 'groupSave')?'active':''">
+                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 新建组
+                    </a>
+                </li>
+         <!--       <li class="sidebar-nav-link" id="1">
+                    <a href="/group/groupList" id="2" th:class="(${activeId} eq 'groupList')?'active':''">
+                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 第一组
+                    </a>
+                </li>-->
                 <!--点击分组管理列出所有的组-->
-                <li class="sidebar-nav-link" th:each="admin:${admins}">
+    <!--            <li class="sidebar-nav-link" th:each="groups:${groups}">
                     <a href="/group/groupList">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 第一组
                     </a>
-                </li>
+                </li>-->
 
             </ul>
         </li>
@@ -78,13 +87,13 @@
             </a>
             <ul class="sidebar-nav sidebar-nav-sub">
                 <li class="sidebar-nav-link">
-                    <a href="/activity/activityList">
+                    <a href="/activity/activityList" id="activityList" th:class="(${activeId} eq 'activityList')?'active':''">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 活动列表
                     </a>
                 </li>
 
                 <li class="sidebar-nav-link">
-                    <a href="/activity/activityList">
+                    <a href="/activity/draftList" id="draft" th:class="(${activeId} eq 'draftList')?'active':''">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 草稿箱
                     </a>
                 </li>

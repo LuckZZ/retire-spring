@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="fragments/head::head_section('分组管理')">
+<head th:include="fragments/head::head_section('活动管理')">
 </head>
 
 <body data-type="widgets">
@@ -12,7 +12,8 @@
     <!-- 风格切换 -->
     <div th:replace="fragments/theme::theme_section"></div>
     <!-- 侧边导航栏 -->
-    <div th:replace="fragments/left_admin::left_section(${group.groupId})"></div>
+    <div th:replace="fragments/left_admin::left_section('draftList')"></div>
+
     <!-- 内容区域 -->
     <div class="tpl-content-wrapper">
 
@@ -21,7 +22,7 @@
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
                         <div class="widget-head am-cf">
-                            <div class="widget-title  am-cf" th:text="${group.groupName}">第一组</div>
+                            <div class="widget-title  am-cf">草稿箱</div>
                         </div>
                         <div class="widget-body  am-fr">
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
@@ -146,7 +147,12 @@
         </div>
     </div>
 </div>
-<div th:replace="fragments/footer::js"></div>
+</div>
+<script th:src="@{/assets/js/amazeui.min.js}"></script>
+<script th:src="@{/assets/js/amazeui.datatables.min.js}"></script>
+<script th:src="@{/assets/js/dataTables.responsive.min.js}"></script>
+<script th:src="@{/assets/js/app.js}"></script>
+
 </body>
 
 </html>
