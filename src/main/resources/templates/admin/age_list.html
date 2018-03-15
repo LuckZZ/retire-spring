@@ -12,7 +12,7 @@
     <!-- 风格切换 -->
     <div th:replace="fragments/theme::theme_section"></div>
     <!-- 侧边导航栏 -->
-    <div th:replace="fragments/left_admin::left_section"></div>
+    <div th:replace="fragments/left_admin::left_section('ageList')"></div>
 
     <!-- 内容区域 -->
     <div class="tpl-content-wrapper">
@@ -152,7 +152,6 @@
 <script th:src="@{/assets/js/amazeui.datatables.min.js}"></script>
 <script th:src="@{/assets/js/dataTables.responsive.min.js}"></script>
 <script th:src="@{/assets/js/app.js}"></script>
-
 </body>
 
 </html>
