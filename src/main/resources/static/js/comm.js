@@ -5,6 +5,17 @@ $(function () {
 })
 
 /**
+ *
+ * 无数据交互，走此处
+ * 为风格统一，url以"/"开头
+ * @param url
+ */
+function directUrl(url) {
+    window.location.href="/direct"+url;
+}
+
+
+/**
  * 加载组
  */
 function loadGroup() {

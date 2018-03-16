@@ -1,7 +1,8 @@
 package com.example.service;
 
 import com.example.RetireSpringApplication;
-import com.example.domain.entity.Admin;
+import com.example.domain.entity.Grouper;
+import com.example.domain.entity.User;
 import com.example.domain.enums.CanLogin;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,25 +12,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = RetireSpringApplication.class,webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class AdminServiceTest {
+public class GrouperServiceTest {
     @Autowired
-    private AdminService adminService;
+    private GrouperService grouperService;
+
+    @Autowired
+    private UserService userService;
 
     /**
-     * 测试增加管理员
+     * 测试增加组长
      */
     @Test
-    public void testSaveAdmin(){
-        Admin admin = new Admin("111111","zhansan","123456","2018", CanLogin.yes);
-        adminService.save(admin);
-    }
-    @Test
-    public void testFindAll(){
-        adminService.findAll();
-    }
-
-    @Test
-    public void testFindByLoginType(){
-        //adminService.findByLoginType(LoginType.Zuzhang);
+    public void testSaveGrouper(){
+        User user = userService.findOne(1);
+        Grouper grouper = new Grouper(user,"123456", CanLogin.yes);
+        grouperService.save(grouper);
     }
 }

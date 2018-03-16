@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/head::head_section('新增管理员')">
+</head>
+
+<body data-type="widgets">
+    <script th:src="@{/assets/js/theme.js}"></script>
+    <div class="am-g tpl-g">
+        <!-- 头部 -->
+        <div th:replace="fragments/header::header_section(Admin)"></div>
+        <!-- 风格切换 -->
+        <div th:replace="fragments/theme::theme_section"></div>
+        <!-- 侧边导航栏 -->
+        <div th:replace="fragments/left_admin::left_section('adminList')"></div>
+
+        <!-- 内容区域 -->
+        <div class="tpl-content-wrapper">
+            <div class="row-content am-cf">
+                <div class="row">
+
+                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                        <div class="widget am-cf">
+                            <div class="widget-head am-cf">
+                                <div class="widget-title am-fl">新增管理员 </div>
+                                <div class="widget-function am-fr">
+                                    <a href="javascript:;" class="am-icon-cog"></a>
+                                </div>
+                            </div>
+                            <div class="widget-body am-fr">
+
+                                <form class="am-form tpl-form-border-form tpl-form-border-br">
+
+                                    <div class="am-form-group">
+                                        <label for="user-jobNum" class="am-u-sm-3 am-form-label">工号</label>
+                                        <div class="am-u-sm-9">
+                                            <input type="text" class="tpl-form-input" id="user-jobNum" placeholder="请输入工号">
+                                            <small>请填写工号10-20字左右。</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="user-name" class="am-u-sm-3 am-form-label">姓名</label>
+                                        <div class="am-u-sm-9">
+                                            <input type="text" class="tpl-form-input" id="user-name" placeholder="请输入姓名">
+                                            <small>请填写姓名10-20字左右。</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="user-name" class="am-u-sm-3 am-form-label">性别</label>
+                                        <div class="am-u-sm-9">
+                                            <input type="text" class="tpl-form-input" id="user-name" placeholder="请输入姓名">
+                                            <small>请填写工号10-20字左右。</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="user-password" class="am-u-sm-3 am-form-label">密码</label>
+                                        <div class="am-u-sm-9">
+                                            <input type="text" class="tpl-form-input" id="user-password" placeholder="请输入密码">
+                                            <small>请填写密码10-20字左右。</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="user-passwordCfm" class="am-u-sm-3 am-form-label">确认密码</label>
+                                        <div class="am-u-sm-9">
+                                            <input type="text" class="tpl-form-input" id="user-passwordCfm" placeholder="再次输入密码">
+                                            <small>请填写密码10-20字左右。</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="doc-form-file" class="am-u-sm-3 am-form-label">图片</label>
+                                        <div class="am-u-sm-9">
+                                            <div class="am-form-group am-form-file">
+                                                <div class="tpl-form-file-img">
+                                                    <img th:src="@{/assets/img/user07.png}" alt="">
+                                                </div>
+                                                <button type="button" class="am-btn am-btn-danger am-btn-sm">
+                                                    <i class="am-icon-cloud-upload"></i> 添加图片</button>
+                                                <input id="doc-form-file" type="file" multiple="">
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="user-intro" class="am-u-sm-3 am-form-label">允许登陆</label>
+                                        <div class="am-u-sm-9">
+                                            <div class="tpl-switch">
+                                                <input type="checkbox" id="user-intro" class="ios-switch bigswitch tpl-switch-btn" checked="">
+                                                <div class="tpl-switch-btn-view">
+                                                    <div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <div class="am-u-sm-9 am-u-sm-push-3">
+                                            <button type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div th:replace="fragments/footer::js"></div>
+</body>
+
+</html>
