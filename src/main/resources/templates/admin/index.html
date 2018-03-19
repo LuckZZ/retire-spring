@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="fragments/head::head_section('首页')">
+    <link rel="stylesheet" href="../../static/assets/css/amazeui.min.css">
 </head>
 
 <body data-type="widgets">
@@ -22,7 +23,206 @@
             <div class="row">
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
-                        This is index!
+                   <!--     This is index!-->
+
+  <!--                      <form class="am-form">
+                            <div class="am-form-group am-form-success am-form-icon am-form-feedback">
+                                <input type="text" class="am-form-field" placeholder="验证成功">
+                                <span class="am-icon-check"></span>
+                            </div>
+                            <div class="am-form-group am-form-warning am-form-icon am-form-feedback">
+                                <input type="text" class="am-form-field" placeholder="验证警告">
+                                <span class="am-icon-warning"></span>
+                            </div>
+                            <div class="am-form-group am-form-error am-form-icon am-form-feedback">
+                                <input type="text" class="am-form-field" placeholder="验证失败">
+                                <span class="am-icon-times"></span>
+                            </div>
+                        </form>-->
+
+                        <form action="" class="am-form" id="doc-vld-msg">
+                            <div class="am-text-success"><h1>测试页面</h1></div>
+                            <fieldset>
+                                <legend>显示验证提示信息</legend>
+                                <div class="am-form-group">
+                                    <label for="doc-vld-name-2-1">用户名：</label>
+                                    <input type="text" id="doc-vld-name-2-1" minlength="3" placeholder="输入用户名（至少 3 个字符）" required/>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label for="doc-vld-email-2-1">邮箱：</label>
+                                    <input type="email" id="doc-vld-email-2-1" data-validation-message="自定义提示信息：输入地球上的电子邮箱撒" placeholder="输入邮箱" required/>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label for="doc-vld-url-2-1">网址：</label>
+                                    <input type="url" id="doc-vld-url-2-1" placeholder="输入网址" required/>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label for="doc-vld-age-2-1">年龄：</label>
+                                    <input type="number" class=""  id="doc-vld-age-2-1" placeholder="输入年龄  18-120" min="18" max="120" required />
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label class="am-form-label">爱好：</label>
+                                    <label class="am-checkbox-inline">
+                                        <input type="checkbox" value="橘子" name="docVlCb" minchecked="2" maxchecked="4" required> 橘子
+                                    </label>
+                                    <label class="am-checkbox-inline">
+                                        <input type="checkbox" value="苹果" name="docVlCb"> 苹果
+                                    </label>
+                                    <label class="am-checkbox-inline">
+                                        <input type="checkbox" value="菠萝" name="docVlCb"> 菠萝
+                                    </label>
+                                    <label class="am-checkbox-inline">
+                                        <input type="checkbox" value="芒果" name="docVlCb"> 芒果
+                                    </label>
+                                    <label class="am-checkbox-inline">
+                                        <input type="checkbox" value="香蕉" name="docVlCb"> 香蕉
+                                    </label>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label>性别： </label>
+                                    <label class="am-radio-inline">
+                                        <input type="radio"  value="" name="docVlGender" required> 男
+                                    </label>
+                                    <label class="am-radio-inline">
+                                        <input type="radio" name="docVlGender"> 女
+                                    </label>
+                                    <label class="am-radio-inline">
+                                        <input type="radio" name="docVlGender"> 其他
+                                    </label>
+                                </div>
+
+                                <button class="am-btn am-btn-secondary" type="submit">提交</button>
+                            </fieldset>
+                        </form>
+
+                        <script>
+                            $(function() {
+                                $('#doc-vld-msg').validator({
+                                    onValid: function(validity) {
+                                        $(validity.field).closest('.am-form-group').find('.am-alert').hide();
+                                    },
+
+                                    onInValid: function(validity) {
+                                        var $field = $(validity.field);
+                                        var $group = $field.closest('.am-form-group');
+                                        var $alert = $group.find('.am-alert');
+                                        // 使用自定义的提示信息 或 插件内置的提示信息
+                                        var msg = $field.data('validationMessage') || this.getValidationMessage(validity);
+                                        //如果没有alert，进入创建alert
+                                        if (!$alert.length) {
+                                            //把$alert追加到$group后
+                                            //am-text am-text-success
+                                            $alert = $('<div class="am-alert am-alert-danger"></div>').hide().
+                                            appendTo($group);
+                                        }
+                                        $alert.html(msg).show();
+                                    }
+                                });
+                            });
+
+
+                            $(function() {
+                                $('#doc-vld-ajax').validator({
+                                    validate: function(validity) {
+                                        var v = $(validity.field).val();
+
+                                        var comparer = function(v1, v2) {
+                                            if (v1 != v2) {
+                                                //验证失败
+                                                validity.valid = false;
+
+                                                //打开错误提示
+                                                var $field = $(validity.field);
+                                                var $group = $field.closest('.am-form-group');
+                                                var $alert = $group.find('.am-text');
+                                                // 使用自定义的提示信息 或 插件内置的提示信息
+                                                var msg = $field.data('validationMessage') || this.getValidationMessage(validity);
+                                                //如果没有alert，进入创建alert
+                                                if (!$alert.length) {
+                                                    //把$alert追加到$group后
+                                                    //am-text am-text-success
+                                                    $alert = $('<div class="am-text am-text-danger"></div>').hide().
+                                                    appendTo($group);
+                                                }
+                                                $alert.html(msg).show();
+                                            }else {
+                                                // 验证成功
+                                                validity.valid = true;
+                                                //关闭错误提示
+                                                $(validity.field).closest('.am-form-group').find('.am-text').hide();
+                                            }
+                                        };
+
+                                        // Ajax 验证
+                                        if ($(validity.field).is('.js-ajax-validate')) {
+                                            // 异步操作必须返回 Deferred 对象
+                                            return $.ajax({
+                                                url: 'http://s.amazeui.org/media/i/demos/validate.json',
+                                                // cache: false, 实际使用中请禁用缓存
+                                                dataType: 'json'
+                                            }).then(function(data) {
+                                                comparer(data.count, v);
+                                                return validity;
+                                            }, function() {
+                                                return validity;
+                                            });
+                                        }
+
+                                        // 本地验证，同步操作，无需返回值
+                                        if ($(validity.field).is('.js-sync-validate')) {
+                                            comparer(10, v);
+                                            // return validity;
+                                        }
+                                    }
+                                });
+                            });
+
+
+                        </script>
+
+
+
+                        <form action="" class="am-form" id="doc-vld-ajax">
+                            <fieldset>
+                                <legend>自定义验证</legend>
+                                <div class="am-form-group">
+                                    <label for="doc-vld-ajax-count">Ajax 服务器端验证：</label>
+                                    <input type="text" class="js-ajax-validate" id="doc-vld-ajax-count"
+                                           placeholder="只能填写数字 10" data-validate-async/>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label for="doc-vld-sync">客户端验证：</label>
+                                    <input type="text" class="js-sync-validate" id="doc-vld-sync"
+                                           placeholder="只能填写数字 10"/>
+                                </div>
+
+                                <button class="am-btn am-btn-secondary" type="submit">提交</button>
+                            </fieldset>
+                        </form>
+
+
+                        <form class="am-form">
+                            <div class="am-form-group am-form-success am-form-icon am-form-feedback">
+                                <input type="text" class="am-form-field" placeholder="验证成功">
+                                <span class="am-icon-check"></span>
+                            </div>
+                            <div class="am-form-group am-form-warning am-form-icon am-form-feedback">
+                                <input type="text" class="am-form-field" placeholder="验证警告">
+                                <span class="am-icon-warning"></span>
+                            </div>
+                            <div class="am-form-group am-form-error am-form-icon am-form-feedback">
+                                <input type="text" class="am-form-field" placeholder="验证失败">
+                                <span class="am-icon-times"></span>
+                            </div>
+                        </form>
+
+
                     </div>
                 </div>
             </div>

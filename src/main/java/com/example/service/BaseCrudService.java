@@ -49,5 +49,5 @@ public interface BaseCrudService<T, ID extends Serializable>{
      * @param id
      * @return
      */
-    boolean exists(ID id);
+    boolean exist(ID id);
 }

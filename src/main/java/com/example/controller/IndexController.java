@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class IndexController extends BaseController{
 
-    @RequestMapping("/")
+/*    @RequestMapping("/")
     @ResponseBody
     public String hello(){
         return "Hello World!";
-    }
+    }*/
     @RequestMapping("/index")
     public String index(){
         return "index";
@@ -23,6 +23,11 @@ public class IndexController extends BaseController{
     @RequestMapping("/admin/index")
     @LoggerManage(description = "管理员首页")
     public String indexAdmin(){
+        return "admin/index";
+    }
+    @RequestMapping("/")
+    @LoggerManage(description = "管理员首页")
+    public String hello(){
         return "admin/index";
     }
     @RequestMapping("/login")
@@ -45,6 +50,8 @@ public class IndexController extends BaseController{
     @RequestMapping("/direct/{directory}/{page}")
     @LoggerManage(description = "直接跳转")
     public String direct(@PathVariable String directory,@PathVariable String page){
-        return directory+"/"+page;
+        String url = directory+"/"+page;
+        logger.info("跳转到:"+url);
+        return url;
     }
 }

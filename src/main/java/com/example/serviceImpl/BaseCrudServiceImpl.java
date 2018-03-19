@@ -57,7 +57,7 @@ public class BaseCrudServiceImpl<T, ID extends Serializable, D extends JpaReposi
     }
 
     @Override
-    public boolean exists(ID id) {
+    public boolean exist(ID id) {
         return d.exists(id);
     }
 }

@@ -29,45 +29,38 @@
                             </div>
                             <div class="widget-body am-fr">
 
-                                <form class="am-form tpl-form-border-form tpl-form-border-br">
+                                <form class="am-form tpl-form-border-form tpl-form-border-br" id="doc-vld-msg">
 
                                     <div class="am-form-group">
                                         <label for="user-jobNum" class="am-u-sm-3 am-form-label">工号</label>
                                         <div class="am-u-sm-9">
-                                            <input type="text" class="tpl-form-input" id="user-jobNum" placeholder="请输入工号">
-                                            <small>请填写工号10-20字左右。</small>
+                                            <input type="text" class="tpl-form-input js-ajax-validate" id="user-jobNum" placeholder="输入工号" data-validate-async />
+                                       <!--     <small>请填写工号10-20字左右。</small>-->
                                         </div>
                                     </div>
 
                                     <div class="am-form-group">
                                         <label for="user-name" class="am-u-sm-3 am-form-label">姓名</label>
                                         <div class="am-u-sm-9">
-                                            <input type="text" class="tpl-form-input" id="user-name" placeholder="请输入姓名">
-                                            <small>请填写姓名10-20字左右。</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="am-form-group">
-                                        <label for="user-name" class="am-u-sm-3 am-form-label">性别</label>
-                                        <div class="am-u-sm-9">
-                                            <input type="text" class="tpl-form-input" id="user-name" placeholder="请输入姓名">
-                                            <small>请填写工号10-20字左右。</small>
+                                            <input type="text" class="tpl-form-input js-sync-validate" id="user-name" placeholder="输入姓名">
+                                    <!--        <small>请填写姓名10-20字左右。</small>-->
                                         </div>
                                     </div>
 
                                     <div class="am-form-group">
                                         <label for="user-password" class="am-u-sm-3 am-form-label">密码</label>
                                         <div class="am-u-sm-9">
-                                            <input type="text" class="tpl-form-input" id="user-password" placeholder="请输入密码">
-                                            <small>请填写密码10-20字左右。</small>
+                                            <input type="text" class="tpl-form-input" id="user-password" placeholder="输入密码">
+                                      <!--      <small>请填写密码10-20字左右。</small>-->
                                         </div>
                                     </div>
 
                                     <div class="am-form-group">
                                         <label for="user-passwordCfm" class="am-u-sm-3 am-form-label">确认密码</label>
+                                        <!--data-equal-to密码验证-->
                                         <div class="am-u-sm-9">
-                                            <input type="text" class="tpl-form-input" id="user-passwordCfm" placeholder="再次输入密码">
-                                            <small>请填写密码10-20字左右。</small>
+                                            <input type="text" class="tpl-form-input" id="user-passwordCfm" placeholder="再次输入密码" data-equal-to="#user-password">
+                             <!--               <small>请填写密码10-20字左右。</small>-->
                                         </div>
                                     </div>
 
@@ -116,5 +109,65 @@
     </div>
     <div th:replace="fragments/footer::js"></div>
 </body>
+<script>
+        $(function() {
+            $('#doc-vld-msg').validator({
+                validate: function(validity) {
+                    //得到输入的值
+                    var v = $(validity.field).val();
 
+                    var disp = function(data) {
+                        if (data.rspCode == '000101') {
+                            //000101工号存在,验证失败
+                            //打开错误提示
+                            var $field = $(validity.field);
+                            //找到输入框的父div
+                            //var $group = $field.closest('.am-form-group');
+                            var $group = $field.closest('div');
+                            var $alert = $group.find('.am-text');
+                            // 使用自定义的提示信息 或 插件内置的提示信息
+                            //var msg = $field.data('validationMessage') || this.getValidationMessage(validity);
+                            var msg = data.rspMsg;
+                            //如果没有alert，进入创建alert
+                            if (!$alert.length) {
+                                //把$alert追加到$group后
+                                //am-text am-text-success
+                                $alert = $('<small class="am-text am-text-danger"></small>').hide().
+                                appendTo($group);
+                            }
+                            $alert.html(msg).show();
+                            validity.valid = false;
+                        }else if(data.rspCode == '000102'){
+                            //000102工号不存在,验证成功
+                            // 验证成功
+                            //关闭错误提示
+                            $(validity.field).closest('div').find('.am-text').hide();
+                            validity.valid = true;
+                        }
+                    };
+
+                    // Ajax 验证
+                    if ($(validity.field).is('.js-ajax-validate')) {
+                        // 异步操作必须返回 Deferred 对象
+                        return $.ajax({
+                            url: '/admin/exist/'+v,
+                            cache: false, //实际使用中请禁用缓存
+                            //dataType: 'json'
+                        }).then(function(data) {
+                            disp(data);
+                            return validity;
+                        }, function() {
+                            return validity;
+                        });
+                    }
+
+                    // 本地验证，同步操作，无需返回值
+                    if ($(validity.field).is('.js-sync-validate')) {
+                        //comparer(10, v);
+                        // return validity;
+                    }
+                }
+            });
+        });
+</script>
 </html>

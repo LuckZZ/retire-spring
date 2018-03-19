@@ -6,8 +6,9 @@ public enum ExceptionMsg {
     ParamError("000001", "参数错误！"),
 
     LoginNameOrPassWordError("000100", "用户名或者密码错误！"),
-    UserNameUsed("000101","工号已存在"),
-    PassWordError("000102","密码输入错误");
+    JobNumUsed("000101","工号已存在"),
+    JobNumNotUsed("000102","工号不存在"),
+    PassWordError("000103","密码输入错误");
 
     private String code;
     private String msg;
