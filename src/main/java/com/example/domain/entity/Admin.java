@@ -99,4 +99,17 @@ public class Admin {
     public void setCanLogin(CanLogin canLogin) {
         this.canLogin = canLogin;
     }
+
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "adminId=" + adminId +
+                ", jobNum='" + jobNum + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", lastTime='" + lastTime + '\'' +
+                ", canLogin=" + canLogin +
+                '}';
+    }
 }

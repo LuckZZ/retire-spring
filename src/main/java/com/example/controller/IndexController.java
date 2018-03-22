@@ -47,11 +47,11 @@ public class IndexController extends BaseController{
      * @param page 去掉后缀的页面名称
      * @return
      */
-    @RequestMapping("/direct/{directory}/{page}")
+/*    @RequestMapping("/direct/{directory}/{page}")
     @LoggerManage(description = "直接跳转")
     public String direct(@PathVariable String directory,@PathVariable String page){
         String url = directory+"/"+page;
         logger.info("跳转到:"+url);
         return url;
-    }
+    }*/
 }
