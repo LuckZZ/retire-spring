@@ -4,41 +4,7 @@
     <!--js放到尾处，整个文档加载完后加载-->
     <div th:fragment="js">
         <script th:src="@{/assets/js/amazeui.min.js}"></script>
-        <script th:src="@{/assets/js/amazeui.datatables.min.js}"></script>
-        <script th:src="@{/assets/js/dataTables.responsive.min.js}"></script>
         <script th:src="@{/assets/js/app.js}"></script>
-
-        <script>
-            /*遍历active，导航栏active类的收缩栏打开*/
-/*            var b = $("#adminList").hasClass("active");
-            if(b){
-                $("#userManage").siblings('.sidebar-nav-sub').slideToggle(80)
-                    .end()
-                    .find('.sidebar-nav-sub-ico').toggleClass('sidebar-nav-sub-ico-rotate');
-            }*/
-            //$("#adminList").
-     /*       $("ul li a").each(function () {
-                var b = $(this).hasClass('active');
-                alert(b);
-            });*/
-/*            $('.sidebar-nav-sub-title').each(function () {
-                var b = $(this).siblings('.sidebar-nav-sub').children('a').hasClass('active');
-                alert('b1:'+b);
-                if (b){
-                    alert('b2:'+b);
-                    $(this).siblings('.sidebar-nav-sub').slideToggle(80)
-                        .end()
-                        .find('.sidebar-nav-sub-ico').toggleClass('sidebar-nav-sub-ico-rotate');
-                }
-            });*/
-
-            /*$('.sidebar-nav-sub-title').on('click', function() {
-                $(this).siblings('.sidebar-nav-sub').slideToggle(80)
-                    .end()
-                    .find('.sidebar-nav-sub-ico').toggleClass('sidebar-nav-sub-ico-rotate');
-            })*/
-
-        </script>
     </div>
 </body>
 </html>
