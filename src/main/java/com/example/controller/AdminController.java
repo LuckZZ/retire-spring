@@ -29,30 +29,33 @@ public class AdminController extends BaseController{
         return "admin/admin_list";
     }
 
+    /**
+     *
+     * @param jobNum
+     * @return false：用户存在 true：用户不存
+     */
     @ResponseBody
-    @RequestMapping("/exist/{jobNub}")
+    @RequestMapping("/exist")
     @LoggerManage(description = "管理员存在")
-    public Response userList(@PathVariable String jobNub){
-        boolean exist = adminService.existsByJobNum(jobNub);
+    public boolean existsAdmin(@RequestParam(value = "jobNum") String jobNum){
+        boolean exist = adminService.existsByJobNum(jobNum);
         logger.info("用户存在:"+exist);
-        if (exist){
-//                用户存在
-            return result(ExceptionMsg.JobNumUsed);
+        if (!exist){
+            return true;
         }
-//        用户不存在
-        return result(ExceptionMsg.JobNumNotUsed);
+        return false;
     }
 
+    @ResponseBody
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @LoggerManage(description = "管理员保存")
-    public String save(@ModelAttribute(value = "admin") Admin admin, Model model){
+    public Response save(@ModelAttribute(value = "admin") Admin admin, Model model){
         if(admin.getCanLogin() == null){
             admin.setCanLogin(CanLogin.no);
         }
         logger.info(admin.toString());
-        List<Admin> admins = adminService.findAll();
-        model.addAttribute("admins",admins);
-        return "admin/admin_list";
+        //直接跳转到另一个controller
+        return result("abcd",ExceptionMsg.SUCCESS);
     }
 
     /**
