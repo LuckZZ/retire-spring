@@ -77,4 +77,17 @@ public class AdminController extends BaseController{
         return "admin/admin_add";
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/delete")
+    @LoggerManage(description = "删除管理员")
+    public Response delete(@RequestParam(value = "adminId") String adminId){
+       logger.info("adminId:"+adminId);
+       try {
+           Integer id = Integer.parseInt(adminId);
+           adminService.delete(id);
+           return result(ExceptionMsg.SUCCESS);
+       }catch (Exception e){
+           return result(ExceptionMsg.FAILED);
+       }
+    }
 }

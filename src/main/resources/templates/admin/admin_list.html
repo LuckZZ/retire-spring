@@ -115,22 +115,50 @@
 
     <div th:replace="fragments/footer::js"></div>
 </body>
+
 <script>
     $(function() {
-
         $(".one-del").on('click',function () {
+            //当前元素查找父级元素
+            var $tr = $(this).closest('tr');
+            //获得工号
+            var jobNum = $tr.find('td').eq(2).html();
+            //获得密码
+            var name = $tr.find('td').eq(3).html();
 
             $("#my-confirm-hd").text("删除管理员");
 
-            $("#my-confirm-bd").text("是否要删除管理！");
+            $("#my-confirm-bd").html("工号：" + jobNum+"<br/> 用户名："+name);
 
             $('#my-confirm').modal({
                 relatedTarget: this,
                 onConfirm: function(options) {
                    var $link = $(this.relatedTarget);
-                    var msg = $link.length ? '你要删除的链接 ID 为 ' + $link.data('id') :
-                        '确定了，但不知道要整哪样';
-                    alert(msg);
+                   var id = $link.data('id');
+
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        dataType: 'json',
+                        data:{
+                            adminId:id
+                        },
+                        url: '/admin/delete',
+                        error : function(XMLHttpRequest, textStatus, errorThrown) {
+                            toastr.error('出现错误！', '错误');
+                        },
+                        success: function(data){
+                            if(data.rspCode == '000000') {
+                                toastr.success('删除管理员成功！', '操作成功');
+                                location.reload();
+                            }
+                            else {
+                                toastr.error('删除管理员失败！', '操作失败');
+                            }
+
+                        }
+                    });
+
                 },
                 // closeOnConfirm: false,
                 onCancel: function() {
