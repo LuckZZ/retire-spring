@@ -2,7 +2,19 @@ var gGroups;
 
 $(function () {
     loadGroup();
+    toastrOpt();
 })
+
+/**
+ * toastrOpt提示框
+ */
+function toastrOpt() {
+    toastr.options = {
+        'closeButton': true,
+        'positionClass': 'toast-top-center',
+        'timeOut': '5000',
+    };
+}
 
 /**
  *

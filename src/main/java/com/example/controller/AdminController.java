@@ -7,6 +7,7 @@ import com.example.domain.enums.Gender;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.AdminService;
+import com.example.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,9 +54,15 @@ public class AdminController extends BaseController{
         if(admin.getCanLogin() == null){
             admin.setCanLogin(CanLogin.no);
         }
+//        设置创建时间
+        admin.setCreateTime(DateUtils.getDateSequence());
         logger.info(admin.toString());
-        //直接跳转到另一个controller
-        return result("abcd",ExceptionMsg.SUCCESS);
+
+        if(!adminService.existsByJobNum(admin.getJobNum())){
+            adminService.save(admin);
+            return result(ExceptionMsg.SUCCESS);
+        }
+        return  result(ExceptionMsg.FAILED);
     }
 
     /**

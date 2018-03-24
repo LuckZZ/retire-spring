@@ -11,7 +11,7 @@ public class DateUtils {
     private final static long month = 31 * day;// 月
     private final static long year = 12 * month;// 年
 
-    public final static String YYYYMMDDHHMMSS = "yyyyMMddHHmmssSSS";
+    private final static String YYYYMMDDHHMMSS = "yyyyMMddHHmmssSSS";
 
     public static String getDateSequence() {
         return new SimpleDateFormat(YYYYMMDDHHMMSS).format(new Date());

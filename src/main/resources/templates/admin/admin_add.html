@@ -78,7 +78,7 @@
 
                                     <div class="am-form-group">
                                         <div class="am-u-sm-9 am-u-sm-push-3">
-                                            <button type="submit" id="adminAdd" class="am-btn am-btn-primary tpl-btn-bg-color-success" data-am-loading="{spinner: 'circle-o-notch', loadingText: '提交中...'}">提交</button>
+                                            <button type="submit" id="adminAdd" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
                                         </div>
                                     </div>
 
@@ -94,14 +94,14 @@
     <div th:replace="fragments/footer::js"></div>
 </body>
 
-
-<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
-<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
-<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/messages_zh.min.js}"></script>
 
 <script>
 
     $(function() {
+
         // 提交时验证表单
         //small元素包裹错误信息
         $("#doc-vld-msg").validate({
@@ -148,30 +148,24 @@
                     dataType: "json",
                     error: function ()
                     {
-                        console.log("This is error!");
-                    },
-                    complete:function () {
-                        // $("#ajax-loader").hide();
-                        console.log("This is complete!");
+                        console.log("admin_add error function!");
                     },
                     success: function (data)
                     {
-                        // $("#article").html(data);
-                        console.log("This is success!");
+                        console.log("admin_add success function!");
+
+                        if(data.rspCode == '000000') {
+                            toastr.success('增加管理员成功！', '操作成功');
+                        }
+                        else {
+                            toastr.error('增加管理员失败！', '操作失败');
+                        }
                     }
                 });
 
             }
         });
-
     });
 </script>
-
-<style>
-    .error{
-        color:red;
-    }
-</style>
-
 
 </html>
