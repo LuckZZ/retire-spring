@@ -23,25 +23,29 @@
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
                         <!--This is index!-->
-<!--                        <button
+
+                        <button
                                 type="button"
                                 class="am-btn am-btn-primary"
                                 data-am-modal="{target: '#my-alert'}">
                             Alert
                         </button>
 
-                        <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
-                            <div class="am-modal-dialog">
-                                <div class="am-modal-hd">Amaze UI</div>
-                                <div class="am-modal-bd">
-                                    Hello world！
-                                </div>
-                                <div class="am-modal-footer">
-                                    <span class="am-modal-btn">确定</span>
-                                </div>
-                            </div>
-                        </div>-->
 
+
+                        <button
+                                type="button"
+                                class="am-btn am-btn-warning"
+                                id="doc-confirm-toggle">
+                            Confirm
+                        </button>
+
+                        <ul class="am-list confirm-list" id="doc-modal-list">
+                            <li><a data-id="1" href="#">每个人都有一个死角， 自己走不出来，别人也闯不进去。</a><i class="am-icon-close"></i></li>
+                            <li><a data-id="2" href="#">我把最深沉的秘密放在那里。</a><i class="am-icon-close"></i></li>
+                            <li><a data-id="3" href="#">你不懂我，我不怪你。</a><i class="am-icon-close"></i></li>
+                            <li><a data-id="4" href="#">每个人都有一道伤口， 或深或浅，盖上布，以为不存在。</a><i class="am-icon-close"></i></li>
+                        </ul>
 
 
                     </div>
@@ -49,8 +53,33 @@
             </div>
         </div>
     </div>
-</div>
+
+    </div>
+
+    <!--alert-->
+    <div th:replace="fragments/alert::alert_section"></div>
+
     <div th:replace="fragments/footer::js"></div>
 </body>
+
+<script>
+    $(function() {
+        $('#doc-modal-list').find('.am-icon-close').on('click', function() {
+            $('#my-confirm').modal({
+                relatedTarget: this,
+                onConfirm: function(options) {
+                    var $link = $(this.relatedTarget).prev('a');
+                    var msg = $link.length ? '你要删除的链接 ID 为 ' + $link.data('id') :
+                        '确定了，但不知道要整哪样';
+                    alert(msg);
+                },
+                // closeOnConfirm: false,
+                onCancel: function() {
+                    alert('算求，不弄了');
+                }
+            });
+        });
+    });
+</script>
 
 </html>

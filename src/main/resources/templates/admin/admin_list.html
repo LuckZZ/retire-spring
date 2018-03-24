@@ -54,7 +54,7 @@
                                 </div>
 
                                 <div class="am-u-sm-12">
-                                    <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                                    <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="table-list">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox"/></th>
@@ -79,30 +79,12 @@
                                                         <a href="javascript:;">
                                                             <i class="am-icon-pencil"></i> 编辑
                                                         </a>
-                                                        <a href="javascript:;" class="tpl-table-black-operation-del">
+                                                        <a id="test" th:attr="data-id=${admin.adminId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
                                                             <i class="am-icon-trash"></i> 删除
                                                         </a>
                                                     </div>
                                                 </td>
                                             </tr>
-                <!--                           <tr>
-                                               <td><input type="checkbox"/></td>
-                                               <td>1</td>
-                                               <td>123456</td>
-                                               <td>测试管理员一</td>
-                                               <td>****** </td>
-                                               <td>2016-09-26</td>
-                                               <td>
-                                                   <div class="tpl-table-black-operation">
-                                                       <a href="javascript:;">
-                                                           <i class="am-icon-pencil"></i> 编辑
-                                                       </a>
-                                                       <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                           <i class="am-icon-trash"></i> 删除
-                                                       </a>
-                                                   </div>
-                                               </td>
-                                           </tr>-->
                                         </tbody>
                                     </table>
                                 </div>
@@ -127,7 +109,35 @@
             </div>
         </div>
     </div>
+
+    <!--alert-->
+    <div th:replace="fragments/alert::alert_section"></div>
+
     <div th:replace="fragments/footer::js"></div>
 </body>
+<script>
+    $(function() {
 
+        $(".one-del").on('click',function () {
+
+            $("#my-confirm-hd").text("删除管理员");
+
+            $("#my-confirm-bd").text("是否要删除管理！");
+
+            $('#my-confirm').modal({
+                relatedTarget: this,
+                onConfirm: function(options) {
+                   var $link = $(this.relatedTarget);
+                    var msg = $link.length ? '你要删除的链接 ID 为 ' + $link.data('id') :
+                        '确定了，但不知道要整哪样';
+                    alert(msg);
+                },
+                // closeOnConfirm: false,
+                onCancel: function() {
+                }
+            });
+        });
+
+    });
+</script>
 </html>
