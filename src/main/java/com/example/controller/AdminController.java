@@ -8,12 +8,16 @@ import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.AdminService;
 import com.example.utils.DateUtils;
+import com.example.utils.ImgUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/admin")
@@ -54,9 +58,12 @@ public class AdminController extends BaseController{
         if(admin.getCanLogin() == null){
             admin.setCanLogin(CanLogin.no);
         }
+
+        System.out.println(admin.getImgUrl());
+
 //        设置创建时间
         admin.setCreateTime(DateUtils.getDateSequence());
-        logger.info(admin.toString());
+//        logger.info(admin.toString());
 
         if(!adminService.existsByJobNum(admin.getJobNum())){
             adminService.save(admin);
@@ -89,5 +96,40 @@ public class AdminController extends BaseController{
        }catch (Exception e){
            return result(ExceptionMsg.FAILED);
        }
+    }
+
+
+    /**
+     * 实现文件上传
+     * */
+    @ResponseBody
+    @RequestMapping(value="fileUpload",method = RequestMethod.POST)
+    @LoggerManage(description = "图片上传")
+    public Response fileUpload(@RequestParam(value = "file") MultipartFile file,@RequestParam(value = "jobNum") String jobNum){
+        String fileName = file.getOriginalFilename();
+        System.out.println("fileName:"+fileName);
+        System.out.println("jobNum:"+jobNum);
+        ImgUtils imgUtils = new ImgUtils(jobNum,file);
+        imgUtils.save();
+/*        if(file.isEmpty()){
+            return result(ExceptionMsg.FAILED);
+        }
+        String fileName = file.getOriginalFilename();
+        String path = System.getProperty("user.dir") + "/uploadFile" ;
+        File dest = new File(path + "/" + fileName);
+        if(!dest.getParentFile().exists()){ //判断文件父目录是否存在
+            dest.getParentFile().mkdir();
+        }
+        try {
+            file.transferTo(dest); //保存文件
+            return result(ExceptionMsg.SUCCESS);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            return result(ExceptionMsg.FAILED);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return result(ExceptionMsg.FAILED);
+        }*/
+        return result(ExceptionMsg.FAILED);
     }
 }

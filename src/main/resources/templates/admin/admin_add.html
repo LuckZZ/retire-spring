@@ -29,7 +29,7 @@
                             </div>
                             <div class="widget-body am-fr">
 
-                                <form class="am-form tpl-form-border-form tpl-form-border-br" id="doc-vld-msg" action="#" method="post" th:object="${admin}">
+                                <form class="am-form tpl-form-border-form tpl-form-border-br" id="doc-vld-msg" action="#" th:object="${admin}">
 
                                     <div class="am-form-group">
                                         <label for="jobNum" class="am-u-sm-3 am-form-label">工号</label>
@@ -63,6 +63,22 @@
 
 
                                     <div class="am-form-group">
+                                        <label for="file" class="am-u-sm-3 am-form-label">图片</label>
+                                        <div class="am-u-sm-9">
+                                            <div class="am-form-group am-form-file">
+                                                <div class="tpl-form-file-img">
+                                                    <img id="avatarPreview" th:src="@{/img/user.jpg}" alt="" style="width: 100px; height: 100px">
+                                                </div>
+                                                <button type="button" class="am-btn am-btn-danger am-btn-sm">
+                                                    <i class="am-icon-cloud-upload"></i> 添加图片
+                                                </button>
+                                                <input id="file" name="file" accept="image/*" type="file" multiple="">
+                                                <input id="imgUrl" name="imgUrl" type="hidden" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
                                         <label for="user-intro" class="am-u-sm-3 am-form-label">允许登陆</label>
                                         <div class="am-u-sm-9">
                                             <div class="tpl-switch">
@@ -94,13 +110,70 @@
     <div th:replace="fragments/footer::js"></div>
 </body>
 
-<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<!--jquery验证-->
 <script th:src="@{/js/jquery.validate.min.js}"></script>
 <script th:src="@{/js/messages_zh.min.js}"></script>
 
 <script>
 
+    /*window.URL.createObjectURL本地预览*/
+    function bindAvatar() {
+        $("#file").change(function () {
+            //得到上传文件的后缀，把后缀赋给imgUrl
+            var fileName=$("#file")[0].files[0].name;
+            var index = fileName.lastIndexOf('.');
+            var sub = fileName.substring(index);
+            $("#imgUrl").val(sub);
+            console.log("上传文件后缀:"+$("#imgUrl").val());
+
+            var obj=$("#file")[0].files[0];
+            var picSrc=window.URL.createObjectURL(obj);
+            $("#avatarPreview").attr('src',picSrc);
+            /*当图片加载后释放内存空间，但在jQuery3.2.1中会报错。浏览器关闭后也会自动释放*/
+            $("#avatarPreview").load(function (){
+                window.URL.revokeObjectURL(picSrc);
+            });
+        })
+    }
+
+    /*图片上传到服务器*/
+    function fileUpload(){
+        //需要上传的数据
+        var formData = new FormData();
+        var jobNum = $("#jobNum").val();
+
+        formData.append('file', $('#file')[0].files[0]);
+        formData.append('jobNum',jobNum);
+
+        $.ajax({
+            url: '/admin/fileUpload',
+            type: 'POST',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false,
+            error: function ()
+            {
+                console.log("update picture error function!");
+                toastr.error('图片上传出现错误！', '错误');
+            },
+            success: function (data){
+                if(data.rspCode == '000000') {
+                    //toastr.success('图片上传成功！', '操作成功')
+                }
+                else {
+                  //  toastr.error('图片上传失败！', '操作失败');
+                }
+                toastr.success('图片上传成功！', '操作成功');
+            }
+
+        });
+    }
+
+
     $(function() {
+
+        bindAvatar();
 
         // 提交时验证表单
         //small元素包裹错误信息
@@ -143,7 +216,7 @@
                 var myform = $("#doc-vld-msg");
                 $.ajax({
                     url: "/admin/save",
-                    type: myform.attr("method"),
+                    type: "POST",
                     data: myform.serialize(),
                     dataType: "json",
                     error: function ()
@@ -157,6 +230,11 @@
 
                         if(data.rspCode == '000000') {
                             toastr.success('增加管理员成功！', '操作成功');
+                            // 文件后缀，不为空上传图片
+                            var postfix = $("#imgUrl").val();
+                            if(!(postfix == "" || postfix == null || postfix == undefined)){ // "",null,undefined
+                                fileUpload();
+                            }
                         }
                         else {
                             toastr.error('增加管理员失败！', '操作失败');

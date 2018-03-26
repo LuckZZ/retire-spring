@@ -22,31 +22,21 @@
             <div class="row">
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
-                        <!--This is index!-->
-
-                        <button
-                                type="button"
-                                class="am-btn am-btn-primary"
-                                data-am-modal="{target: '#my-alert'}">
-                            Alert
-                        </button>
-
-
-
-                        <button
-                                type="button"
-                                class="am-btn am-btn-warning"
-                                id="doc-confirm-toggle">
-                            Confirm
-                        </button>
-
-                        <ul class="am-list confirm-list" id="doc-modal-list">
-                            <li><a data-id="1" href="#">每个人都有一个死角， 自己走不出来，别人也闯不进去。</a><i class="am-icon-close"></i></li>
-                            <li><a data-id="2" href="#">我把最深沉的秘密放在那里。</a><i class="am-icon-close"></i></li>
-                            <li><a data-id="3" href="#">你不懂我，我不怪你。</a><i class="am-icon-close"></i></li>
-                            <li><a data-id="4" href="#">每个人都有一道伤口， 或深或浅，盖上布，以为不存在。</a><i class="am-icon-close"></i></li>
-                        </ul>
-
+                <!--        This is index!-->
+                        <div style="margin-left: 30px; margin-top: 30px">
+                            <form action="">
+                                <h3>用户注册</h3>
+                                <p>用户名：<input type="text" name="userName"></p>
+                                <p>密码：<input type="password" name="password"></p>
+                                <p>邮箱：<input type="text" name="email"></p>
+                                <input id="avatar" type="text" value="/static/images/sample.png" name="avatar" style="width: 400px"> {# 实际应用中要将该input标签隐藏，display:none; #}
+                                <p><input type="submit" value="注册"></p>
+                            </form>
+                            <div style="position: absolute; top: 85px; left: 300px;">
+                                <input id="avatarSlect" type="file" style="position: absolute;float: left; z-index: 10; opacity: 0;width: 100px; height: 100px;">
+                                <img id="avatarPreview" src="/static/images/sample.png" title="点击更换图片" style="position: absolute; z-index: 9; float: left; width: 100px; height: 100px">
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -63,23 +53,70 @@
 </body>
 
 <script>
-    $(function() {
-        $('#doc-modal-list').find('.am-icon-close').on('click', function() {
-            $('#my-confirm').modal({
-                relatedTarget: this,
-                onConfirm: function(options) {
-                    var $link = $(this.relatedTarget).prev('a');
-                    var msg = $link.length ? '你要删除的链接 ID 为 ' + $link.data('id') :
-                        '确定了，但不知道要整哪样';
-                    alert(msg);
-                },
-                // closeOnConfirm: false,
-                onCancel: function() {
-                    alert('算求，不弄了');
-                }
-            });
-        });
+    $(function () {
+        bindAvatar();
     });
+    function bindAvatar() {
+        if(window.URL.createObjectURL){
+            console.info("This is One!")
+            bindAvatar3();
+        }/*else if(window.FileReader){
+            console.info("This is Two!")
+            bindAvatar2();
+        }else {
+            console.info("This is Three!")
+            bindAvatar1();
+        }*/
+    }
+    /*Ajax上传至后台并返回图片的url*/
+/*    function bindAvatar1() {
+        $("#avatarSlect").change(function () {
+            var csrf = $("input[name='csrfmiddlewaretoken']").val();
+            var formData=new FormData();
+            formData.append("csrfmiddlewaretoken",csrf);
+            formData.append('avatar', $("#avatarSlect")[0].files[0]);  /!*获取上传的图片对象*!/
+            $.ajax({
+                url: '/upload_avatar/',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (args) {
+                    console.log(args);  /!*服务器端的图片地址*!/
+                    $("#avatarPreview").attr('src','/'+args);  /!*预览图片*!/
+                    $("#avatar").val('/'+args);  /!*将服务端的图片url赋值给form表单的隐藏input标签*!/
+                }
+            })
+        })
+    }*/
+    /*window.FileReader本地预览*/
+/*    function bindAvatar2() {
+        console.log(2);
+        $("#avatarSlect").change(function () {
+            var obj=$("#avatarSlect")[0].files[0];
+            var fr=new FileReader();
+            fr.onload=function () {
+                $("#avatarPreview").attr('src',this.result);
+                console.log(this.result);
+                $("#avatar").val(this.result);
+            };
+            fr.readAsDataURL(obj);
+        })
+    }*/
+    /*window.URL.createObjectURL本地预览*/
+    function bindAvatar3() {
+        console.log(3);
+        $("#avatarSlect").change(function () {
+            var obj=$("#avatarSlect")[0].files[0];
+            var wuc=window.URL.createObjectURL(obj);
+            $("#avatarPreview").attr('src',wuc);
+            $("#avatar").val(wuc);
+            /*当图片加载后释放内存空间，但在jQuery3.2.1中会报错。浏览器关闭后也会自动释放*/
+            $("#avatarPreview").load(function (){
+                window.URL.revokeObjectURL(wuc);
+            });
+        })
+    }
 </script>
 
 </html>

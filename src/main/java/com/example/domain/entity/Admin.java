@@ -33,6 +33,9 @@ public class Admin {
     @Column(nullable = false)
     private CanLogin canLogin;      //是否允许登陆
 
+    @Column
+    private String imgUrl;             //图片地址
+
     public Admin() {
     }
 
@@ -99,6 +102,13 @@ public class Admin {
     public void setCanLogin(CanLogin canLogin) {
         this.canLogin = canLogin;
     }
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
     @Override
     public String toString() {
@@ -110,6 +120,7 @@ public class Admin {
                 ", createTime='" + createTime + '\'' +
                 ", lastTime='" + lastTime + '\'' +
                 ", canLogin=" + canLogin +
+                ", imgUrl='" + imgUrl + '\'' +
                 '}';
     }
 }
