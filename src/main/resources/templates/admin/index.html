@@ -22,19 +22,25 @@
             <div class="row">
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
-                <!--        This is index!-->
-                        <div style="margin-left: 30px; margin-top: 30px">
-                            <form action="">
-                                <h3>用户注册</h3>
-                                <p>用户名：<input type="text" name="userName"></p>
-                                <p>密码：<input type="password" name="password"></p>
-                                <p>邮箱：<input type="text" name="email"></p>
-                                <input id="avatar" type="text" value="/static/images/sample.png" name="avatar" style="width: 400px"> {# 实际应用中要将该input标签隐藏，display:none; #}
-                                <p><input type="submit" value="注册"></p>
-                            </form>
-                            <div style="position: absolute; top: 85px; left: 300px;">
-                                <input id="avatarSlect" type="file" style="position: absolute;float: left; z-index: 10; opacity: 0;width: 100px; height: 100px;">
-                                <img id="avatarPreview" src="/static/images/sample.png" title="点击更换图片" style="position: absolute; z-index: 9; float: left; width: 100px; height: 100px">
+                      <!--  This is index!-->
+
+                        <div class="am-tabs" data-am-tabs>
+                            <ul class="am-tabs-nav am-nav am-nav-tabs">
+                                <li class="am-active"><a href="#tab1">恣意</a></li>
+                                <li><a href="#tab2">等候</a></li>
+                                <li><a href="#tab3">流浪</a></li>
+                            </ul>
+
+                            <div class="am-tabs-bd">
+                                <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+                                    置身人群中<br>你只需要被淹没 享受 沉默<br>退到人群后<br>你只需给予双手 微笑 等候
+                                </div>
+                                <div class="am-tab-panel am-fade" id="tab2">
+                                    走在忠孝东路<br>徘徊在茫然中<br>在我的人生旅途<br>选择了多少错误<br>我在睡梦中惊醒<br>感叹悔言无尽<br>恨我不能说服自己<br>接受一切教训<br>让生命去等候<br>等候下一个漂流<br>让生命去等候<br>等候下一个伤口
+                                </div>
+                                <div class="am-tab-panel am-fade" id="tab3">
+                                    我就这样告别山下的家，我实在不愿轻易让眼泪留下。我以为我并不差不会害怕，我就这样自己照顾自己长大。我不想因为现实把头低下，我以为我并不差能学会虚假。怎样才能够看穿面具里的谎话？别让我的真心散的像沙。如果有一天我变得更复杂，还能不能唱出歌声里的那幅画？
+                                </div>
                             </div>
                         </div>
 
@@ -51,72 +57,5 @@
 
     <div th:replace="fragments/footer::js"></div>
 </body>
-
-<script>
-    $(function () {
-        bindAvatar();
-    });
-    function bindAvatar() {
-        if(window.URL.createObjectURL){
-            console.info("This is One!")
-            bindAvatar3();
-        }/*else if(window.FileReader){
-            console.info("This is Two!")
-            bindAvatar2();
-        }else {
-            console.info("This is Three!")
-            bindAvatar1();
-        }*/
-    }
-    /*Ajax上传至后台并返回图片的url*/
-/*    function bindAvatar1() {
-        $("#avatarSlect").change(function () {
-            var csrf = $("input[name='csrfmiddlewaretoken']").val();
-            var formData=new FormData();
-            formData.append("csrfmiddlewaretoken",csrf);
-            formData.append('avatar', $("#avatarSlect")[0].files[0]);  /!*获取上传的图片对象*!/
-            $.ajax({
-                url: '/upload_avatar/',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (args) {
-                    console.log(args);  /!*服务器端的图片地址*!/
-                    $("#avatarPreview").attr('src','/'+args);  /!*预览图片*!/
-                    $("#avatar").val('/'+args);  /!*将服务端的图片url赋值给form表单的隐藏input标签*!/
-                }
-            })
-        })
-    }*/
-    /*window.FileReader本地预览*/
-/*    function bindAvatar2() {
-        console.log(2);
-        $("#avatarSlect").change(function () {
-            var obj=$("#avatarSlect")[0].files[0];
-            var fr=new FileReader();
-            fr.onload=function () {
-                $("#avatarPreview").attr('src',this.result);
-                console.log(this.result);
-                $("#avatar").val(this.result);
-            };
-            fr.readAsDataURL(obj);
-        })
-    }*/
-    /*window.URL.createObjectURL本地预览*/
-    function bindAvatar3() {
-        console.log(3);
-        $("#avatarSlect").change(function () {
-            var obj=$("#avatarSlect")[0].files[0];
-            var wuc=window.URL.createObjectURL(obj);
-            $("#avatarPreview").attr('src',wuc);
-            $("#avatar").val(wuc);
-            /*当图片加载后释放内存空间，但在jQuery3.2.1中会报错。浏览器关闭后也会自动释放*/
-            $("#avatarPreview").load(function (){
-                window.URL.revokeObjectURL(wuc);
-            });
-        })
-    }
-</script>
 
 </html>

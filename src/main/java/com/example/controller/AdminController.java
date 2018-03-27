@@ -55,21 +55,18 @@ public class AdminController extends BaseController{
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @LoggerManage(description = "管理员保存")
     public Response save(@ModelAttribute(value = "admin") Admin admin, Model model){
+        if(adminService.existsByJobNum(admin.getJobNum())){
+            return  result(ExceptionMsg.FAILED);
+        }
+        //        设置canLogin的值
         if(admin.getCanLogin() == null){
             admin.setCanLogin(CanLogin.no);
         }
-
-        System.out.println(admin.getImgUrl());
-
 //        设置创建时间
         admin.setCreateTime(DateUtils.getDateSequence());
-//        logger.info(admin.toString());
-
-        if(!adminService.existsByJobNum(admin.getJobNum())){
-            adminService.save(admin);
-            return result(ExceptionMsg.SUCCESS);
-        }
-        return  result(ExceptionMsg.FAILED);
+//            保存
+        adminService.save(admin);
+        return result(ExceptionMsg.SUCCESS);
     }
 
     /**
@@ -98,6 +95,48 @@ public class AdminController extends BaseController{
        }
     }
 
+    @RequestMapping(value = "/updateView/{adminId}")
+    @LoggerManage(description = "修改管理员界面")
+    public String updateView(@PathVariable String adminId, Model model){
+        Admin admin = adminService.findOne(Integer.parseInt(adminId));
+        model.addAttribute("admin",admin);
+        return "admin/admin_update";
+    }
+
+    /**
+     * typeId=1：修改姓名、权限
+     * typeId=2:修改照片
+     * @param typeId
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/update/{typeId}")
+    @LoggerManage(description = "修改管理员")
+    public Response update(@PathVariable Integer typeId, HttpServletRequest request){
+        String adminId = request.getParameter("adminId");
+        if (typeId == 1){
+            logger.info("修改用户名及登陆状态");
+            String name = request.getParameter("name");
+            String canLoginStr = request.getParameter("canLogin");
+            //        设置canLogin的值
+            CanLogin canLogin = CanLogin.no;
+            if(canLoginStr == null){
+                canLogin=CanLogin.no;
+            }else {
+                canLogin=CanLogin.yes;
+            }
+            adminService.updateNameAndCanLogin(name, canLogin, Integer.parseInt(adminId));
+            return result(ExceptionMsg.SUCCESS);
+        }else if(typeId == 2){
+//            修改密码
+            logger.info("修改密码");
+            String password = request.getParameter("password");
+            adminService.updatePassword(password,Integer.parseInt(adminId));
+            return result(ExceptionMsg.SUCCESS);
+        }
+        return result(ExceptionMsg.FAILED);
+    }
 
     /**
      * 实现文件上传
@@ -105,31 +144,34 @@ public class AdminController extends BaseController{
     @ResponseBody
     @RequestMapping(value="fileUpload",method = RequestMethod.POST)
     @LoggerManage(description = "图片上传")
-    public Response fileUpload(@RequestParam(value = "file") MultipartFile file,@RequestParam(value = "jobNum") String jobNum){
+    public Response fileUpload(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request){
+
+        String adminId = request.getParameter("adminId");
+        String jobNum = request.getParameter("jobNum");
+        String imgUrl = request.getParameter("imgUrl");
         String fileName = file.getOriginalFilename();
-        System.out.println("fileName:"+fileName);
+
+        System.out.println("adminId:"+adminId);
         System.out.println("jobNum:"+jobNum);
-        ImgUtils imgUtils = new ImgUtils(jobNum,file);
-        imgUtils.save();
-/*        if(file.isEmpty()){
+        System.out.println("imgUrl:"+imgUrl);
+        System.out.println("fileName:"+fileName);
+
+ /*       String filePath = request.getSession().getServletContext().getRealPath("/");
+        System.out.println(filePath);*/
+
+        if(file.isEmpty()){
             return result(ExceptionMsg.FAILED);
         }
-        String fileName = file.getOriginalFilename();
-        String path = System.getProperty("user.dir") + "/uploadFile" ;
-        File dest = new File(path + "/" + fileName);
-        if(!dest.getParentFile().exists()){ //判断文件父目录是否存在
-            dest.getParentFile().mkdir();
-        }
+
+        return result(ExceptionMsg.SUCCESS);
+
+/*        ImgUtils imgUtils = new ImgUtils(jobNum,file);
         try {
-            file.transferTo(dest); //保存文件
+            imgUtils.save();
             return result(ExceptionMsg.SUCCESS);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            return result(ExceptionMsg.FAILED);
         } catch (IOException e) {
             e.printStackTrace();
             return result(ExceptionMsg.FAILED);
         }*/
-        return result(ExceptionMsg.FAILED);
     }
 }

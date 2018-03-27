@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/head::head_section('修改管理员')">
+</head>
+
+<body data-type="widgets">
+    <script th:src="@{/assets/js/theme.js}"></script>
+    <div class="am-g tpl-g">
+        <!-- 头部 -->
+        <div th:replace="fragments/header::header_section(Admin)"></div>
+        <!-- 风格切换 -->
+        <div th:replace="fragments/theme::theme_section"></div>
+        <!-- 侧边导航栏 -->
+        <div th:replace="fragments/left_admin::left_section('adminList')"></div>
+
+        <!-- 内容区域 -->
+        <div class="tpl-content-wrapper">
+            <div class="row-content am-cf">
+                <div class="row">
+
+                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                        <div class="widget am-cf">
+                            <div class="widget-head am-cf">
+                                <div class="widget-title am-fl">修改管理员 </div>
+                                <div class="widget-function am-fr">
+                                    <a href="javascript:;" class="am-icon-cog"></a>
+                                </div>
+                            </div>
+                            <div class="widget-body am-fr">
+
+                                <div class="am-tabs" data-am-tabs>
+                                    <ul class="am-tabs-nav am-nav am-nav-tabs">
+                                        <li class="am-active"><a href="#tab1">修改基本信息</a></li>
+                                        <li><a href="#tab2">修改密码</a></li>
+                                        <li><a href="#tab3">修改图片</a></li>
+                                    </ul>
+
+                                    <div class="am-tabs-bd">
+                                        <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+
+                                            <form class="am-form tpl-form-border-form tpl-form-border-br" id="updateOneForm" action="#" th:object="${admin}">
+                                                <div class="am-form-group">
+                                                    <label for="jobNum" class="am-u-sm-3 am-form-label">工号</label>
+                                                    <div class="am-u-sm-9">
+                                                        <input name="adminId" th:field="*{adminId}" type="hidden" id="adminId"/>
+                                                        <input name="jobNum" type="number" class="tpl-form-field" id="jobNum" placeholder="输入工号(6位)" th:field="*{jobNum}" disabled required/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="name" class="am-u-sm-3 am-form-label">姓名</label>
+                                                    <div class="am-u-sm-9">
+                                                        <input name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名" th:field="*{name}" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="canLogin" class="am-u-sm-3 am-form-label">允许登陆</label>
+                                                    <div class="am-u-sm-9">
+                                                        <div class="tpl-switch">
+                                                            <!--被选择value为yes、否则为null-->
+                                                            <input type="checkbox" th:checked="(*{canLogin.toString()} eq 'yes')?'true':'false'" id="canLogin" class="ios-switch bigswitch tpl-switch-btn" value="yes" name="canLogin">
+                                                            <div class="tpl-switch-btn-view">
+                                                                <div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <div class="am-u-sm-9 am-u-sm-push-3">
+                                                        <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+
+                                        </div>
+                                        <div class="am-tab-panel am-fade" id="tab2">
+
+                                            <form class="am-form tpl-form-border-form tpl-form-border-br" id="updateTwoForm" action="#" th:object="${admin}">
+
+                                                <input name="adminId" th:field="*{adminId}" type="hidden"/>
+                                                <div class="am-form-group">
+                                                    <label for="password" class="am-u-sm-3 am-form-label">重置密码</label>
+                                                    <div class="am-u-sm-9">
+                                                        <input name="password" type="password" minlength="6" maxlength="10" class="tpl-form-input" id="password" placeholder="输入密码(6-10位)" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="passwordCfm" class="am-u-sm-3 am-form-label">确认密码</label>
+                                                    <!--data-equal-to密码验证-->
+                                                    <div class="am-u-sm-9">
+                                                        <input name="passwordCfm" type="password" minlength="6" maxlength="10" class="tpl-form-input" id="passwordCfm" placeholder="再次输入密码" required>
+                                                    </div>
+                                                </div>
+                                                <div class="am-form-group">
+                                                    <div class="am-u-sm-9 am-u-sm-push-3">
+                                                        <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="am-tab-panel am-fade" id="tab3">
+
+                                            <!--<input name="adminId" th:field="*{adminId}" type="hidden"/>-->
+
+                                            <form class="am-form tpl-form-border-form tpl-form-border-br" action="#" th:object="${admin}">
+                                                <div class="am-form-group">
+                                                    <label for="file" class="am-u-sm-3 am-form-label">图片</label>
+                                                    <div class="am-u-sm-9">
+                                                        <div class="am-form-group am-form-file">
+                                                            <div class="tpl-form-file-img">
+                                                                <img id="avatarPreview" th:src="@{/img/user.jpg}" alt="" style="width: 100px; height: 100px">
+                                                            </div>
+                                                            <button type="button" class="am-btn am-btn-danger am-btn-sm">
+                                                                <i class="am-icon-cloud-upload"></i> 添加图片
+                                                            </button>
+                                                            <input id="file" name="file" accept="image/*" type="file" multiple="">
+                                                            <input id="imgUrl" name="imgUrl" type="hidden" th:field="*{imgUrl}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <div class="am-u-sm-9 am-u-sm-push-3">
+                                                        <button type="button" id="updatePic" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div th:replace="fragments/footer::js"></div>
+</body>
+
+<!--jquery验证-->
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/messages_zh.min.js}"></script>
+
+<script>
+
+    /*window.URL.createObjectURL本地预览*/
+    function bindAvatar() {
+        $("#file").change(function () {
+            //得到上传文件的后缀，把后缀赋给imgUrl
+            var fileName=$("#file")[0].files[0].name;
+            var index = fileName.lastIndexOf('.');
+            var sub = fileName.substring(index);
+            $("#imgUrl").val(sub);
+            console.log("上传文件后缀:"+$("#imgUrl").val());
+
+            var obj=$("#file")[0].files[0];
+            var picSrc=window.URL.createObjectURL(obj);
+            $("#avatarPreview").attr('src',picSrc);
+            /*当图片加载后释放内存空间，但在jQuery3.2.1中会报错。浏览器关闭后也会自动释放*/
+            $("#avatarPreview").load(function (){
+                window.URL.revokeObjectURL(picSrc);
+            });
+        })
+    }
+
+    /*图片上传到服务器*/
+    function fileUpload(){
+        //需要上传的数据
+        var formData = new FormData();
+        var adminId = $("#adminId").val();
+        var jobNum = $("#jobNum").val();
+        var imgUrl = $("#imgUrl").val();
+
+        formData.append('file', $('#file')[0].files[0]);
+        formData.append('adminId',adminId);
+        formData.append('jobNum',jobNum);
+        formData.append('imgUrl',imgUrl);
+
+        $.ajax({
+            url: '/admin/fileUpload',
+            type: 'POST',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false,
+            error: function ()
+            {
+                console.log("update picture error function!");
+                toastr.error('图片上传出现错误！', '错误');
+            },
+            success: function (data){
+                if(data.rspCode == '000000') {
+                    toastr.success('图片上传成功！', '操作成功')
+                }
+                else {
+                    toastr.error('图片上传失败！', '操作失败');
+                }
+            }
+
+        });
+    }
+
+
+    $(function() {
+        //回显图片
+        bindAvatar();
+
+        // 提交时验证表单，small元素包裹错误信息
+        $("#updateOneForm").validate({
+            errorPlacement: function(error, element) {
+                $( element ).closest( "div" ).append( error );
+            },
+            errorElement: "small",
+            submitHandler:function(form){
+                var myform = $("#updateOneForm");
+                $.ajax({
+                    url: "/admin/update/1",
+                    type: "POST",
+                    data: myform.serialize(),
+                    dataType: "json",
+                    error: function ()
+                    {
+                        console.log("admin_update error function!");
+                        toastr.error('出现错误！', '错误');
+                    },
+                    success: function (data)
+                    {
+                        console.log("admin_update success function!");
+
+                        if(data.rspCode == '000000') {
+                            toastr.success('修改管理员成功！', '操作成功');
+                        }
+                        else {
+                            toastr.error('修改管理员失败！', '操作失败');
+                        }
+                    }
+                });
+
+            }
+        });
+
+
+        $("#updateTwoForm").validate({
+            rules:{
+                password:{
+
+                },
+                passwordCfm:{
+                    equalTo:"#password"
+                }
+            },
+            errorPlacement: function(error, element) {
+                $( element ).closest( "div" ).append( error );
+            },
+            errorElement: "small",
+            messages:{
+                passwordCfm:"两次密码输入不一致"
+            },
+            submitHandler:function(form){
+                var myform = $("#updateTwoForm");
+                $.ajax({
+                    url: "/admin/update/2",
+                    type: "POST",
+                    data: myform.serialize(),
+                    dataType: "json",
+                    error: function ()
+                    {
+                        console.log("admin_update error function!");
+                        toastr.error('出现错误！', '错误');
+                    },
+                    success: function (data)
+                    {
+                        console.log("admin_update success function!");
+
+                        if(data.rspCode == '000000') {
+                            toastr.success('重置密码成功！', '操作成功');
+                        }
+                        else {
+                            toastr.error('重置密码失败！', '操作失败');
+                        }
+                    }
+                });
+            }
+        });
+
+
+        // updateThreeForm
+
+  /*      $("#updateThreeForm").submit(function () {
+            alert("This is test!");
+        });*/
+          $("#updatePic").on('click',function () {
+              fileUpload();
+          });
+    });
+</script>
+
+</html>

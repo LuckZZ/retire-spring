@@ -61,8 +61,8 @@
                                                 <th>序号</th>
                                                 <th>工号</th>
                                                 <th>姓名</th>
-                                                <th>密码</th>
                                                 <th>最近一次登陆</th>
+                                                <th>状态</th>
                                                 <th>操作</th>
                                             </tr>
                                         </thead>
@@ -72,14 +72,14 @@
                                                 <td th:text="${admin.adminId}">1</td>
                                                 <td th:text="${admin.jobNum}">123456</td>
                                                 <td th:text="${admin.name}">测试管理员一</td>
-                                                <td th:text="${admin.password}"> ****** </td>
                                                 <td th:text="${admin.lastTime}">2016-09-26</td>
+                                                <td th:text="${admin.canLogin.name}">是否允许登陆</td>
                                                 <td>
                                                     <div class="tpl-table-black-operation">
-                                                        <a href="javascript:;">
+                                                        <a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-update">
                                                             <i class="am-icon-pencil"></i> 编辑
                                                         </a>
-                                                        <a id="test" th:attr="data-id=${admin.adminId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
+                                                        <a th:attr="data-id=${admin.adminId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
                                                             <i class="am-icon-trash"></i> 删除
                                                         </a>
                                                     </div>
@@ -118,6 +118,12 @@
 
 <script>
     $(function() {
+    // 修改
+        $(".one-update").on('click',function () {
+            var v = $(this).data('id');
+            window.location.href="/admin/updateView/"+v;
+        });
+        //删除
         $(".one-del").on('click',function () {
             //当前元素查找父级元素
             var $tr = $(this).closest('tr');
