@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
+import com.example.domain.result.Response;
 
 public interface AdminService extends BaseCrudService<Admin,Integer>{
 
@@ -10,4 +11,9 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
     int updateNameAndCanLogin(String name, CanLogin canLogin, Integer adminId);
 
     int updatePassword(String password, Integer adminId);
+
+    boolean canDelete(Integer[] adminIds);
+
+    void delete(Integer[] adminIds);
+
 }

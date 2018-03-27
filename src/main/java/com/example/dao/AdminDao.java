@@ -17,4 +17,5 @@ public interface AdminDao extends JpaRepository<Admin, Integer> {
     @Modifying(clearAutomatically=true)
     @Query("update Admin set password=:password where adminId=:adminId")
     int updatePassword(@Param("password") String password, @Param("adminId") Integer adminId);
+
 }

@@ -3,6 +3,8 @@ package com.example.serviceImpl;
 import com.example.dao.AdminDao;
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
+import com.example.domain.result.ExceptionMsg;
+import com.example.domain.result.Response;
 import com.example.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,5 +29,23 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
     @Override
     public int updatePassword(String password, Integer adminId) {
         return adminDao.updatePassword(password,adminId);
+    }
+
+    @Override
+    public boolean canDelete(Integer[] adminIds) {
+        for (int i = 0; i < adminIds.length; i ++){
+            Admin admin = adminDao.findOne(adminIds[i]);
+            if (admin.getCanLogin() == CanLogin.yes)
+                return false;
+        }
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public void delete(Integer[] adminIds) {
+        for (int i = 0; i < adminIds.length; i ++){
+            adminDao.delete(adminIds[i]);
+        }
     }
 }

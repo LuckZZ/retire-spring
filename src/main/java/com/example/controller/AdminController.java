@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @RequestMapping("/admin")
@@ -84,11 +85,21 @@ public class AdminController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "/delete")
     @LoggerManage(description = "删除管理员")
-    public Response delete(@RequestParam(value = "adminId") String adminId){
-       logger.info("adminId:"+adminId);
+    public Response delete(HttpServletRequest request){
+
+        String[] adminIds = request.getParameterValues("adminId");
+
+        Integer[] ids = new Integer[adminIds.length];
+        for (int i = 0; i < adminIds.length; i++) {
+            ids[i] = new Integer(adminIds[i]);
+            logger.info("adminId:"+ids[i]);
+        }
+
+       if (!adminService.canDelete(ids)){
+            return result(ExceptionMsg.DisableAdminDelete);
+       }
        try {
-           Integer id = Integer.parseInt(adminId);
-           adminService.delete(id);
+            adminService.delete(ids);
            return result(ExceptionMsg.SUCCESS);
        }catch (Exception e){
            return result(ExceptionMsg.FAILED);

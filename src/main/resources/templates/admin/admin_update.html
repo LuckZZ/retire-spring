@@ -197,15 +197,17 @@
             error: function ()
             {
                 console.log("update picture error function!");
-                toastr.error('图片上传出现错误！', '错误');
+                // toastr.error('图片上传出现错误！', '错误');
+                toastr.error('维护中！', '操作失败');
             },
             success: function (data){
                 if(data.rspCode == '000000') {
-                    toastr.success('图片上传成功！', '操作成功')
+                    // toastr.success('图片上传成功！', '操作成功')
                 }
                 else {
-                    toastr.error('图片上传失败！', '操作失败');
+                    // toastr.error('图片上传失败！', '操作失败');
                 }
+                toastr.error('维护中！', '操作失败');
             }
 
         });

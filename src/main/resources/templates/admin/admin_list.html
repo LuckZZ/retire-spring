@@ -30,7 +30,7 @@
                                         <div class="am-btn-toolbar">
                                             <div class="am-btn-group am-btn-group-xs">
                                                 <a type="button" class="am-btn am-btn-default am-btn-success" href="/admin/addView"><span class="am-icon-plus"></span> 新增</a>
-                                                <button type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>
+                                                <button type="button" class="am-btn am-btn-default am-btn-danger" id="checked-del"><span class="am-icon-trash-o"></span> 删除</button>
                                             </div>
                                         </div>
                                     </div>
@@ -57,7 +57,7 @@
                                     <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="table-list">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox"/></th>
+                                                <th><input id="allChecked" type="checkbox" value="all"/></th>
                                                 <th>序号</th>
                                                 <th>工号</th>
                                                 <th>姓名</th>
@@ -68,7 +68,7 @@
                                         </thead>
                                         <tbody>
                                             <tr th:each="admin:${admins}">
-                                                <td><input type="checkbox"/></td>
+                                                <td><input type="checkbox" th:value="${admin.adminId}" name="che"/></td>
                                                 <td th:text="${admin.adminId}">1</td>
                                                 <td th:text="${admin.jobNum}">123456</td>
                                                 <td th:text="${admin.name}">测试管理员一</td>
@@ -141,7 +141,6 @@
                 onConfirm: function(options) {
                    var $link = $(this.relatedTarget);
                    var id = $link.data('id');
-
                     $.ajax({
                         async: false,
                         type: 'POST',
@@ -157,11 +156,12 @@
                             if(data.rspCode == '000000') {
                                 toastr.success('删除管理员成功！', '操作成功');
                                 location.reload();
+                            }else if(data.rspCode == '000202'){
+                                toastr.error(data.rspMsg, '操作失败');
                             }
                             else {
                                 toastr.error('删除管理员失败！', '操作失败');
                             }
-
                         }
                     });
 
@@ -170,6 +170,60 @@
                 onCancel: function() {
                 }
             });
+        });
+
+
+        //全选
+        $('#allChecked').change(function(){
+            $('#table-list').find(':checkbox').prop('checked',$(this).is(':checked')?true:false);
+        });
+
+        //删除已选择
+        $("#checked-del").on('click',function () {
+            var checkedId = new Array();
+            $("input:checkbox[name='che']:checked").each(function() {
+                checkedId.push($(this).val());
+            });
+
+            $("#my-confirm-hd").text("批量删除");
+
+            $("#my-confirm-bd").html("");
+
+            $('#my-confirm').modal({
+                onConfirm: function(options) {
+
+                    $.ajaxSettings.traditional=true;
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        dataType: 'json',
+                        data:{
+                            adminId:checkedId
+                        },
+                        url: '/admin/delete',
+                        error : function(XMLHttpRequest, textStatus, errorThrown) {
+                            toastr.error('出现错误！', '错误');
+                        },
+                        success: function(data){
+                            if(data.rspCode == '000000') {
+                                toastr.success('批量删除成功！', '操作成功');
+                                location.reload();
+                            }
+                            else if(data.rspCode == '000202'){
+                                toastr.error(data.rspMsg, '操作失败');
+                            }
+                            else {
+                                toastr.error('批量删除失败！', '操作失败');
+                            }
+                        }
+                    });
+
+                },
+                // closeOnConfirm: false,
+                onCancel: function() {
+                }
+            });
+
         });
 
     });
