@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/head::head_section('新增管理员')">
+</head>
+
+<body data-type="widgets">
+    <script th:src="@{/assets/js/theme.js}"></script>
+    <div class="am-g tpl-g">
+        <!-- 头部 -->
+        <div th:replace="fragments/header::header_section(Admin)"></div>
+        <!-- 风格切换 -->
+        <div th:replace="fragments/theme::theme_section"></div>
+        <!-- 侧边导航栏 -->
+        <div th:replace="fragments/left_admin::left_section('adminList')"></div>
+
+        <!-- 内容区域 -->
+        <div class="tpl-content-wrapper">
+            <div class="row-content am-cf">
+                <div class="row">
+
+                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                        <div class="widget am-cf">
+                            <div class="widget-head am-cf">
+                                <div class="widget-title am-fl">详细信息</div>
+                                <div class="widget-function am-fr">
+                                  <!--  <a href="javascript:;" class="am-icon-cog"></a>-->
+                                </div>
+                            </div>
+                            <div class="widget-body am-fr">
+
+                                <form class="am-form tpl-form-border-form tpl-form-border-br" th:object="${admin}">
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">工号</label>
+                                        <div class="am-u-sm-9">
+                                            <input th:field="*{jobNum}" type="text" disabled/>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">姓名</label>
+                                        <div class="am-u-sm-9">
+                                            <input th:field="*{name}" type="text" disabled/>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">最近一次登陆</label>
+                                        <div class="am-u-sm-9">
+                                            <input th:field="*{lastTime}" type="text" disabled/>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="canLogin" class="am-u-sm-3 am-form-label">允许登陆</label>
+                                        <div class="am-u-sm-9">
+                                            <div class="tpl-switch">
+                                                <!--被选择value为yes、否则为null-->
+                                                <input type="checkbox" th:checked="(*{canLogin.toString()} eq 'yes')?'true':'false'" id="canLogin" class="ios-switch bigswitch tpl-switch-btn" disabled />
+                                                <div class="tpl-switch-btn-view">
+                                                    <div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">图片</label>
+                                        <div class="am-u-sm-9">
+                                            <div class="am-form-group am-form-file">
+                                                <div class="tpl-form-file-img">
+                                                    <img id="avatarPreview" th:src="*{imgUrl}" alt="" style="width: 100px; height: 100px" th:onerror="@{/img/user.jpg}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div th:replace="fragments/footer::js"></div>
+</body>
+
+</html>

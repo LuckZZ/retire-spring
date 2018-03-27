@@ -114,6 +114,14 @@ public class AdminController extends BaseController{
         return "admin/admin_update";
     }
 
+    @RequestMapping(value = "/datailView/{adminId}")
+    @LoggerManage(description = "管理员详细信息界面")
+    public String datailView(@PathVariable String adminId, Model model){
+        Admin admin = adminService.findOne(Integer.parseInt(adminId));
+        model.addAttribute("admin",admin);
+        return "admin/admin_datail";
+    }
+
     /**
      * typeId=1：修改姓名、权限
      * typeId=2:修改照片

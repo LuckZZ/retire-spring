@@ -82,6 +82,9 @@
                                                         <a th:attr="data-id=${admin.adminId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
                                                             <i class="am-icon-trash"></i> 删除
                                                         </a>
+                                                        <a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-detail">
+                                                            <i class="am-icon-cog"></i> 详细
+                                                        </a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -123,6 +126,13 @@
             var v = $(this).data('id');
             window.location.href="/admin/updateView/"+v;
         });
+
+        // 详细
+        $(".one-detail").on('click',function () {
+            var v = $(this).data('id');
+            window.location.href="/admin/datailView/"+v;
+        });
+
         //删除
         $(".one-del").on('click',function () {
             //当前元素查找父级元素
