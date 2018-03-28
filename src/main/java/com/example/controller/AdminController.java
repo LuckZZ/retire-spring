@@ -55,7 +55,7 @@ public class AdminController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @LoggerManage(description = "管理员保存")
-    public Response save(@ModelAttribute(value = "admin") Admin admin, Model model){
+    public Response save(@ModelAttribute(value = "admin") Admin admin){
         if(adminService.existsByJobNum(admin.getJobNum())){
             return  result(ExceptionMsg.FAILED);
         }

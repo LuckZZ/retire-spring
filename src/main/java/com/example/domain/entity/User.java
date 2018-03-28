@@ -261,4 +261,30 @@ public class User implements Serializable,Cloneable{
         }
         return user;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", jobNum='" + jobNum + '\'' +
+                ", name='" + name + '\'' +
+                ", group=" + group.toString() +
+                ", gender=" + gender +
+                ", tel='" + tel + '\'' +
+                ", mate='" + mate + '\'' +
+                ", address='" + address + '\'' +
+                ", politics=" + politics +
+                ", department=" + department +
+                ", duty=" + duty +
+                ", nation=" + nation +
+                ", exist=" + exist +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", passTime='" + passTime + '\'' +
+                ", birth='" + birth + '\'' +
+                ", workTime='" + workTime + '\'' +
+                ", retireTime='" + retireTime + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", other='" + other + '\'' +
+                '}';
+    }
 }

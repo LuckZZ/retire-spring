@@ -13,8 +13,10 @@ import javax.transaction.Transactional;
 
 @Service
 public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao> implements AdminService{
+
     @Autowired
     private AdminDao adminDao;
+
     public  boolean existsByJobNum(String jobNum){
         return adminDao.existsByJobNum(jobNum);
     }

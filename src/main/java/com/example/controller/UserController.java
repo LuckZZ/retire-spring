@@ -2,17 +2,21 @@ package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
 import com.example.domain.entity.*;
+import com.example.domain.enums.Gender;
+import com.example.domain.result.ExceptionMsg;
+import com.example.domain.result.Response;
 import com.example.service.*;
+import com.example.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequestMapping("/user")
 @Controller
-public class UserController {
+public class UserController extends BaseController{
 
     @Autowired
     private UserService userService;
@@ -38,6 +42,23 @@ public class UserController {
        List<User> users = userService.findAll();
        model.addAttribute("users",users);
        return "admin/user_list";
+    }
+
+    /**
+     *
+     * @param jobNum
+     * @return false：用户存在 true：用户不存
+     */
+    @ResponseBody
+    @RequestMapping("/exist")
+    @LoggerManage(description = "用户存在")
+    public boolean existsUser(@RequestParam(value = "jobNum") String jobNum){
+        boolean exist = userService.existsByJobNum(jobNum);
+        logger.info("用户存在:"+exist);
+        if (!exist){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -77,5 +98,21 @@ public class UserController {
         model.addAttribute("duties",duties);
 
         return "admin/user_add";
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @LoggerManage(description = "管理员保存")
+    public Response save(@ModelAttribute(value = "user") User user){
+        if(userService.existsByJobNum(user.getJobNum())){
+            return  result(ExceptionMsg.FAILED);
+        }
+//        设置创建时间
+        user.setCreateTime(DateUtils.getDateSequence());
+//            保存
+        logger.info(user.toString());
+        //userService.save(user);
+        return result(ExceptionMsg.SUCCESS);
     }
 }

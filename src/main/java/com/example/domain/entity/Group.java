@@ -40,4 +40,13 @@ public class Group implements Serializable{
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                "groupId=" + groupId +
+                ", groupName='" + groupName + '\'' +
+                ", user=" + user +
+                '}';
+    }
 }
