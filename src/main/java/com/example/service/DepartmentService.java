@@ -1,4 +1,6 @@
 package com.example.service;
 
-public interface DepartmentService {
+import com.example.domain.entity.Department;
+
+public interface DepartmentService extends BaseCrudService<Department,Integer>{
 }

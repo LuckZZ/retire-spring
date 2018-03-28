@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/head::head_section('新增组员')">
+</head>
+
+<body data-type="widgets">
+    <script th:src="@{/assets/js/theme.js}"></script>
+    <div class="am-g tpl-g">
+        <!-- 头部 -->
+        <div th:replace="fragments/header::header_section(Admin)"></div>
+        <!-- 风格切换 -->
+        <div th:replace="fragments/theme::theme_section"></div>
+        <!-- 侧边导航栏 -->
+        <div th:replace="fragments/left_admin::left_section('userList')"></div>
+
+        <!-- 内容区域 -->
+        <div class="tpl-content-wrapper">
+            <div class="row-content am-cf">
+                <div class="row">
+
+                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                        <div class="widget am-cf">
+                            <div class="widget-head am-cf">
+                                <div class="widget-title am-fl">新增用户 </div>
+                                <div class="widget-function am-fr">
+                                    <!--<a href="javascript:;" class="am-icon-cog"></a>-->
+                                </div>
+                            </div>
+                            <div class="widget-body am-fr">
+
+                                <form class="am-form tpl-form-border-form tpl-form-border-br" id="addUserForm" action="#" th:object="${user}">
+
+                                    <div class="am-form-group">
+                                        <label for="jobNum" class="am-u-sm-3 am-form-label">工号</label>
+                                        <div class="am-u-sm-9">
+                                            <!--本地验证和ajax验证-->
+                                            <input name="jobNum" minlength="6" maxlength="6" type="number" class="tpl-form-input" id="jobNum" placeholder="输入工号(6位)" required/>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="name" class="am-u-sm-3 am-form-label">姓名</label>
+                                        <div class="am-u-sm-9">
+                                            <input name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">组别</label>
+                                        <div class="am-u-sm-9">
+                                            <select th:field="*{group}" data-am-selected="{searchBox: 1}" style="display: none;">
+                                                <option th:each="group:${groups}" th:value="${group}" th:text="${group.groupName}">静态组一</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">性别</label>
+                                        <div class="am-u-sm-9">
+                                            <label class="am-radio-inline">
+                                                <input type="radio"  value="" name="docVlGender" checked required> 男
+                                            </label>
+                                            <label class="am-radio-inline">
+                                                <input type="radio" name="docVlGender"> 女
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label  class="am-u-sm-3 am-form-label">民族</label>
+                                        <div class="am-u-sm-9">
+                                            <select th:field="*{nation}" data-am-selected="{searchBox: 1}" style="display: none;">
+                                                <option th:each="nation:${nations}" th:value="${nation}" th:text="${nation.nationName}">民族</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="tel" class="am-u-sm-3 am-form-label">电话</label>
+                                        <div class="am-u-sm-9">
+                                            <input name="tel"type="text" class="tpl-form-input" id="tel" placeholder="输入电话" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="mate" class="am-u-sm-3 am-form-label">配偶</label>
+                                        <div class="am-u-sm-9">
+                                            <input name="mate"type="text" class="tpl-form-input" id="mate" placeholder="输入配偶" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="address" class="am-u-sm-3 am-form-label">地址</label>
+                                        <div class="am-u-sm-9">
+                                            <input name="address"type="text" class="tpl-form-input" id="address" placeholder="输入地址" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">政治面貌</label>
+                                        <div class="am-u-sm-9">
+                                            <select th:field="*{politics}" data-am-selected="{searchBox: 1}" style="display: none;">
+                                                <option th:each="politics:${politicss}" th:value="${politics}" th:text="${politics.politicsName}">政治面貌/option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">部门</label>
+                                        <div class="am-u-sm-9">
+                                            <select th:field="*{department}" data-am-selected="{searchBox: 1}" style="display: none;">
+                                                <option th:each="department:${departments}" th:value="${department}" th:text="${department.departmentName}">部门</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">职务</label>
+                                        <div class="am-u-sm-9">
+                                            <select th:field="*{duty}" data-am-selected="{searchBox: 1}" style="display: none;">
+                                                <option th:each="duty:${duties}" th:value="${duty}" th:text="${duty.dutyName}">职务</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="birth" class="am-u-sm-3 am-form-label">出生日期</label>
+                                        <div class="am-u-sm-9">
+                                            <input name="birth"type="text" class="tpl-form-input" id="birth" placeholder="出生日期" data-am-datepicker="" readonly="" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="workTime" class="am-u-sm-3 am-form-label">工作时间</label>
+                                        <div class="am-u-sm-9">
+                                            <input name="workTime"type="text" class="tpl-form-input" id="workTime" placeholder="工作时间" data-am-datepicker="" readonly="" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="retireTime" class="am-u-sm-3 am-form-label">退休时间</label>
+                                        <div class="am-u-sm-9">
+                                            <input name="retireTime"type="text" class="tpl-form-input" id="retireTime" placeholder="退休时间" data-am-datepicker="" readonly="" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label for="other" class="am-u-sm-3 am-form-label">备注</label>
+                                        <div class="am-u-sm-9">
+                                            <input name="other"type="text" class="tpl-form-input" id="other" placeholder="输入备注" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <div class="am-u-sm-9 am-u-sm-push-3">
+                                            <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div th:replace="fragments/footer::js"></div>
+</body>
+
+<!--jquery验证-->
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/messages_zh.min.js}"></script>
+
+<script>
+
+    $(function() {
+
+        // 提交时验证表单，small元素包裹错误信息
+        $("#addUserForm").validate({
+            rules:{
+                jobNum: {
+                    required: true,
+                    remote: {
+                        url: '/user/exist',
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            jobNum: function () {
+                                return $("#jobNum").val();
+                            }
+                        }
+                    }
+                }
+            },
+
+            errorPlacement: function(error, element) {
+                $( element ).closest( "div" ).append( error );
+            },
+            errorElement: "small",
+            messages:{
+                jobNum:{
+                    minlength: "工号必须6位",
+                    maxlength: "工号必须6位",
+                    remote:"此工号已存在，重新输入"
+                }
+            },
+            submitHandler:function(form){
+                var myform = $("#addUserForm");
+                $.ajax({
+                    url: "/user/save",
+                    type: "POST",
+                    data: myform.serialize(),
+                    dataType: "json",
+                    error: function ()
+                    {
+                        console.log("user_add error function!");
+                        toastr.error('出现错误！', '错误');
+                    },
+                    success: function (data)
+                    {
+                        console.log("user_add success function!");
+
+                        if(data.rspCode == '000000') {
+                            toastr.success('增加用户成功！', '操作成功');
+                        }
+                        else {
+                            toastr.error('增加用户失败！', '操作失败');
+                        }
+                    }
+                });
+
+            }
+        });
+    });
+</script>
+
+</html>

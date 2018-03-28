@@ -1,5 +1,6 @@
 package com.example.domain.entity;
 
+import com.example.domain.enums.Exist;
 import com.example.domain.enums.Gender;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import java.sql.Date;
 /**
  * User实体类有属性:
  * user_id、group_id、job_num、name、
- * gender、tel、cel1、cel2、
+ * gender、tel、
  * mate、address、department、duties、work_time、
  * retire_time、birth、nation、exist、photo、
  * pass_time、politics、createTinme
@@ -22,24 +23,31 @@ public class User implements Serializable,Cloneable{
     @Column(name="user_id")
     private Integer userId;         //用户Id为主键、自增
 
-    @ManyToOne
-    @JoinColumn(name = "group_id")
-    private Group group;        //多对一,多的一方数据表生成group_id列
-
     @Column(nullable = false)
     private String jobNum;      //工号非空
 
     @Column(nullable = false)
     private String name;        //姓名非空
 
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;        //多对一,多的一方数据表生成group_id列
+
     @Column
     private Gender gender;
 
+    @Column
     private String tel;
-    private String cel1;
-    private String cel2;
+
+    @Column
     private String mate;
+
+    @Column
     private String address;
+
+    @ManyToOne
+    @JoinColumn(name = "politics_id")
+    private Politics politics;
 
     @ManyToOne
     @JoinColumn(name = "department_id")
@@ -49,34 +57,35 @@ public class User implements Serializable,Cloneable{
     @JoinColumn(name = "duty_id")
     private Duty duty;
 
-    private Date workTime;
-    private Date retireTime;
-    private Date birth;
-
     @ManyToOne
     @JoinColumn(name = "nation_id")
     private Nation nation;
 
     @Column(nullable = false)
-    private Integer exist;          //是否存在非空
-    private String photo;
-    private Integer passTime;
+    private Exist exist;          //是否存在非空
 
-    @ManyToOne
-    @JoinColumn(name = "politics_id")
-    private Politics politics;
+    @Column
+    private String imgUrl;             //图片地址
+
+    @Column
+    private String passTime;
+
+    @Column
+    private String birth;
+
+    @Column
+    private String workTime;
+
+    @Column
+    private String retireTime;
 
     @Column
     private String createTime;  //用户创建时间
+
+    @Column
+    private String other;
     //set、get方法
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
 
     public Integer getUserId() {
         return userId;
@@ -84,14 +93,6 @@ public class User implements Serializable,Cloneable{
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
     }
 
     public String getJobNum() {
@@ -110,6 +111,14 @@ public class User implements Serializable,Cloneable{
         this.name = name;
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
     public Gender getGender() {
         return gender;
     }
@@ -124,22 +133,6 @@ public class User implements Serializable,Cloneable{
 
     public void setTel(String tel) {
         this.tel = tel;
-    }
-
-    public String getCel1() {
-        return cel1;
-    }
-
-    public void setCel1(String cel1) {
-        this.cel1 = cel1;
-    }
-
-    public String getCel2() {
-        return cel2;
-    }
-
-    public void setCel2(String cel2) {
-        this.cel2 = cel2;
     }
 
     public String getMate() {
@@ -158,6 +151,14 @@ public class User implements Serializable,Cloneable{
         this.address = address;
     }
 
+    public Politics getPolitics() {
+        return politics;
+    }
+
+    public void setPolitics(Politics politics) {
+        this.politics = politics;
+    }
+
     public Department getDepartment() {
         return department;
     }
@@ -174,30 +175,6 @@ public class User implements Serializable,Cloneable{
         this.duty = duty;
     }
 
-    public Date getWorkTime() {
-        return workTime;
-    }
-
-    public void setWorkTime(Date workTime) {
-        this.workTime = workTime;
-    }
-
-    public Date getRetireTime() {
-        return retireTime;
-    }
-
-    public void setRetireTime(Date retireTime) {
-        this.retireTime = retireTime;
-    }
-
-    public Date getBirth() {
-        return birth;
-    }
-
-    public void setBirth(Date birth) {
-        this.birth = birth;
-    }
-
     public Nation getNation() {
         return nation;
     }
@@ -206,36 +183,68 @@ public class User implements Serializable,Cloneable{
         this.nation = nation;
     }
 
-    public Integer getExist() {
+    public Exist getExist() {
         return exist;
     }
 
-    public void setExist(Integer exist) {
+    public void setExist(Exist exist) {
         this.exist = exist;
     }
 
-    public String getPhoto() {
-        return photo;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
-    public Integer getPassTime() {
+    public String getPassTime() {
         return passTime;
     }
 
-    public void setPassTime(Integer passTime) {
+    public void setPassTime(String passTime) {
         this.passTime = passTime;
     }
 
-    public Politics getPolitics() {
-        return politics;
+    public String getBirth() {
+        return birth;
     }
 
-    public void setPolitics(Politics politics) {
-        this.politics = politics;
+    public void setBirth(String birth) {
+        this.birth = birth;
+    }
+
+    public String getWorkTime() {
+        return workTime;
+    }
+
+    public void setWorkTime(String workTime) {
+        this.workTime = workTime;
+    }
+
+    public String getRetireTime() {
+        return retireTime;
+    }
+
+    public void setRetireTime(String retireTime) {
+        this.retireTime = retireTime;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getOther() {
+        return other;
+    }
+
+    public void setOther(String other) {
+        this.other = other;
     }
 
     /**
