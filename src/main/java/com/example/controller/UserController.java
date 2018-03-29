@@ -118,6 +118,13 @@ public class UserController extends BaseController{
         return result(ExceptionMsg.SUCCESS);
     }
 
+    @RequestMapping(value = "/datailView/{userId}")
+    @LoggerManage(description = "用户详细信息界面")
+    public String datailView(@PathVariable String userId, Model model){
+        User user = userService.findOne(Integer.parseInt(userId));
+        model.addAttribute("user",user);
+        return "admin/user_datail";
+    }
 
     @ResponseBody
     @RequestMapping(value = "/delete")

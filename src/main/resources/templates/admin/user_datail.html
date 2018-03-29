@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/head::head_section('组员详细')">
+</head>
+
+<body data-type="widgets">
+    <script th:src="@{/assets/js/theme.js}"></script>
+    <div class="am-g tpl-g">
+        <!-- 头部 -->
+        <div th:replace="fragments/header::header_section(Admin)"></div>
+        <!-- 风格切换 -->
+        <div th:replace="fragments/theme::theme_section"></div>
+        <!-- 侧边导航栏 -->
+        <div th:replace="fragments/left_admin::left_section('userList')"></div>
+
+        <!-- 内容区域 -->
+        <div class="tpl-content-wrapper">
+            <div class="row-content am-cf">
+                <div class="row">
+
+                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                        <div class="widget am-cf">
+                            <div class="widget-head am-cf">
+                                <div class="widget-title am-fl">详细信息 </div>
+                                <div class="widget-function am-fr">
+                                    <!--<a href="javascript:;" class="am-icon-cog"></a>-->
+                                </div>
+                            </div>
+                            <div class="widget-body am-fr">
+
+                                <form class="am-form tpl-form-border-form tpl-form-border-br" th:object="${user}">
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">工号</label>
+                                        <div class="am-u-sm-9">
+                                            <input th:field="*{userId}" type="text" disabled/>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">姓名</label>
+                                        <div class="am-u-sm-9">
+                                            <input th:field="*{name}" type="text" disabled/>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">组别</label>
+                                        <div class="am-u-sm-9">
+                                            <input th:field="*{group.groupName}" type="text" disabled/>
+                                        </div>
+                                    </div>
+
+                                  <div class="am-form-group">
+                                         <label class="am-u-sm-3 am-form-label">性别</label>
+                                         <div class="am-u-sm-9">
+                                             <input th:field="*{gender.name}" type="text" disabled/>
+                                         </div>
+                                     </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">民族</label>
+                                        <div class="am-u-sm-9">
+                                            <input th:field="*{nation.nationName}" type="text" disabled/>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <div class="am-u-sm-3 am-form-label">
+                                            <label>电话</label>
+                                        </div>
+                                        <div class="am-u-sm-9">
+                                            <input th:field="*{tel}" type="text" disabled/>
+                                        </div>
+                         <!--               <div class="am-u-sm-3">
+                                            <input name="tel"type="number" minlength="7" maxlength="11" class="tpl-form-input" placeholder="输入电话1"/>
+                                        </div>
+                                        <div class="am-u-sm-3">
+                                            <input name="tel"type="number" minlength="7" maxlength="11" class="tpl-form-input" placeholder="输入电话2"/>
+                                        </div>
+                                        <div class="am-u-sm-3">
+                                            <input name="tel"type="number" minlength="7" maxlength="11" class="tpl-form-input" placeholder="输入电话3"/>
+                                        </div>-->
+                                    </div>
+
+                                     <div class="am-form-group">
+                                         <label class="am-u-sm-3 am-form-label">配偶</label>
+                                         <div class="am-u-sm-9">
+                                             <input th:field="*{mate}" type="text" disabled/>
+                                         </div>
+                                     </div>
+
+                                     <div class="am-form-group">
+                                         <label class="am-u-sm-3 am-form-label">地址</label>
+                                         <div class="am-u-sm-9">
+                                             <input th:field="*{address}" type="text" disabled/>
+                                         </div>
+                                     </div>
+
+                                   <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">政治面貌</label>
+                                        <div class="am-u-sm-9">
+                                            <input th:field="*{politics.politicsName}" type="text" disabled/>
+                                        </div>
+                                    </div>
+
+                                      <div class="am-form-group">
+                                          <label class="am-u-sm-3 am-form-label">部门</label>
+                                          <div class="am-u-sm-9">
+                                              <input th:field="*{department.departmentName}" type="text" disabled/>
+                                          </div>
+                                      </div>
+
+                                      <div class="am-form-group">
+                                          <label class="am-u-sm-3 am-form-label">职务</label>
+                                          <div class="am-u-sm-9">
+                                              <input th:field="*{duty.dutyName}" type="text" disabled/>
+                                          </div>
+                                      </div>
+
+                                      <div class="am-form-group">
+                                          <label class="am-u-sm-3 am-form-label">出生日期</label>
+                                          <div class="am-u-sm-9">
+                                              <input th:field="*{birth}" type="text" disabled/>
+                                          </div>
+                                      </div>
+
+                                      <div class="am-form-group">
+                                          <label class="am-u-sm-3 am-form-label">工作时间</label>
+                                          <div class="am-u-sm-9">
+                                              <input th:field="*{workTime}" type="text" disabled/>
+                                          </div>
+                                      </div>
+
+                                      <div class="am-form-group">
+                                          <label class="am-u-sm-3 am-form-label">退休时间</label>
+                                          <div class="am-u-sm-9">
+                                              <input th:field="*{retireTime}" type="text" disabled/>
+                                          </div>
+                                      </div>
+
+                                      <div class="am-form-group">
+                                          <label class="am-u-sm-3 am-form-label">备注</label>
+                                          <div class="am-u-sm-9">
+                                              <input th:field="*{other}" type="text" disabled/>
+                                          </div>
+                                      </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div th:replace="fragments/footer::js"></div>
+</body>
+
+</html>
