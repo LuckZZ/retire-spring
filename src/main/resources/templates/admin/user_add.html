@@ -187,6 +187,14 @@
 
     $(function() {
 
+        //日期比较，date1<date2返回true
+        $.validator.methods.compareDate = function(value, element, param) {
+            var startDate = $(param).val();
+            var date1 = new Date(Date.parse(startDate.replace("-", "/")));
+            var date2 = new Date(Date.parse(value.replace("-", "/")));
+            return date1 < date2;
+        };
+
         // 提交时验证表单，small元素包裹错误信息
         $("#addUserForm").validate({
             rules:{
@@ -202,6 +210,17 @@
                             }
                         }
                     }
+                },
+                birth:{
+                    required:true
+                },
+                workTime:{
+                    required:true,
+                    compareDate:"#birth"
+                },
+                retireTime:{
+                    required:true,
+                    compareDate:"#workTime"
                 }
             },
 
@@ -218,6 +237,12 @@
                 tel:{
                     minlength: "电话6-11位",
                     maxlength: "电话6-11位"
+                },
+                workTime:{
+                    compareDate:"工作时间必须大于出生时间"
+                },
+                retireTime:{
+                    compareDate:"退休时间必须大于工作时间"
                 }
             },
             submitHandler:function(form){
