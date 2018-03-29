@@ -5,6 +5,8 @@ import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao> implements UserService{
 
@@ -14,5 +16,13 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Override
     public boolean existsByJobNum(String jobNum) {
         return userDao.existsByJobNum(jobNum);
+    }
+
+    @Transactional
+    @Override
+    public void delete(Integer[] userIds) {
+        for (int i = 0; i < userIds.length; i ++){
+            userDao.delete(userIds[i]);
+        }
     }
 }

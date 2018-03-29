@@ -7,6 +7,7 @@ import com.example.domain.enums.Gender;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.AdminService;
+import com.example.utils.DataUtils;
 import com.example.utils.DateUtils;
 import com.example.utils.ImgUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,12 +87,7 @@ public class AdminController extends BaseController{
     public Response delete(HttpServletRequest request){
 
         String[] adminIds = request.getParameterValues("adminId");
-
-        Integer[] ids = new Integer[adminIds.length];
-        for (int i = 0; i < adminIds.length; i++) {
-            ids[i] = new Integer(adminIds[i]);
-            logger.info("adminId:"+ids[i]);
-        }
+        Integer[] ids = DataUtils.turn(adminIds);
 
        if (!adminService.canDelete(ids)){
             return result(ExceptionMsg.DisableAdminDelete);

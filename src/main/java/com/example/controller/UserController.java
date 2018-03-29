@@ -7,12 +7,14 @@ import com.example.domain.enums.Gender;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.*;
+import com.example.utils.DataUtils;
 import com.example.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequestMapping("/user")
@@ -114,5 +116,22 @@ public class UserController extends BaseController{
         logger.info(user.toString());
         userService.save(user);
         return result(ExceptionMsg.SUCCESS);
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/delete")
+    @LoggerManage(description = "删除用户")
+    public Response delete(HttpServletRequest request){
+
+        String[] userIds = request.getParameterValues("userId");
+        Integer[] ids = DataUtils.turn(userIds);
+
+        try {
+            userService.delete(ids);
+            return result(ExceptionMsg.SUCCESS);
+        }catch (Exception e){
+            return result(ExceptionMsg.FAILED);
+        }
     }
 }
