@@ -19,12 +19,12 @@ public class AdminServiceTest {
      * 测试增加管理员
      */
     @Test
-    public void testSaveAdmin(){
-        Admin admin = new Admin("111111","zhansan","123456","2018", CanLogin.yes);
-        adminService.save(admin);
+    public void save(){
+    /*    Admin admin = new Admin("111111","zhansan","123456","2018", CanLogin.yes);
+        adminService.save(admin);*/
     }
     @Test
-    public void testFindAll(){
+    public void findAll(){
         adminService.findAll();
     }
 

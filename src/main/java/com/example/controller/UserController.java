@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
 import com.example.domain.entity.*;
+import com.example.domain.enums.Exist;
 import com.example.domain.enums.Gender;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
@@ -103,16 +104,15 @@ public class UserController extends BaseController{
 
     @ResponseBody
     @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @LoggerManage(description = "管理员保存")
+    @LoggerManage(description = "用户保存")
     public Response save(@ModelAttribute(value = "user") User user){
         if(userService.existsByJobNum(user.getJobNum())){
             return  result(ExceptionMsg.FAILED);
         }
-//        设置创建时间
-        user.setCreateTime(DateUtils.getDateSequence());
+        user.setExist(Exist.yes);
 //            保存
         logger.info(user.toString());
-        //userService.save(user);
+        userService.save(user);
         return result(ExceptionMsg.SUCCESS);
     }
 }

@@ -63,8 +63,6 @@ public class AdminController extends BaseController{
         if(admin.getCanLogin() == null){
             admin.setCanLogin(CanLogin.no);
         }
-//        设置创建时间
-        admin.setCreateTime(DateUtils.getDateSequence());
 //            保存
         adminService.save(admin);
         return result(ExceptionMsg.SUCCESS);

@@ -23,6 +23,13 @@ public class Group implements Serializable{
     @OneToMany(mappedBy="group")
     private List<User> user = new ArrayList<>();    //一对多
 
+    public Group() {
+    }
+
+    public Group(String groupName) {
+        this.groupName = groupName;
+    }
+
     //set、get方法
 
     public Integer getGroupId() {

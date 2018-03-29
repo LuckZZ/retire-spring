@@ -18,6 +18,13 @@ public class Duty implements Serializable{
     @Column(nullable = false)
     private String dutyName;    //非空
 
+    public Duty() {
+    }
+
+    public Duty(String dutyName) {
+        this.dutyName = dutyName;
+    }
+
     //set、get方法
 
     public Integer getDutyId() {

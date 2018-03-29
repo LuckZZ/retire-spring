@@ -3,13 +3,14 @@ package com.example.domain.entity;
 import com.example.domain.enums.CanLogin;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * 管理员表
  */
 @Entity
 @Table(name="tb_admin")
-public class Admin {
+public class Admin extends BaseEntity implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="admin_id")
@@ -24,9 +25,6 @@ public class Admin {
     @Column(nullable = false)
     private String password;        //密码非空
 
-    @Column(nullable = false)
-    private String createTime;      //创建时间
-
     @Column(nullable = true)
     private String lastTime;        //最后登录日可以为空
 
@@ -39,11 +37,10 @@ public class Admin {
     public Admin() {
     }
 
-    public Admin(String jobNum, String name, String password, String createTime, CanLogin canLogin) {
+    public Admin(String jobNum, String name, String password, CanLogin canLogin) {
         this.jobNum = jobNum;
         this.name = name;
         this.password = password;
-        this.createTime = createTime;
         this.canLogin = canLogin;
     }
 
@@ -79,14 +76,6 @@ public class Admin {
         this.password = password;
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
     public String getLastTime() {
         return lastTime;
     }
@@ -110,17 +99,4 @@ public class Admin {
         this.imgUrl = imgUrl;
     }
 
-    @Override
-    public String toString() {
-        return "Admin{" +
-                "adminId=" + adminId +
-                ", jobNum='" + jobNum + '\'' +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", lastTime='" + lastTime + '\'' +
-                ", canLogin=" + canLogin +
-                ", imgUrl='" + imgUrl + '\'' +
-                '}';
-    }
 }

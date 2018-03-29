@@ -18,6 +18,12 @@ public class Nation implements Serializable{
     @Column(nullable = false)
     private String nationName;//非空
 
+    public Nation() {
+    }
+
+    public Nation(String nationName) {
+        this.nationName = nationName;
+    }
     //set、get方法
 
     public Integer getNationId() {

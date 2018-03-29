@@ -18,6 +18,15 @@ public class Department implements Serializable{
     @Column(nullable = false)
     private String departmentName;
 
+    public Department() {
+    }
+
+
+    public Department(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+
     //set、get方法
 
     public Integer getDepartmentId() {

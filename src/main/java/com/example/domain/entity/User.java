@@ -17,7 +17,7 @@ import java.sql.Date;
  */
 @Entity
 @Table(name="tb_user")
-public class User implements Serializable,Cloneable{
+public class User extends BaseEntity implements Serializable,Cloneable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="user_id")
@@ -78,9 +78,6 @@ public class User implements Serializable,Cloneable{
 
     @Column
     private String retireTime;
-
-    @Column
-    private String createTime;  //用户创建时间
 
     @Column
     private String other;
@@ -231,14 +228,6 @@ public class User implements Serializable,Cloneable{
         this.retireTime = retireTime;
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
     public String getOther() {
         return other;
     }
@@ -262,29 +251,4 @@ public class User implements Serializable,Cloneable{
         return user;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", jobNum='" + jobNum + '\'' +
-                ", name='" + name + '\'' +
-                ", group=" + group.toString() +
-                ", gender=" + gender +
-                ", tel='" + tel + '\'' +
-                ", mate='" + mate + '\'' +
-                ", address='" + address + '\'' +
-                ", politics=" + politics +
-                ", department=" + department +
-                ", duty=" + duty +
-                ", nation=" + nation +
-                ", exist=" + exist +
-                ", imgUrl='" + imgUrl + '\'' +
-                ", passTime='" + passTime + '\'' +
-                ", birth='" + birth + '\'' +
-                ", workTime='" + workTime + '\'' +
-                ", retireTime='" + retireTime + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", other='" + other + '\'' +
-                '}';
-    }
 }

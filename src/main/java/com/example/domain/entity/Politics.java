@@ -18,6 +18,13 @@ public class Politics implements Serializable{
     @Column(nullable = false)
     private String politicsName;
 
+    public Politics() {
+    }
+
+    public Politics(String politicsName) {
+        this.politicsName = politicsName;
+    }
+
     //set、get方法
 
     public Integer getPoliticsId() {
