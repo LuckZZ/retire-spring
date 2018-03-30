@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -113,21 +114,61 @@ public class UserController extends BaseController{
         }
         user.setExist(Exist.yes);
 //            保存
-        logger.info(user.toString());
+        logger.info(user.getExist());
         userService.save(user);
         return result(ExceptionMsg.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/update")
+    @LoggerManage(description = "修改用户")
+    public Response update(@ModelAttribute(value = "user") User user){
+        boolean b=  userService.updateExceptId(user);
+        if (b){
+            return result(ExceptionMsg.SUCCESS);
+        }
+        return result(ExceptionMsg.FAILED);
+    }
+
+    @RequestMapping(value = "/updateView/{userId}")
+    @LoggerManage(description = "修改用户界面")
+    public String updateView(@PathVariable String userId, Model model){
+        User user = userService.findOne(Integer.parseInt(userId));
+        model.addAttribute("user",user);
+
+        //        所有的组
+        List<Group> groups = groupService.findAll();
+
+//        所有的民族
+        List<Nation> nations = nationService.findAll();
+
+        //        所有的政治面貌
+        List<Politics> politicss = politicsService.findAll();
+
+        //        所有的政治面貌
+        List<Department> departments = departmentService.findAll();
+
+        //        所有的政治面貌
+        List<Duty> duties = dutyService.findAll();
+
+        model.addAttribute("groups",groups);
+
+        model.addAttribute("nations",nations);
+
+        model.addAttribute("politicss",politicss);
+
+        model.addAttribute("departments",departments);
+
+        model.addAttribute("duties",duties);
+
+        return "admin/user_update";
     }
 
     @RequestMapping(value = "/datailView/{userId}")
     @LoggerManage(description = "用户详细信息界面")
     public String datailView(@PathVariable String userId, Model model){
         User user = userService.findOne(Integer.parseInt(userId));
-//        电话String切割
-        String tel = user.getTel();
-        List<String> tels = DataUtils.turnToList(tel);
-
         model.addAttribute("user",user);
-        model.addAttribute("tels",tels);
         return "admin/user_datail";
     }
 
@@ -145,5 +186,42 @@ public class UserController extends BaseController{
         }catch (Exception e){
             return result(ExceptionMsg.FAILED);
         }
+    }
+
+    /**
+     * 实现文件上传
+     * */
+    @ResponseBody
+    @RequestMapping(value="fileUpload",method = RequestMethod.POST)
+    @LoggerManage(description = "图片上传")
+    public Response fileUpload(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request){
+
+        String adminId = request.getParameter("userId");
+        String jobNum = request.getParameter("jobNum");
+        String imgUrl = request.getParameter("imgUrl");
+        String fileName = file.getOriginalFilename();
+
+        System.out.println("userId:"+adminId);
+        System.out.println("jobNum:"+jobNum);
+        System.out.println("imgUrl:"+imgUrl);
+        System.out.println("fileName:"+fileName);
+
+ /*       String filePath = request.getSession().getServletContext().getRealPath("/");
+        System.out.println(filePath);*/
+
+        if(file.isEmpty()){
+            return result(ExceptionMsg.FAILED);
+        }
+
+        return result(ExceptionMsg.SUCCESS);
+
+/*        ImgUtils imgUtils = new ImgUtils(jobNum,file);
+        try {
+            imgUtils.save();
+            return result(ExceptionMsg.SUCCESS);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return result(ExceptionMsg.FAILED);
+        }*/
     }
 }

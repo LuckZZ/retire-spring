@@ -25,4 +25,19 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
             userDao.delete(userIds[i]);
         }
     }
+
+    @Transactional
+    @Override
+    public boolean updateExceptId(User user){
+        if (user.getUserId() == null){
+            return false;
+        }
+//        用户存在的状态不变
+        User oldUser = userDao.findOne(user.getUserId());
+        user.setExist(oldUser.getExist());
+
+//        保存，由于userId不变，执行的是update语句
+        userDao.save(user);
+        return true;
+    }
 }

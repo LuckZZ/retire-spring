@@ -61,7 +61,12 @@
                                         <th>序号</th>
                                         <th>工号</th>
                                         <th>姓名</th>
+                                        <th>性别</th>
                                         <th>组别</th>
+                                        <th>民族</th>
+                                        <th>职务</th>
+                                        <th>部门</th>
+                                        <th>政治面貌</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -71,7 +76,12 @@
                                         <td th:text="${user.userId}">1</td>
                                         <td th:text="${user.jobNum}">123456</td>
                                         <td th:text="${user.name}">张三</td>
+                                        <td th:text="${user.gender.name}">性别</td>
                                         <td th:text="${user.group.groupName}">组一</td>
+                                        <td th:text="${user.nation.nationName}">民族</td>
+                                        <td th:text="${user.duty.dutyName}" >职务</td>
+                                        <td th:text="${user.department.departmentName}" >部门</td>
+                                        <td th:text="${user.politics.politicsName}">政治面貌</td>
                                         <td>
                                             <div class="tpl-table-black-operation">
                                                 <a th:attr="data-id=${user.userId}" href="javascript:;" class="one-update">

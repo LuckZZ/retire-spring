@@ -7,4 +7,6 @@ public interface UserService extends BaseCrudService<User,Integer>{
     boolean existsByJobNum(String jobNum);
 
     void delete(Integer[] userIds);
+
+    boolean updateExceptId(User user);
 }

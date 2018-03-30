@@ -118,7 +118,7 @@ public class AdminController extends BaseController{
 
     /**
      * typeId=1：修改姓名、权限
-     * typeId=2:修改照片
+     * typeId=2:修改密码
      * @param typeId
      * @param request
      * @return

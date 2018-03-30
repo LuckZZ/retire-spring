@@ -35,7 +35,7 @@
                                     <div class="am-form-group">
                                         <label class="am-u-sm-3 am-form-label">工号</label>
                                         <div class="am-u-sm-9">
-                                            <input th:field="*{userId}" type="text" disabled/>
+                                            <input th:field="*{jobNum}" type="text" disabled/>
                                         </div>
                                     </div>
 
@@ -71,8 +71,14 @@
                                         <div class="am-u-sm-3 am-form-label">
                                             <label>电话</label>
                                         </div>
-                                        <div th:each="t:${tels}" class="am-u-sm-3">
-                                            <input th:value="${t}" type="text" disabled/>
+                                        <div class="am-u-sm-3">
+                                            <input th:field="*{tel1}" type="text" disabled/>
+                                        </div>
+                                        <div class="am-u-sm-3">
+                                            <input th:field="*{tel2}" type="text" disabled/>
+                                        </div>
+                                        <div class="am-u-sm-3">
+                                            <input th:field="*{tel3}" type="text" disabled/>
                                         </div>
                                     </div>
 
@@ -138,6 +144,17 @@
                                               <input th:field="*{other}" type="text" disabled/>
                                           </div>
                                       </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label">图片</label>
+                                        <div class="am-u-sm-9">
+                                            <div class="am-form-group am-form-file">
+                                                <div class="tpl-form-file-img">
+                                                    <img id="avatarPreview" th:src="*{imgUrl}" alt="" style="width: 100px; height: 100px" onerror="this.src='/img/user.jpg'">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </form>
                             </div>

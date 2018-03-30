@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/head::head_section('修改用户')">
+</head>
+
+<body data-type="widgets">
+    <script th:src="@{/assets/js/theme.js}"></script>
+    <div class="am-g tpl-g">
+        <!-- 头部 -->
+        <div th:replace="fragments/header::header_section(Admin)"></div>
+        <!-- 风格切换 -->
+        <div th:replace="fragments/theme::theme_section"></div>
+        <!-- 侧边导航栏 -->
+        <div th:replace="fragments/left_admin::left_section('userList')"></div>
+
+        <!-- 内容区域 -->
+        <div class="tpl-content-wrapper">
+            <div class="row-content am-cf">
+                <div class="row">
+
+                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                        <div class="widget am-cf">
+                            <div class="widget-head am-cf">
+                                <div class="widget-title am-fl">修改用户</div>
+                                <div class="widget-function am-fr">
+                                    <!--<a href="javascript:;" class="am-icon-cog"></a>-->
+                                </div>
+                            </div>
+                            <div class="widget-body am-fr">
+
+                                <div class="am-tabs" data-am-tabs>
+                                    <ul class="am-tabs-nav am-nav am-nav-tabs">
+                                        <li class="am-active"><a href="#tab1">修改基本信息</a></li>
+                                        <li><a href="#tab3">修改图片</a></li>
+                                    </ul>
+
+                                    <div class="am-tabs-bd">
+                                        <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+
+                                            <form class="am-form tpl-form-border-form tpl-form-border-br" id="updateOneForm" action="#" th:object="${user}">
+
+                                                <div class="am-form-group">
+                                                    <label for="jobNum" class="am-u-sm-3 am-form-label">工号</label>
+                                                    <div class="am-u-sm-9">
+                                                        <input name="userId" th:field="*{userId}" type="hidden" id="userId"/>
+                                                        <input name="jobNum" th:field="*{jobNum}" type="hidden"/>
+                                                        <input name="jobNum" type="number" class="tpl-form-field" id="jobNum" th:field="*{jobNum}" disabled required/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="name" class="am-u-sm-3 am-form-label">姓名</label>
+                                                    <div class="am-u-sm-9">
+                                                        <input th:field="*{name}" name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="group" class="am-u-sm-3 am-form-label">组别</label>
+                                                    <div class="am-u-sm-9">
+                                                        <select name="group" id="group" data-am-selected="{searchBox: 1}" style="display: none;">
+                                                            <option th:selected="(${user.group.groupId} eq ${group.groupId})?'true':'false'" th:each="group:${groups}" th:value="${group.groupId}" th:text="${group.groupName}">静态组一</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label class="am-u-sm-3 am-form-label">性别</label>
+                                                    <div class="am-u-sm-9">
+                                                        <label class="am-radio-inline">
+                                                            <input type="radio" value="male" name="gender" th:checked="(${user.gender.toString()} eq 'male')?'true':'false'" required> 男
+                                                        </label>
+                                                        <label class="am-radio-inline">
+                                                            <input type="radio" value="female" th:checked="(${user.gender.toString()} eq 'female')?'true':'false'" name="gender"> 女
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="nation"  class="am-u-sm-3 am-form-label">民族</label>
+                                                    <div class="am-u-sm-9">
+                                                        <select name="nation" id="nation" data-am-selected="{searchBox: 1}" style="display: none;">
+                                                            <option th:selected="(${user.nation.nationId} eq ${nation.nationId})?'true':'false'" th:each="nation:${nations}" th:value="${nation.nationId}" th:text="${nation.nationName}">民族</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <div class="am-u-sm-3 am-form-label">
+                                                        <label>电话</label>
+                                                    </div>
+                                                    <div class="am-u-sm-3">
+                                                        <input th:field="*{tel1}" name="tel1"type="number" minlength="7" maxlength="11" class="tpl-form-input" placeholder="输入电话1"/>
+                                                    </div>
+                                                    <div class="am-u-sm-3">
+                                                        <input th:field="*{tel2}" name="tel2"type="number" minlength="7" maxlength="11" class="tpl-form-input" placeholder="输入电话2"/>
+                                                    </div>
+                                                    <div class="am-u-sm-3">
+                                                        <input th:field="*{tel3}" name="tel3"type="number" minlength="7" maxlength="11" class="tpl-form-input" placeholder="输入电话3"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="mate" class="am-u-sm-3 am-form-label">配偶</label>
+                                                    <div class="am-u-sm-9">
+                                                        <input th:field="*{mate}" name="mate"type="text" class="tpl-form-input" id="mate" placeholder="输入配偶" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="address" class="am-u-sm-3 am-form-label">地址</label>
+                                                    <div class="am-u-sm-9">
+                                                        <input th:field="*{address}" name="address"type="text" class="tpl-form-input" id="address" placeholder="输入地址" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="politics" class="am-u-sm-3 am-form-label">政治面貌</label>
+                                                    <div class="am-u-sm-9">
+                                                        <select name="politics" id="politics" data-am-selected="{searchBox: 1}" style="display: none;">
+                                                            <option th:selected="(${user.politics.politicsId} eq ${politics.politicsId})?'true':'false'" th:each="politics:${politicss}" th:value="${politics.politicsId}" th:text="${politics.politicsName}">政治面貌/option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="department" class="am-u-sm-3 am-form-label">部门</label>
+                                                    <div class="am-u-sm-9">
+                                                        <select name="department" id="department" data-am-selected="{searchBox: 1}" style="display: none;">
+                                                            <option th:selected="(${user.department.departmentId} eq ${department.departmentId})?'true':'false'" th:each="department:${departments}" th:value="${department.departmentId}" th:text="${department.departmentName}">部门</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="duty" class="am-u-sm-3 am-form-label">职务</label>
+                                                    <div class="am-u-sm-9">
+                                                        <select name="duty" id="duty" data-am-selected="{searchBox: 1}" style="display: none;">
+                                                            <option th:selected="(${user.duty.dutyId} eq ${duty.dutyId})?'true':'false'" th:each="duty:${duties}" th:value="${duty.dutyId}" th:text="${duty.dutyName}">职务</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="birth" class="am-u-sm-3 am-form-label">出生日期</label>
+                                                    <div class="am-u-sm-9">
+                                                        <input th:field="*{birth}" name="birth" id="birth" type="text" class="tpl-form-input" placeholder="出生日期" data-am-datepicker="" readonly="" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="workTime" class="am-u-sm-3 am-form-label">工作时间</label>
+                                                    <div class="am-u-sm-9">
+                                                        <input th:field="*{workTime}" name="workTime" id="workTime"  type="text" class="tpl-form-input" placeholder="工作时间" data-am-datepicker="" readonly="" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="retireTime" class="am-u-sm-3 am-form-label">退休时间</label>
+                                                    <div class="am-u-sm-9">
+                                                        <input th:field="*{retireTime}" name="retireTime" id="retireTime" type="text" class="tpl-form-input"  placeholder="退休时间" data-am-datepicker="" readonly="" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <label for="other" class="am-u-sm-3 am-form-label">备注</label>
+                                                    <div class="am-u-sm-9">
+                                                        <input th:field="*{other}" name="other"type="text" class="tpl-form-input" id="other" placeholder="输入备注" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <div class="am-u-sm-9 am-u-sm-push-3">
+                                                        <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+
+                                        </div>
+
+                                        <div class="am-tab-panel am-fade" id="tab3">
+
+                                            <form class="am-form tpl-form-border-form tpl-form-border-br" action="#" th:object="${user}">
+                                                <div class="am-form-group">
+                                                    <label for="file" class="am-u-sm-3 am-form-label">图片</label>
+                                                    <div class="am-u-sm-9">
+                                                        <div class="am-form-group am-form-file">
+                                                            <div class="tpl-form-file-img">
+                                                                <img id="avatarPreview" th:src="@{/img/user.jpg}" alt="" style="width: 100px; height: 100px">
+                                                            </div>
+                                                            <button type="button" class="am-btn am-btn-danger am-btn-sm">
+                                                                <i class="am-icon-cloud-upload"></i> 添加图片
+                                                            </button>
+                                                            <input id="file" name="file" accept="image/*" type="file" multiple="">
+                                                            <input id="imgUrl" name="imgUrl" type="hidden" th:field="*{imgUrl}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="am-form-group">
+                                                    <div class="am-u-sm-9 am-u-sm-push-3">
+                                                        <button type="button" id="updatePic" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div th:replace="fragments/footer::js"></div>
+</body>
+
+<!--jquery验证-->
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/messages_zh.min.js}"></script>
+
+<script>
+
+    /*window.URL.createObjectURL本地预览*/
+    function bindAvatar() {
+        $("#file").change(function () {
+            //得到上传文件的后缀，把后缀赋给imgUrl
+            var fileName=$("#file")[0].files[0].name;
+            var index = fileName.lastIndexOf('.');
+            var sub = fileName.substring(index);
+            $("#imgUrl").val(sub);
+            console.log("上传文件后缀:"+$("#imgUrl").val());
+
+            var obj=$("#file")[0].files[0];
+            var picSrc=window.URL.createObjectURL(obj);
+            $("#avatarPreview").attr('src',picSrc);
+            /*当图片加载后释放内存空间，但在jQuery3.2.1中会报错。浏览器关闭后也会自动释放*/
+            $("#avatarPreview").load(function (){
+                window.URL.revokeObjectURL(picSrc);
+            });
+        })
+    }
+
+    /*图片上传到服务器*/
+    function fileUpload(){
+        //需要上传的数据
+        var formData = new FormData();
+        var userId = $("#userId").val();
+        var jobNum = $("#jobNum").val();
+        var imgUrl = $("#imgUrl").val();
+
+        formData.append('file', $('#file')[0].files[0]);
+        formData.append('userId',userId);
+        formData.append('jobNum',jobNum);
+        formData.append('imgUrl',imgUrl);
+
+        $.ajax({
+            url: '/user/fileUpload',
+            type: 'POST',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false,
+            error: function ()
+            {
+                console.log("update picture error function!");
+                // toastr.error('图片上传出现错误！', '错误');
+                toastr.error('维护中！', '操作失败');
+            },
+            success: function (data){
+                if(data.rspCode == '000000') {
+                    // toastr.success('图片上传成功！', '操作成功')
+                }
+                else {
+                    // toastr.error('图片上传失败！', '操作失败');
+                }
+                toastr.error('维护中！', '操作失败');
+            }
+
+        });
+    }
+
+
+    $(function() {
+        //回显图片
+        bindAvatar();
+
+        //日期比较，date1<date2返回true
+        $.validator.methods.compareDate = function(value, element, param) {
+            var startDate = $(param).val();
+            var date1 = new Date(Date.parse(startDate.replace("-", "/")));
+            var date2 = new Date(Date.parse(value.replace("-", "/")));
+            return date1 < date2;
+        };
+
+        // 提交时验证表单，small元素包裹错误信息
+        $("#updateOneForm").validate({
+            rules:{
+                birth:{
+                    required:true
+                },
+                workTime:{
+                    required:true,
+                    compareDate:"#birth"
+                },
+                retireTime:{
+                    required:true,
+                    compareDate:"#workTime"
+                }
+            },
+
+            errorPlacement: function(error, element) {
+                $( element ).closest( "div" ).append( error );
+            },
+            errorElement: "small",
+            messages:{
+                tel1:{
+                    minlength: "电话7-11位",
+                    maxlength: "电话7-11位"
+                },
+                tel2:{
+                    minlength: "电话7-11位",
+                    maxlength: "电话7-11位"
+                },
+                tel3:{
+                    minlength: "电话7-11位",
+                    maxlength: "电话7-11位"
+                },
+                workTime:{
+                    compareDate:"工作时间必须大于出生时间"
+                },
+                retireTime:{
+                    compareDate:"退休时间必须大于工作时间"
+                }
+            },
+            submitHandler:function(form){
+                var myform = $("#updateOneForm");
+                $.ajax({
+                    url: "/user/update",
+                    type: "POST",
+                    data: myform.serialize(),
+                    dataType: "json",
+                    error: function ()
+                    {
+                        console.log("user_update error function!");
+                        toastr.error('出现错误！', '错误');
+                    },
+                    success: function (data)
+                    {
+                        console.log("user_update success function!");
+
+                        if(data.rspCode == '000000') {
+                            toastr.success('修改用户成功！', '操作成功');
+                        }
+                        else {
+                            toastr.error('修改用户失败！', '操作失败');
+                        }
+                    }
+                });
+
+            }
+        });
+
+          $("#updatePic").on('click',function () {
+              fileUpload();
+          });
+    });
+</script>
+
+</html>
