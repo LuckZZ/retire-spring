@@ -122,7 +122,12 @@ public class UserController extends BaseController{
     @LoggerManage(description = "用户详细信息界面")
     public String datailView(@PathVariable String userId, Model model){
         User user = userService.findOne(Integer.parseInt(userId));
+//        电话String切割
+        String tel = user.getTel();
+        List<String> tels = DataUtils.turnToList(tel);
+
         model.addAttribute("user",user);
+        model.addAttribute("tels",tels);
         return "admin/user_datail";
     }
 

@@ -1,16 +1,18 @@
 package com.example;
 
 import com.example.domain.enums.CanLogin;
+import com.example.utils.DataUtils;
 import com.example.utils.DateUtils;
+
+import java.util.List;
 
 public class MyMain {
     public static void main(String[] args) {
-/*        long time = DateUtils.getCurrentTime();
-        System.out.println(time);
-        String data = DateUtils.getDateSequence();
-        System.out.println(data);*/
-        CanLogin canLogin = CanLogin.yes;
-        System.out.println(canLogin);
-        System.out.println(canLogin.toString());
+//        DataUtils.
+        String s = "1234567,1234567,1234567";
+        List<String> list =  DataUtils.turnToList(s);
+        for (String str : list){
+            System.out.println(str);
+        }
     }
 }

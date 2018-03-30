@@ -1,5 +1,8 @@
 package com.example.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class DataUtils {
 
     /**
@@ -13,5 +16,16 @@ public class DataUtils {
             ints[i] = new Integer(strs[i]);
         }
         return ints;
+    }
+
+    /**
+     * 把包含“，”或“,”的字符串切割成list
+     * @param str
+     * @return
+     */
+    public static List<String> turnToList(String str){
+        String[] s = str.split("，|\\,");
+        List<String> list = Arrays.asList(s);
+        return list;
     }
 }
