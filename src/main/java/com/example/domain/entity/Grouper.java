@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Grouper {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "group_id")
+    @Column(name = "grouper_id")
     private Integer grouperId;      //id
 
     @OneToOne

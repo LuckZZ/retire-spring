@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao> implements UserService{
@@ -39,5 +40,15 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
 //        保存，由于userId不变，执行的是update语句
         userDao.save(user);
         return true;
+    }
+
+    @Override
+    public List<User> findAllByJobNum(String jobNum) {
+        return userDao.findAllByJobNum(jobNum);
+    }
+
+    @Override
+    public List<User> findAllByName(String name) {
+        return userDao.findAllByName(name);
     }
 }

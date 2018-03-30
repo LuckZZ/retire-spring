@@ -18,8 +18,8 @@ public class GrouperController {
     @RequestMapping("/grouperList")
     @LoggerManage(description = "组长列表")
     public String grouperList(Model model){
-        List<Grouper> geroupers = grouperService.findAll();
-        model.addAttribute("geroupers",geroupers);
+        List<Grouper> groupers = grouperService.findAll();
+        model.addAttribute("groupers",groupers);
         return "admin/grouper_list";
     }
 
