@@ -4,6 +4,7 @@ import com.example.comm.aop.LoggerManage;
 import com.example.domain.entity.*;
 import com.example.domain.enums.Exist;
 import com.example.domain.enums.Gender;
+import com.example.domain.enums.Rank;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.*;
@@ -113,6 +114,8 @@ public class UserController extends BaseController{
             return  result(ExceptionMsg.FAILED);
         }
         user.setExist(Exist.yes);
+//        默认组员
+        user.setRank(Rank.user);
 //            保存
         logger.info(user.getExist());
         userService.save(user);

@@ -2,6 +2,7 @@ package com.example.domain.entity;
 
 import com.example.domain.enums.Exist;
 import com.example.domain.enums.Gender;
+import com.example.domain.enums.Rank;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,6 +33,9 @@ public class User extends BaseEntity implements Serializable,Cloneable{
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;        //多对一,多的一方数据表生成group_id列
+
+    @Column
+    private Rank rank;
 
     @Column
     private Gender gender;
@@ -120,6 +124,14 @@ public class User extends BaseEntity implements Serializable,Cloneable{
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public Rank getRank() {
+        return rank;
+    }
+
+    public void setRank(Rank rank) {
+        this.rank = rank;
     }
 
     public Gender getGender() {

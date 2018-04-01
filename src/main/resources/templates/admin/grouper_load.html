@@ -9,6 +9,7 @@
             <th>工号</th>
             <th>姓名</th>
             <th>组别</th>
+            <th>类型</th>
             <th>操作</th>
         </tr>
         </thead>
@@ -16,8 +17,9 @@
         <tr th:each="userLoad:${usersLoad}">
             <td th:text="${userLoad.userId}">1</td>
             <td th:text="${userLoad.jobNum}">123456</td>
-            <td th:text="${userLoad.name}">组长</td>
+            <td th:text="${userLoad.name}">组长名字</td>
             <td th:text="${userLoad.group.groupName}">组别一</td>
+            <td th:text="${userLoad.rank.name}">组长或组员</td>
             <td>
                 <div class="tpl-table-black-operation">
                     <a href="javascript:;">

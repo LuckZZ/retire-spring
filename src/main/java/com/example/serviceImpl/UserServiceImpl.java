@@ -36,6 +36,8 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
 //        用户存在的状态不变
         User oldUser = userDao.findOne(user.getUserId());
         user.setExist(oldUser.getExist());
+//        用户身份不变
+        user.setRank(oldUser.getRank());
 
 //        保存，由于userId不变，执行的是update语句
         userDao.save(user);
