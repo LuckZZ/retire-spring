@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<body>
+<!--此页面展示用户，用于增加组长功能-->
+    <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>工号</th>
+            <th>姓名</th>
+            <th>组别</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="userLoad:${usersLoad}">
+            <td th:text="${userLoad.userId}">1</td>
+            <td th:text="${userLoad.jobNum}">123456</td>
+            <td th:text="${userLoad.name}">组长</td>
+            <td th:text="${userLoad.group.groupName}">组别一</td>
+            <td>
+                <div class="tpl-table-black-operation">
+                    <a href="javascript:;">
+                        <i class="am-icon-pencil"></i> 编辑
+                    </a>
+                </div>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</body>
+</html>

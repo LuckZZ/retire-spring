@@ -49,32 +49,6 @@ public class UserController extends BaseController{
     }
 
     /**
-     * 通过jobNum获得List<User>
-     * @param jobNum
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping("/userListByJobNum")
-    @LoggerManage(description = "组员列表ByJobNum")
-    public Response findAllByJobNum(@RequestParam(value = "jobNum")String jobNum){
-       List<User> users = userService.findAllByJobNum(jobNum);
-        return result(users,ExceptionMsg.SUCCESS);
-    }
-
-    /**
-     * 通过name获得List<User>
-     * @param name
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping("/userListByName")
-    @LoggerManage(description = "组员列表ByName")
-    public Response findAllByName(@RequestParam(value = "name") String name){
-        List<User> users = userService.findAllByName(name);
-        return result(users,ExceptionMsg.SUCCESS);
-    }
-
-    /**
      *
      * @param jobNum
      * @return false：用户存在 true：用户不存
