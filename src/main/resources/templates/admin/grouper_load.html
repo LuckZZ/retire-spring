@@ -22,9 +22,7 @@
             <td th:text="${userLoad.rank.name}">组长或组员</td>
             <td>
                 <div class="tpl-table-black-operation">
-                    <a href="javascript:;">
-                        <i class="am-icon-pencil"></i> 编辑
-                    </a>
+                    <a th:attr="data-id=${userLoad.userId}" href="javascript:;" class="one-change" th:text="(${userLoad.rank.toString()} eq 'grouper')?'设为组员':'设为组长'"></a>
                 </div>
             </td>
         </tr>
@@ -32,4 +30,36 @@
         </tbody>
     </table>
 </body>
+<script>
+    $(function () {
+        //改变
+        $(".one-change").on('click',function(){
+            var id = $(this).data('id');
+            $.ajax({
+                url: "/grouper/changeRank",
+                type: "POST",
+                data:{
+                    userId:id
+                },
+                error: function ()
+                {
+                    console.log("grouper_add error function!");
+                    toastr.error('出现错误！', '错误');
+                },
+                success: function (data)
+                {
+                    console.log("grouper_add success function!");
+
+                    if(data.rspCode == '000000') {
+                        toastr.success('更改用户 Rank成功！', '操作成功');
+                    }
+                    else {
+                        toastr.error('更改用户 Rank失败！', '操作失败');
+                    }
+                }
+            });
+            loadContent();
+        });
+    });
+</script>
 </html>

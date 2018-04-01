@@ -172,22 +172,33 @@
             }
         });
 
-        //点击搜索按钮，触发
-        $("#select-btn").on('click',function() {
-            var key = $("#select-key").val();
-            var input = $("#select-input").val();
-            if(key == 'jobNum'){
-                $("#result-modal").load('/grouper/addHtml/1',{value:input});
-            }else if(key == 'name'){
-                $("#result-modal").load('/grouper/addHtml/2',{value:input});
-            }
-        });
-        
         //打开模态框
         $("#addGrouper").on('click',function() {
             $('#addGrouper-modal').modal();
         });
+
+        //设置模态框关闭时，执行
+        $('#addGrouper-modal').on('close.modal.amui', function(){
+            //刷新
+            window.location.reload();
+        });
+
+        //点击搜索按钮，触发
+        $("#select-btn").on('click',function() {
+            loadContent();
+        });
     });
+
+    //搜索，把内容加载到模态框
+    function loadContent() {
+        var key = $("#select-key").val();
+        var input = $("#select-input").val();
+        if(key == 'jobNum'){
+            $("#result-modal").load('/grouper/addHtml/1',{value:input});
+        }else if(key == 'name'){
+            $("#result-modal").load('/grouper/addHtml/2',{value:input});
+        }
+    }
     
 </script>
 

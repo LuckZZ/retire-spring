@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.RetireSpringApplication;
+import com.example.dao.GrouperDao;
 import com.example.domain.entity.Admin;
 import com.example.domain.entity.User;
 import com.example.domain.enums.CanLogin;
@@ -15,6 +16,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class UserServiceTest {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GrouperDao grouperDao;
 
     /**
      * 测试增加管理员
@@ -31,15 +35,20 @@ public class UserServiceTest {
 
     @Test
     public void findOne(){
-        User user = userService.findOne(2);
+        User user = userService.findOne(4);
         System.out.println(user.toString());
     }
 
     @Test
     public void update(){
-        User user = userService.findOne(2);
+        User user = userService.findOne(4);
         user.setName("abcd");
         userService.save(user);
+    }
+
+    public void delete(){
+        User user = userService.findOne(4);
+        grouperDao.deleteByUser(user);
     }
 
 }

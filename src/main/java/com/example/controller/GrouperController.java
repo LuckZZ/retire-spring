@@ -3,6 +3,8 @@ package com.example.controller;
 import com.example.comm.aop.LoggerManage;
 import com.example.domain.entity.Grouper;
 import com.example.domain.entity.User;
+import com.example.domain.result.ExceptionMsg;
+import com.example.domain.result.Response;
 import com.example.service.GrouperService;
 import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,18 @@ public class GrouperController extends BaseController{
         }
         model.addAttribute("usersLoad",usersLoad);
         return "admin/grouper_load";
+    }
+
+    @ResponseBody
+    @RequestMapping("/changeRank")
+    @LoggerManage(description = "更改用户type")
+    public Response changeRank(@RequestParam(value = "userId") String userId){
+        Integer id = Integer.parseInt(userId);
+        boolean b = grouperService.notGrouper(id);
+        if (b){
+            return result(ExceptionMsg.SUCCESS);
+        }
+        return result(ExceptionMsg.FAILED);
     }
 
 }
