@@ -61,4 +61,25 @@ public class GrouperController extends BaseController{
         return result(ExceptionMsg.FAILED);
     }
 
+    @ResponseBody
+    @RequestMapping("/changeCanLogin")
+    @LoggerManage(description = "切换组长登陆权限")
+    public Response changeCanLogin(@RequestParam(value = "grouperId") String grouperId){
+        Integer id = Integer.parseInt(grouperId);
+        boolean b = grouperService.notCanLogin(id);
+        if (b){
+            return result(ExceptionMsg.SUCCESS);
+        }
+        return result(ExceptionMsg.FAILED);
+    }
+
+    @ResponseBody
+    @RequestMapping("/updatePwd")
+    @LoggerManage(description = "重置组长密码")
+    public Response updatePwd(@RequestParam(value = "grouperId") String grouperId,@RequestParam(value = "password") String password){
+        Integer id = Integer.parseInt(grouperId);
+        grouperService.updatePwd(password,id);
+        return result(ExceptionMsg.SUCCESS);
+    }
+
 }

@@ -47,4 +47,23 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
         userDao.updateRank(newRank,userId);
         return true;
     }
+
+    @Transactional
+    @Override
+    public boolean notCanLogin(Integer grouperId) {
+        Grouper grouper = grouperDao.findOne(grouperId);
+        CanLogin oldCanLogin = grouper.getCanLogin();
+        if (oldCanLogin == CanLogin.no){
+            grouperDao.updateCanLogin(CanLogin.yes,grouperId);
+        }else if(oldCanLogin == CanLogin.yes){
+            grouperDao.updateCanLogin(CanLogin.no,grouperId);
+        }
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public int updatePwd(String password, Integer grouperId) {
+        return grouperDao.updatePwd(password,grouperId);
+    }
 }
