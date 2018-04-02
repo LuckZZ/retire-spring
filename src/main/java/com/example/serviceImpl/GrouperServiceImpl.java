@@ -66,4 +66,23 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
     public int updatePwd(String password, Integer grouperId) {
         return grouperDao.updatePwd(password,grouperId);
     }
+
+    /**
+     * 需要两个循环
+     * jpa中删除，不是一个一个删除，而是把数据先全部select，再delete
+     * @param grouperIds
+     */
+    @Transactional
+    @Override
+    public void remove(Integer[] grouperIds) {
+        for (Integer grouperId : grouperIds){
+            Integer userId = new Integer(grouperDao.findOne(grouperId).getUser().getUserId());
+            //            设置user的rank
+            userDao.updateRank(Rank.user,userId);
+        }
+        for (Integer grouperId : grouperIds){
+            //            删除组长
+            grouperDao.delete(grouperId);
+        }
+     }
 }

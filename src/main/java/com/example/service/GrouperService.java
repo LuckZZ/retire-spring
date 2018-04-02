@@ -19,4 +19,10 @@ public interface GrouperService extends BaseCrudService<Grouper,Integer>{
     boolean notCanLogin(Integer grouperId);
 
     int updatePwd(String password, Integer grouperId);
+
+    /**
+     * 从组长表中删除组长，并设置用户表用户的rank值
+     * @param grouperIds
+     */
+    void remove(Integer[] grouperIds);
 }

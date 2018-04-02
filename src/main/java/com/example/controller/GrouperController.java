@@ -7,6 +7,7 @@ import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.GrouperService;
 import com.example.service.UserService;
+import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequestMapping("/grouper")
@@ -82,4 +84,17 @@ public class GrouperController extends BaseController{
         return result(ExceptionMsg.SUCCESS);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/remove")
+    @LoggerManage(description = "移除组长")
+    public Response remove(HttpServletRequest request){
+        String[] grouperIds = request.getParameterValues("grouperId");
+        Integer[] ids = DataUtils.turn(grouperIds);
+        try {
+            grouperService.remove(ids);
+            return result(ExceptionMsg.SUCCESS);
+        }catch (Exception e){
+            return result(ExceptionMsg.FAILED);
+        }
+    }
 }

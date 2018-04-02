@@ -153,11 +153,13 @@
             //获得密码
             var name = $tr.find('td').eq(3).html();
 
-            $("#my-confirm-hd").text("删除用户");
+            var $oneDel= $('#my-confirm');
 
-            $("#my-confirm-bd").html("工号：" + jobNum+"<br/> 用户名："+name);
+            $oneDel.find(".am-modal-hd").text("删除用户");
 
-            $('#my-confirm').modal({
+            $oneDel.find(".am-modal-bd").html("工号：" + jobNum+"<br/> 用户名："+name);
+
+            $oneDel.modal({
                 relatedTarget: this,
                 onConfirm: function(options) {
                     var $link = $(this.relatedTarget);
@@ -204,11 +206,13 @@
                 checkedId.push($(this).val());
             });
 
-            $("#my-confirm-hd").text("批量删除");
+            var $oneDel= $('#my-confirm');
 
-            $("#my-confirm-bd").html("");
+            $oneDel.find(".am-modal-hd").text("批量删除");
 
-            $('#my-confirm').modal({
+            $oneDel.find(".am-modal-bd").html("");
+
+            $oneDel.modal({
                 onConfirm: function(options) {
 
                     $.ajaxSettings.traditional=true;

@@ -54,10 +54,10 @@
                             </div>
 
                             <div class="am-u-sm-12">
-                                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="table-list">
                                     <thead>
                                     <tr>
-                                        <th><input type="checkbox"/></th>
+                                        <th><input id="allChecked" type="checkbox" value="all"/></th>
                                         <th>序号</th>
                                         <th>工号</th>
                                         <th>姓名</th>
@@ -69,7 +69,7 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="grouper:${groupers}">
-                                        <td><input type="checkbox"/></td>
+                                        <td><input type="checkbox" th:value="${grouper.grouperId}" name="che"/></td>
                                         <td th:text="${grouper.grouperId}">1</td>
                                         <td th:text="${grouper.user.jobNum}">123456</td>
                                         <td th:text="${grouper.user.name}">组长</td>
@@ -82,7 +82,7 @@
                                                     <a href="javascript:;" class="am-dropdown-toggle" data-am-dropdown-toggle>
                                                         <i class="am-icon-pencil"></i> 编辑
                                                     </a>
-                                                    <a href="javascript:;" class="tpl-table-black-operation-del">
+                                                    <a th:attr="data-id=${grouper.grouperId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
                                                         <i class="am-icon-trash"></i> 移除
                                                     </a>
                                                 </div>
@@ -121,10 +121,10 @@
 
 <div class="am-modal am-modal-confirm" tabindex="-1" id="addGrouper-modal">
     <div class="am-modal-dialog">
-        <div class="am-modal-hd" id="my-confirm-hd">新增组长
+        <div class="am-modal-hd">新增组长
             <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
         </div>
-        <div class="am-modal-bd" id="my-confirm-bd">
+        <div class="am-modal-bd">
             <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                 <br/>
             </div>
@@ -190,6 +190,9 @@
         </div>
     </div>
 </div>
+
+<!--alert-->
+<div th:replace="fragments/alert::alert_section"></div>
 
 <div th:replace="fragments/footer::js"></div>
 </body>
@@ -324,6 +327,109 @@
                     }
                 });
             }
+        });
+
+
+        //移除组长
+        $(".one-del").on('click',function () {
+            //当前元素查找父级元素
+            var $tr = $(this).closest('tr');
+            //获得工号
+            var jobNum = $tr.find('td').eq(2).html();
+            //获得密码
+            var name = $tr.find('td').eq(3).html();
+
+            var $oneDel= $('#my-confirm');
+
+            $oneDel.find(".am-modal-hd").text("移除组长");
+
+            $oneDel.find(".am-modal-bd").html("工号：" + jobNum+"<br/> 用户名："+name);
+
+            $oneDel.modal({
+                relatedTarget: this,
+                onConfirm: function(options) {
+                    var $link = $(this.relatedTarget);
+                    var id = $link.data('id');
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        dataType: 'json',
+                        data:{
+                            grouperId:id
+                        },
+                        url: '/grouper/remove',
+                        error : function(XMLHttpRequest, textStatus, errorThrown) {
+                            toastr.error('出现错误！', '错误');
+                        },
+                        success: function(data){
+                            if(data.rspCode == '000000') {
+                                toastr.success('移除组长成功！', '操作成功');
+                                location.reload();
+                            }
+                            else {
+                                toastr.error('移除组长失败！', '操作失败');
+                            }
+                        }
+                    });
+
+                },
+                // closeOnConfirm: false,
+                onCancel: function() {
+                }
+            });
+        });
+
+
+        //全选
+        $('#allChecked').change(function(){
+            $('#table-list').find(':checkbox').prop('checked',$(this).is(':checked')?true:false);
+        });
+
+        //删除已选择
+        $("#checked-del").on('click',function () {
+            var checkedId = new Array();
+            $("input:checkbox[name='che']:checked").each(function() {
+                checkedId.push($(this).val());
+            });
+
+            var $mulDel= $('#my-confirm');
+
+            $mulDel.find(".am-modal-hd").text("批量删除");
+
+            $mulDel.find(".am-modal-bd").html("");
+
+             $mulDel.modal({
+                onConfirm: function(options) {
+
+                    $.ajaxSettings.traditional=true;
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        dataType: 'json',
+                        data:{
+                            grouperId:checkedId
+                        },
+                        url: '/grouper/remove',
+                        error : function(XMLHttpRequest, textStatus, errorThrown) {
+                            toastr.error('出现错误！', '错误');
+                        },
+                        success: function(data){
+                            if(data.rspCode == '000000') {
+                                toastr.success('批量删除成功！', '操作成功');
+                                location.reload();
+                            }
+                            else {
+                                toastr.error('批量删除失败！', '操作失败');
+                            }
+                        }
+                    });
+
+                },
+                // closeOnConfirm: false,
+                onCancel: function() {
+                }
+            });
+
         });
 
     });
