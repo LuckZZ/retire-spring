@@ -64,3 +64,33 @@ function initFollows(gGroups) {
         $("#newGroup").after(group)
     }
 }
+
+/**
+ * ajax提交form
+ * @param paramForm
+ * @param paramUrl
+ */
+function myFormAjax(paramForm,paramUrl) {
+    $.ajax({
+        url: paramUrl,
+        type: "POST",
+        data: paramForm.serialize(),
+        dataType: "json",
+        error: function ()
+        {
+            console.log("myFormAjax error function!");
+            toastr.error('出现错误！', '错误');
+        },
+        success: function (data)
+        {
+            console.log("myFormAjax success function!");
+
+            if(data.rspCode == '000000') {
+                toastr.success('操作成功！', '操作成功');
+            }
+            else {
+                toastr.error('操作失败！', '操作失败');
+            }
+        }
+    });
+}

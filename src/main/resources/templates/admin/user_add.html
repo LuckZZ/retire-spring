@@ -36,14 +36,14 @@
                                         <label for="jobNum" class="am-u-sm-3 am-form-label">工号</label>
                                         <div class="am-u-sm-9">
                                             <!--本地验证和ajax验证-->
-                                            <input name="jobNum" minlength="6" maxlength="6" type="number" class="tpl-form-input" id="jobNum" placeholder="输入工号(6位)" required/>
+                                            <input name="jobNum" type="number" class="tpl-form-input" id="jobNum" placeholder="输入工号(6位)"/>
                                         </div>
                                     </div>
 
                                     <div class="am-form-group">
                                         <label for="name" class="am-u-sm-3 am-form-label">姓名</label>
                                         <div class="am-u-sm-9">
-                                            <input name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名" required>
+                                            <input name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名">
                                         </div>
                                     </div>
 
@@ -82,27 +82,27 @@
                                             <label>电话</label>
                                         </div>
                                         <div class="am-u-sm-3">
-                                            <input name="tel1"type="number" minlength="7" maxlength="11" class="tpl-form-input" placeholder="输入电话1"/>
+                                            <input name="tel1"type="number" class="tpl-form-input" placeholder="输入电话1"/>
                                         </div>
                                         <div class="am-u-sm-3">
-                                            <input name="tel2"type="number" minlength="7" maxlength="11" class="tpl-form-input" placeholder="输入电话2"/>
+                                            <input name="tel2"type="number" class="tpl-form-input" placeholder="输入电话2"/>
                                         </div>
                                         <div class="am-u-sm-3">
-                                            <input name="tel3"type="number" minlength="7" maxlength="11" class="tpl-form-input" placeholder="输入电话3"/>
+                                            <input name="tel3"type="number" class="tpl-form-input" placeholder="输入电话3"/>
                                         </div>
                                     </div>
 
                                      <div class="am-form-group">
                                          <label for="mate" class="am-u-sm-3 am-form-label">配偶</label>
                                          <div class="am-u-sm-9">
-                                             <input name="mate"type="text" class="tpl-form-input" id="mate" placeholder="输入配偶" required>
+                                             <input name="mate"type="text" class="tpl-form-input" id="mate" placeholder="输入配偶">
                                          </div>
                                      </div>
 
                                      <div class="am-form-group">
                                          <label for="address" class="am-u-sm-3 am-form-label">地址</label>
                                          <div class="am-u-sm-9">
-                                             <input name="address"type="text" class="tpl-form-input" id="address" placeholder="输入地址" required>
+                                             <input name="address"type="text" class="tpl-form-input" id="address" placeholder="输入地址">
                                          </div>
                                      </div>
 
@@ -136,28 +136,28 @@
                                       <div class="am-form-group">
                                           <label for="birth" class="am-u-sm-3 am-form-label">出生日期</label>
                                           <div class="am-u-sm-9">
-                                              <input name="birth" id="birth" type="text" class="tpl-form-input" placeholder="出生日期" data-am-datepicker="" readonly="" required>
+                                              <input name="birth" id="birth" type="text" class="tpl-form-input" placeholder="出生日期" data-am-datepicker="" readonly="">
                                           </div>
                                       </div>
 
                                       <div class="am-form-group">
                                           <label for="workTime" class="am-u-sm-3 am-form-label">工作时间</label>
                                           <div class="am-u-sm-9">
-                                              <input name="workTime" id="workTime"  type="text" class="tpl-form-input" placeholder="工作时间" data-am-datepicker="" readonly="" required>
+                                              <input name="workTime" id="workTime"  type="text" class="tpl-form-input" placeholder="工作时间" data-am-datepicker="" readonly="">
                                           </div>
                                       </div>
 
                                       <div class="am-form-group">
                                           <label for="retireTime" class="am-u-sm-3 am-form-label">退休时间</label>
                                           <div class="am-u-sm-9">
-                                              <input name="retireTime" id="retireTime" type="text" class="tpl-form-input"  placeholder="退休时间" data-am-datepicker="" readonly="" required>
+                                              <input name="retireTime" id="retireTime" type="text" class="tpl-form-input"  placeholder="退休时间" data-am-datepicker="" readonly="">
                                           </div>
                                       </div>
 
                                       <div class="am-form-group">
                                           <label for="other" class="am-u-sm-3 am-form-label">备注</label>
                                           <div class="am-u-sm-9">
-                                              <input name="other"type="text" class="tpl-form-input" id="other" placeholder="输入备注" required>
+                                              <input name="other" type="text" class="tpl-form-input" id="other" placeholder="输入备注">
                                           </div>
                                       </div>
 
@@ -183,17 +183,11 @@
 <script th:src="@{/js/jquery.validate.min.js}"></script>
 <script th:src="@{/js/messages_zh.min.js}"></script>
 
+<script th:src="@{/js/l-validate.js}"></script>
+
 <script>
 
     $(function() {
-
-        //日期比较，date1<date2返回true
-        $.validator.methods.compareDate = function(value, element, param) {
-            var startDate = $(param).val();
-            var date1 = new Date(Date.parse(startDate.replace("-", "/")));
-            var date2 = new Date(Date.parse(value.replace("-", "/")));
-            return date1 < date2;
-        };
 
         // 提交时验证表单，small元素包裹错误信息
         $("#addUserForm").validate({
@@ -210,70 +204,13 @@
                             }
                         }
                     }
-                },
-                birth:{
-                    required:true
-                },
-                workTime:{
-                    required:true,
-                    compareDate:"#birth"
-                },
-                retireTime:{
-                    required:true,
-                    compareDate:"#workTime"
                 }
-            },
 
-            errorPlacement: function(error, element) {
-                $( element ).closest( "div" ).append( error );
-            },
-            errorElement: "small",
-            messages:{
-                jobNum:{
-                    minlength: "工号必须6位",
-                    maxlength: "工号必须6位",
-                    remote:"此工号已存在，重新输入"
-                },
-                tel1:{
-                    minlength: "电话7-11位",
-                    maxlength: "电话7-11位"
-                },
-                tel1:{
-                    minlength: "电话7-11位",
-                    maxlength: "电话7-11位"
-                },
-                workTime:{
-                    compareDate:"工作时间必须大于出生时间"
-                },
-                retireTime:{
-                    compareDate:"退休时间必须大于工作时间"
-                }
             },
             submitHandler:function(form){
                 var myform = $("#addUserForm");
-                $.ajax({
-                    url: "/user/save",
-                    type: "POST",
-                    data: myform.serialize(),
-                    dataType: "json",
-                    error: function ()
-                    {
-                        console.log("user_add error function!");
-                        toastr.error('出现错误！', '错误');
-                    },
-                    success: function (data)
-                    {
-                        console.log("user_add success function!");
-
-                        if(data.rspCode == '000000') {
-                            toastr.success('增加用户成功！', '操作成功');
-                        }
-                        else {
-                            toastr.error('增加用户失败！', '操作失败');
-                        }
-                    }
-                });
-
+                //ajax提交form
+                myFormAjax(myform,"/user/save");
             }
         });
     });

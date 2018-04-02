@@ -44,14 +44,14 @@
                                                     <label for="jobNum" class="am-u-sm-3 am-form-label">工号</label>
                                                     <div class="am-u-sm-9">
                                                         <input name="adminId" th:field="*{adminId}" type="hidden" id="adminId"/>
-                                                        <input name="jobNum" type="number" class="tpl-form-field" id="jobNum" placeholder="输入工号(6位)" th:field="*{jobNum}" disabled required/>
+                                                        <input name="jobNum" type="number" class="tpl-form-field" id="jobNum" placeholder="输入工号(6位)" th:field="*{jobNum}" disabled/>
                                                     </div>
                                                 </div>
 
                                                 <div class="am-form-group">
                                                     <label for="name" class="am-u-sm-3 am-form-label">姓名</label>
                                                     <div class="am-u-sm-9">
-                                                        <input name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名" th:field="*{name}" required>
+                                                        <input name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名" th:field="*{name}">
                                                     </div>
                                                 </div>
 
@@ -86,7 +86,7 @@
                                                 <div class="am-form-group">
                                                     <label for="password" class="am-u-sm-3 am-form-label">重置密码</label>
                                                     <div class="am-u-sm-9">
-                                                        <input name="password" type="password" minlength="6" maxlength="10" class="tpl-form-input" id="password" placeholder="输入密码(6-10位)" required>
+                                                        <input name="password" type="password" class="tpl-form-input" id="password" placeholder="输入密码(6-10位)">
                                                     </div>
                                                 </div>
 
@@ -94,7 +94,7 @@
                                                     <label for="passwordCfm" class="am-u-sm-3 am-form-label">确认密码</label>
                                                     <!--data-equal-to密码验证-->
                                                     <div class="am-u-sm-9">
-                                                        <input name="passwordCfm" type="password" minlength="6" maxlength="10" class="tpl-form-input" id="passwordCfm" placeholder="再次输入密码" required>
+                                                        <input name="passwordCfm" type="password" class="tpl-form-input" id="passwordCfm" placeholder="再次输入密码">
                                                     </div>
                                                 </div>
                                                 <div class="am-form-group">
@@ -151,6 +151,8 @@
 <!--jquery验证-->
 <script th:src="@{/js/jquery.validate.min.js}"></script>
 <script th:src="@{/js/messages_zh.min.js}"></script>
+
+<script th:src="@{/js/l-validate.js}"></script>
 
 <script>
 
@@ -220,88 +222,22 @@
 
         // 提交时验证表单，small元素包裹错误信息
         $("#updateOneForm").validate({
-            errorPlacement: function(error, element) {
-                $( element ).closest( "div" ).append( error );
-            },
-            errorElement: "small",
             submitHandler:function(form){
                 var myform = $("#updateOneForm");
-                $.ajax({
-                    url: "/admin/update/1",
-                    type: "POST",
-                    data: myform.serialize(),
-                    dataType: "json",
-                    error: function ()
-                    {
-                        console.log("admin_update error function!");
-                        toastr.error('出现错误！', '错误');
-                    },
-                    success: function (data)
-                    {
-                        console.log("admin_update success function!");
-
-                        if(data.rspCode == '000000') {
-                            toastr.success('修改管理员成功！', '操作成功');
-                        }
-                        else {
-                            toastr.error('修改管理员失败！', '操作失败');
-                        }
-                    }
-                });
-
+                //ajax提交form
+                myFormAjax(myform,"/admin/update/1");
             }
         });
 
 
         $("#updateTwoForm").validate({
-            rules:{
-                password:{
-
-                },
-                passwordCfm:{
-                    equalTo:"#password"
-                }
-            },
-            errorPlacement: function(error, element) {
-                $( element ).closest( "div" ).append( error );
-            },
-            errorElement: "small",
-            messages:{
-                passwordCfm:"两次密码输入不一致"
-            },
             submitHandler:function(form){
                 var myform = $("#updateTwoForm");
-                $.ajax({
-                    url: "/admin/update/2",
-                    type: "POST",
-                    data: myform.serialize(),
-                    dataType: "json",
-                    error: function ()
-                    {
-                        console.log("admin_update error function!");
-                        toastr.error('出现错误！', '错误');
-                    },
-                    success: function (data)
-                    {
-                        console.log("admin_update success function!");
-
-                        if(data.rspCode == '000000') {
-                            toastr.success('重置密码成功！', '操作成功');
-                        }
-                        else {
-                            toastr.error('重置密码失败！', '操作失败');
-                        }
-                    }
-                });
+                //ajax提交form
+                myFormAjax(myform,"/admin/update/2");
             }
         });
 
-
-        // updateThreeForm
-
-  /*      $("#updateThreeForm").submit(function () {
-            alert("This is test!");
-        });*/
           $("#updatePic").on('click',function () {
               fileUpload();
           });

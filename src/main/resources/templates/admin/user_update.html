@@ -225,6 +225,8 @@
 <script th:src="@{/js/jquery.validate.min.js}"></script>
 <script th:src="@{/js/messages_zh.min.js}"></script>
 
+<script th:src="@{/js/l-validate.js}"></script>
+
 <script>
 
     /*window.URL.createObjectURL本地预览*/
@@ -286,84 +288,15 @@
         });
     }
 
-
     $(function() {
         //回显图片
         bindAvatar();
 
-        //日期比较，date1<date2返回true
-        $.validator.methods.compareDate = function(value, element, param) {
-            var startDate = $(param).val();
-            var date1 = new Date(Date.parse(startDate.replace("-", "/")));
-            var date2 = new Date(Date.parse(value.replace("-", "/")));
-            return date1 < date2;
-        };
-
-        // 提交时验证表单，small元素包裹错误信息
         $("#updateOneForm").validate({
-            rules:{
-                birth:{
-                    required:true
-                },
-                workTime:{
-                    required:true,
-                    compareDate:"#birth"
-                },
-                retireTime:{
-                    required:true,
-                    compareDate:"#workTime"
-                }
-            },
-
-            errorPlacement: function(error, element) {
-                $( element ).closest( "div" ).append( error );
-            },
-            errorElement: "small",
-            messages:{
-                tel1:{
-                    minlength: "电话7-11位",
-                    maxlength: "电话7-11位"
-                },
-                tel2:{
-                    minlength: "电话7-11位",
-                    maxlength: "电话7-11位"
-                },
-                tel3:{
-                    minlength: "电话7-11位",
-                    maxlength: "电话7-11位"
-                },
-                workTime:{
-                    compareDate:"工作时间必须大于出生时间"
-                },
-                retireTime:{
-                    compareDate:"退休时间必须大于工作时间"
-                }
-            },
             submitHandler:function(form){
                 var myform = $("#updateOneForm");
-                $.ajax({
-                    url: "/user/update",
-                    type: "POST",
-                    data: myform.serialize(),
-                    dataType: "json",
-                    error: function ()
-                    {
-                        console.log("user_update error function!");
-                        toastr.error('出现错误！', '错误');
-                    },
-                    success: function (data)
-                    {
-                        console.log("user_update success function!");
-
-                        if(data.rspCode == '000000') {
-                            toastr.success('修改用户成功！', '操作成功');
-                        }
-                        else {
-                            toastr.error('修改用户失败！', '操作失败');
-                        }
-                    }
-                });
-
+                //ajax提交form
+                myFormAjax(myform,"/user/update");
             }
         });
 

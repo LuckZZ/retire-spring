@@ -35,21 +35,21 @@
                                         <label for="jobNum" class="am-u-sm-3 am-form-label">工号</label>
                                         <div class="am-u-sm-9">
                                             <!--本地验证和ajax验证-->
-                                            <input name="jobNum" minlength="6" maxlength="6" type="number" class="tpl-form-input" id="jobNum" placeholder="输入工号(6位)" required/>
+                                            <input name="jobNum" type="number" class="tpl-form-input" id="jobNum" placeholder="输入工号(6位)"/>
                                         </div>
                                     </div>
 
                                     <div class="am-form-group">
                                         <label for="name" class="am-u-sm-3 am-form-label">姓名</label>
                                         <div class="am-u-sm-9">
-                                            <input name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名" required>
+                                            <input name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名">
                                         </div>
                                     </div>
 
                                     <div class="am-form-group">
                                         <label for="password" class="am-u-sm-3 am-form-label">密码</label>
                                         <div class="am-u-sm-9">
-                                            <input name="password" type="password" minlength="6" maxlength="10" class="tpl-form-input" id="password" placeholder="输入密码(6-10位)" required>
+                                            <input name="password" type="password" class="tpl-form-input" id="password" placeholder="输入密码(6-10位)">
                                         </div>
                                     </div>
 
@@ -57,7 +57,7 @@
                                         <label for="passwordCfm" class="am-u-sm-3 am-form-label">确认密码</label>
                                         <!--data-equal-to密码验证-->
                                         <div class="am-u-sm-9">
-                                            <input name="passwordCfm" type="password" minlength="6" maxlength="10" class="tpl-form-input" id="passwordCfm" placeholder="再次输入密码" required>
+                                            <input name="passwordCfm" type="password" class="tpl-form-input" id="passwordCfm" placeholder="再次输入密码">
                                         </div>
                                     </div>
 
@@ -97,6 +97,8 @@
 <script th:src="@{/js/jquery.validate.min.js}"></script>
 <script th:src="@{/js/messages_zh.min.js}"></script>
 
+<script th:src="@{/js/l-validate.js}"></script>
+
 <script>
 
     $(function() {
@@ -116,51 +118,12 @@
                             }
                         }
                     }
-                },
-                password:{
-
-                },
-                passwordCfm:{
-                    equalTo:"#password"
                 }
-            },
-
-            errorPlacement: function(error, element) {
-                $( element ).closest( "div" ).append( error );
-            },
-            errorElement: "small",
-            messages:{
-                jobNum:{
-                    minlength: "工号必须6位",
-                    maxlength: "工号必须6位",
-                    remote:"此工号已存在，重新输入"
-                },
-                passwordCfm:"两次密码输入不一致"
             },
             submitHandler:function(form){
                 var myform = $("#addAdminForm");
-                $.ajax({
-                    url: "/admin/save",
-                    type: "POST",
-                    data: myform.serialize(),
-                    dataType: "json",
-                    error: function ()
-                    {
-                        console.log("admin_add error function!");
-                        toastr.error('出现错误！', '错误');
-                    },
-                    success: function (data)
-                    {
-                        console.log("admin_add success function!");
-
-                        if(data.rspCode == '000000') {
-                            toastr.success('增加管理员成功！', '操作成功');
-                        }
-                        else {
-                            toastr.error('增加管理员失败！', '操作失败');
-                        }
-                    }
-                });
+                //ajax提交form
+                myFormAjax(myform,"/admin/save");
 
             }
         });
