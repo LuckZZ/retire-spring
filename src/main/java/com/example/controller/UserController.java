@@ -180,7 +180,7 @@ public class UserController extends BaseController{
     @LoggerManage(description = "删除用户")
     public Response delete(HttpServletRequest request){
 
-        String[] userIds = request.getParameterValues("userId");
+        String[] userIds = request.getParameterValues("id");
         Integer[] ids = DataUtils.turn(userIds);
 
         try {

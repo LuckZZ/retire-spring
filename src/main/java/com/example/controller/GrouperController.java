@@ -88,7 +88,7 @@ public class GrouperController extends BaseController{
     @RequestMapping(value = "/remove")
     @LoggerManage(description = "移除组长")
     public Response remove(HttpServletRequest request){
-        String[] grouperIds = request.getParameterValues("grouperId");
+        String[] grouperIds = request.getParameterValues("id");
         Integer[] ids = DataUtils.turn(grouperIds);
         try {
             grouperService.remove(ids);

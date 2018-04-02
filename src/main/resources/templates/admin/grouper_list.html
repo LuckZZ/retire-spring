@@ -201,6 +201,9 @@
 <script th:src="@{/js/jquery.validate.min.js}"></script>
 <script th:src="@{/js/messages_zh.min.js}"></script>
 
+<script th:src="@{/js/l-checked.js}"></script>
+<script th:src="@{/js/l-modalAjax.js}"></script>
+
 <script>
     $(function(){
 
@@ -332,6 +335,7 @@
 
         //移除组长
         $(".one-del").on('click',function () {
+
             //当前元素查找父级元素
             var $tr = $(this).closest('tr');
             //获得工号
@@ -339,96 +343,28 @@
             //获得密码
             var name = $tr.find('td').eq(3).html();
 
-            var $oneDel= $('#my-confirm');
+            var $oneDel= $('#oneDel-modal');
 
-            $oneDel.find(".am-modal-hd").text("移除组长");
+            //设置工号、姓名
+            $oneDel.find("#jobNum").text(jobNum);
 
-            $oneDel.find(".am-modal-bd").html("工号：" + jobNum+"<br/> 用户名："+name);
+            $oneDel.find("#name").text(name);
 
-            $oneDel.modal({
-                relatedTarget: this,
-                onConfirm: function(options) {
-                    var $link = $(this.relatedTarget);
-                    var id = $link.data('id');
-                    $.ajax({
-                        async: false,
-                        type: 'POST',
-                        dataType: 'json',
-                        data:{
-                            grouperId:id
-                        },
-                        url: '/grouper/remove',
-                        error : function(XMLHttpRequest, textStatus, errorThrown) {
-                            toastr.error('出现错误！', '错误');
-                        },
-                        success: function(data){
-                            if(data.rspCode == '000000') {
-                                toastr.success('移除组长成功！', '操作成功');
-                                location.reload();
-                            }
-                            else {
-                                toastr.error('移除组长失败！', '操作失败');
-                            }
-                        }
-                    });
+            var myId = $(this).data('id');
 
-                },
-                // closeOnConfirm: false,
-                onCancel: function() {
-                }
-            });
+            oneDelModal($oneDel,'/grouper/remove',myId);
+
         });
 
-
-        //全选
-        $('#allChecked').change(function(){
-            $('#table-list').find(':checkbox').prop('checked',$(this).is(':checked')?true:false);
-        });
 
         //删除已选择
         $("#checked-del").on('click',function () {
-            var checkedId = new Array();
-            $("input:checkbox[name='che']:checked").each(function() {
-                checkedId.push($(this).val());
-            });
 
-            var $mulDel= $('#my-confirm');
+            var checkedId = checkedIds();
 
-            $mulDel.find(".am-modal-hd").text("批量删除");
+            var $mulDel= $('#mulDel-modal');
 
-            $mulDel.find(".am-modal-bd").html("");
-
-             $mulDel.modal({
-                onConfirm: function(options) {
-
-                    $.ajaxSettings.traditional=true;
-                    $.ajax({
-                        async: false,
-                        type: 'POST',
-                        dataType: 'json',
-                        data:{
-                            grouperId:checkedId
-                        },
-                        url: '/grouper/remove',
-                        error : function(XMLHttpRequest, textStatus, errorThrown) {
-                            toastr.error('出现错误！', '错误');
-                        },
-                        success: function(data){
-                            if(data.rspCode == '000000') {
-                                toastr.success('批量删除成功！', '操作成功');
-                                location.reload();
-                            }
-                            else {
-                                toastr.error('批量删除失败！', '操作失败');
-                            }
-                        }
-                    });
-
-                },
-                // closeOnConfirm: false,
-                onCancel: function() {
-                }
-            });
+            mulDelModal($mulDel,'/grouper/remove',checkedId);
 
         });
 

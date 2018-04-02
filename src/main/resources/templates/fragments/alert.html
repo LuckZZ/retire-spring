@@ -30,5 +30,42 @@
     </div>
 
 </div>
+
+<div th:fragment="alert_user_delete">
+
+    <!--用户批量删除modal-->
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="mulDel-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">批量删除</div>
+            <div class="am-modal-bd">
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+            </div>
+        </div>
+    </div>
+
+    <!--用户单个删除modal-->
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="oneDel-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">删除
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd">
+                <label>工号：</label>
+                <label id="jobNum"></label><br/>
+                <label>姓名：</label>
+                <label id="name"></label><br/>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 </body>
 </html>

@@ -86,7 +86,7 @@ public class AdminController extends BaseController{
     @LoggerManage(description = "删除管理员")
     public Response delete(HttpServletRequest request){
 
-        String[] adminIds = request.getParameterValues("adminId");
+        String[] adminIds = request.getParameterValues("id");
         Integer[] ids = DataUtils.turn(adminIds);
 
        if (!adminService.canDelete(ids)){
