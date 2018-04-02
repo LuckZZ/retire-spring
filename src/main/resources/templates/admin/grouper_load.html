@@ -34,6 +34,7 @@
     $(function () {
         //改变
         $(".one-change").on('click',function(){
+            console.log("a");
             var id = $(this).data('id');
             $.ajax({
                 url: "/grouper/changeRank",
@@ -48,8 +49,8 @@
                 },
                 success: function (data)
                 {
+                    loadContent();
                     console.log("grouper_add success function!");
-
                     if(data.rspCode == '000000') {
                         toastr.success('更改用户 Rank成功！', '操作成功');
                     }
@@ -58,7 +59,6 @@
                     }
                 }
             });
-            loadContent();
         });
     });
 </script>
