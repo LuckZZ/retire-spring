@@ -11,6 +11,7 @@ import com.example.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -60,5 +61,33 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
     @Override
     public boolean existsByGroupName(String groupName) {
         return groupDao.existsByGroupName(groupName);
+    }
+
+    @Transactional
+    @Override
+    public void delete(Integer[] groupIds) {
+//        查看是否有未分组，如果没有，新建未分组
+        Group newGroup;
+        if (!groupDao.existsByGroupName("未分组")){
+            newGroup = groupDao.save(new Group("未分组"));
+        }else {
+            newGroup = groupDao.findByGroupName("未分组");
+        }
+
+        for (Integer groupId : groupIds) {
+            Group group = groupDao.findOne(groupId);
+//            把此组的组长设为组员，没有组长，不进行设置
+            User userGrouper = userDao.findByGroupAndRank(group,Rank.grouper);
+            if (userGrouper != null){
+                userDao.updateRank(Rank.user,userGrouper.getUserId());
+            }
+            userDao.updateGroup(newGroup.getGroupId(), groupId);
+        }
+
+        for (Integer groupId : groupIds) {
+//            删除分组
+            groupDao.delete(groupId);
+        }
+
     }
 }

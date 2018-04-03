@@ -5,11 +5,13 @@ import com.example.domain.entity.Group;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.GroupService;
+import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequestMapping("/group")
@@ -65,6 +67,23 @@ public class GroupController extends BaseController{
 //            保存
         groupService.save(new Group(groupName));
         return result(ExceptionMsg.SUCCESS);
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/delete")
+    @LoggerManage(description = "删除组")
+    public Response delete(HttpServletRequest request){
+
+        String[] groupIds = request.getParameterValues("id");
+        Integer[] ids = DataUtils.turn(groupIds);
+
+        try {
+            groupService.delete(ids);
+            return result(ExceptionMsg.SUCCESS);
+        }catch (Exception e){
+            return result(ExceptionMsg.FAILED);
+        }
     }
 
 }

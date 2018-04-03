@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.RetireSpringApplication;
 import com.example.dao.GrouperDao;
+import com.example.dao.UserDao;
 import com.example.domain.entity.Admin;
 import com.example.domain.entity.User;
 import com.example.domain.enums.CanLogin;
@@ -19,6 +20,9 @@ public class UserServiceTest {
 
     @Autowired
     private GrouperDao grouperDao;
+
+    @Autowired
+    private UserDao userDao;
 
     /**
      * 测试增加管理员
@@ -50,5 +54,11 @@ public class UserServiceTest {
         User user = userService.findOne(4);
         grouperDao.deleteByUser(user);
     }
+
+    @Test
+    public void updateGroup(){
+        userDao.updateGroup(17,20);
+    }
+
 
 }

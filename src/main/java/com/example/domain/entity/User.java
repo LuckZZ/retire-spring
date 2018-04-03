@@ -31,7 +31,7 @@ public class User extends BaseEntity implements Serializable,Cloneable{
     private String name;        //姓名非空
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id",updatable = true)
     private Group group;        //多对一,多的一方数据表生成group_id列
 
     @Column

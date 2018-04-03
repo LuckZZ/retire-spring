@@ -11,4 +11,6 @@ public interface GroupDao extends JpaRepository<Group,Integer> {
 
     List<Group> findAllByOrderByGroupId();
 
+    Group findByGroupName(String groupName);
+
 }

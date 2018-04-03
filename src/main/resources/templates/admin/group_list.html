@@ -135,7 +135,8 @@
             </div>
         </div>
     </div>
-
+    <!--alert-->
+    <div th:replace="fragments/alert::alert_group_delete"></div>
 
     <div th:replace="fragments/footer::js"></div>
 </body>
@@ -145,6 +146,10 @@
 <script th:src="@{/js/messages_zh.min.js}"></script>
 
 <script th:src="@{/js/l-validate.js}"></script>
+
+<script th:src="@{/js/l-checked.js}"></script>
+<script th:src="@{/js/l-modalAjax.js}"></script>
+
 
 <script>
     $(function () {
@@ -193,6 +198,39 @@
                     }
                 }
             });
+
+        });
+
+        //删除
+        $(".one-del").on('click',function () {
+            //当前元素查找父级元素
+            var $tr = $(this).closest('tr');
+            //获得组名
+            var groupName = $tr.find('td').eq(2).html();
+            //获得人数
+            var count = $tr.find('td').eq(4).html();
+
+            var $oneDel= $('#oneDel-group-modal');
+
+            //设置组名、人数
+            $oneDel.find("#groupName").text(groupName);
+
+            $oneDel.find("#count").text(count);
+
+            var myId = $(this).data('id');
+
+            oneDelModal($oneDel,'/group/delete',myId);
+
+        });
+
+        //删除已选择
+        $("#checked-del").on('click',function () {
+
+            var checkedId = checkedIds();
+
+            var $mulDel= $('#mulDel-group-modal');
+
+            mulDelModal($mulDel,'/group/delete',checkedId);
 
         });
 
