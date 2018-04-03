@@ -86,4 +86,20 @@ public class GroupController extends BaseController{
         }
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/removeUser")
+    @LoggerManage(description = "移除组成员")
+    public Response removeUser(HttpServletRequest request){
+
+        String[] groupIds = request.getParameterValues("id");
+        Integer[] ids = DataUtils.turn(groupIds);
+
+        try {
+            groupService.removeUser(ids);
+            return result(ExceptionMsg.SUCCESS);
+        }catch (Exception e){
+            return result(ExceptionMsg.FAILED);
+        }
+    }
+
 }

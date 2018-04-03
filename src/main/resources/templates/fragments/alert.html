@@ -5,7 +5,9 @@
 
     <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
         <div class="am-modal-dialog">
-            <div class="am-modal-hd">Amaze UI</div>
+            <div class="am-modal-hd">Amaze UI
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
             <div class="am-modal-bd">
                 Hello world！
             </div>
@@ -18,7 +20,9 @@
 
     <div class="am-modal am-modal-confirm" tabindex="-1" id="my-confirm">
         <div class="am-modal-dialog">
-            <div class="am-modal-hd" id="my-confirm-hd">删除记录</div>
+            <div class="am-modal-hd" id="my-confirm-hd">删除记录
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
             <div class="am-modal-bd" id="my-confirm-bd">
                 你，确定要删除这条记录吗？
             </div>
@@ -36,7 +40,9 @@
     <!--用户批量删除modal-->
     <div class="am-modal am-modal-confirm" tabindex="-1" id="mulDel-modal">
         <div class="am-modal-dialog">
-            <div class="am-modal-hd">批量删除</div>
+            <div class="am-modal-hd">批量删除
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
             <div class="am-modal-bd">
             </div>
             <div class="am-modal-footer">
@@ -73,7 +79,9 @@
     <!--组删除modal-->
     <div class="am-modal am-modal-confirm" tabindex="-1" id="mulDel-group-modal">
         <div class="am-modal-dialog">
-            <div class="am-modal-hd">批量删除</div>
+            <div class="am-modal-hd">批量删除
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
             <div class="am-modal-bd">
                 <label class="am-text-danger">提示：所选组的所有用户将被移到"未分组"</label>
             </div>
@@ -94,6 +102,46 @@
                 <label>组名：</label>
                 <label id="groupName"></label><br/>
                 <label class="am-text-danger">提示：此组的<label id="count"></label>个用户将被移到"未分组"</label>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:fragment="alert_group_user_remove">
+
+    <!--组删除modal-->
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="mulDel-group-user-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">批量移除
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd">
+                <label class="am-text-danger">提示：所选的所有用户将被移到"未分组"</label>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+            </div>
+        </div>
+    </div>
+
+    <!--组单个删除modal-->
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="oneDel-group-user-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">移除
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd">
+                <label>工号：</label>
+                <label id="group-user-jobNum"></label><br/>
+                <label>姓名：</label>
+                <label id="group-user-name"></label><br/>
+                <label class="am-text-danger">提示：此用户将被移到"未分组"</label><br/>
             </div>
             <div class="am-modal-footer">
                 <span class="am-modal-btn" data-am-modal-cancel>取消</span>

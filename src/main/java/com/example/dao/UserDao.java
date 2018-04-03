@@ -34,4 +34,8 @@ public interface UserDao extends JpaRepository<User,Integer> {
     @Query(value = "update tb_user set group_id=?1 where group_id=?2", nativeQuery = true)
     int updateGroup(Integer newGroupId, Integer oldGroupId);
 
+    @Modifying(clearAutomatically=true)
+    @Query(value = "update tb_user set group_id=?1 where user_id=?2", nativeQuery = true)
+    int updateGroupByUseId(Integer groupId, Integer userId);
+
 }

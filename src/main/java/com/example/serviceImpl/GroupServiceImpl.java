@@ -90,4 +90,28 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
         }
 
     }
+
+    @Transactional
+    @Override
+    public void removeUser(Integer[] userIds) {
+        //        查看是否有未分组，如果没有，新建未分组
+        Group newGroup;
+        if (!groupDao.existsByGroupName("未分组")){
+            newGroup = groupDao.save(new Group("未分组"));
+        }else {
+            newGroup = groupDao.findByGroupName("未分组");
+        }
+        Integer newGroupId = newGroup.getGroupId();
+
+        for (Integer userId : userIds) {
+//           如果是组长，需要设置为组员
+            User user = userDao.findOne(userId);
+            if (user.getRank() == Rank.grouper){
+                userDao.updateRank(Rank.user, userId);
+            }
+//            更改分组
+            userDao.updateGroupByUseId(newGroupId, userId);
+        }
+
+    }
 }

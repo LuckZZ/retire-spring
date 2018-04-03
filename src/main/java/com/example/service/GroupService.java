@@ -24,4 +24,6 @@ public interface GroupService extends BaseCrudService<Group,Integer>{
     boolean existsByGroupName(String groupName);
 
     void delete(Integer[] groupIds);
+
+    void removeUser(Integer[] userIds);
 }

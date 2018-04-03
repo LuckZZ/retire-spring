@@ -28,8 +28,8 @@
                                 <div class="am-form-group">
                                     <div class="am-btn-toolbar">
                                         <div class="am-btn-group am-btn-group-xs">
-                                            <button type="button" class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 新增</button>
-                                            <button type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 移除</button>
+                                            <a type="button" class="am-btn am-btn-default am-btn-success" href="javascript:;" id="addGroup"><span class="am-icon-plus"></span> 新增</a>
+                                            <a type="button" class="am-btn am-btn-default am-btn-danger" href="javascript:;" id="checked-del"><span class="am-icon-trash-o"></span> 移除</a>
                                         </div>
                                     </div>
                                 </div>
@@ -60,23 +60,31 @@
                                         <th>序号</th>
                                         <th>工号</th>
                                         <th>姓名</th>
+                                        <th>类型</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr th:each="user:${group.users}">
-                                        <td><input type="checkbox"/></td>
+                                        <td><input type="checkbox" th:value="${user.userId}"/></td>
                                         <td th:text="${user.userId}">1</td>
                                         <td th:text="${user.jobNum}">123456</td>
                                         <td th:text="${user.name}">测试用户一</td>
+                                        <td th:text="${user.rank.name}">组长或组员</td>
                                         <td>
-                                            <div class="tpl-table-black-operation">
-                                                <a href="javascript:;">
-                                                    <i class="am-icon-pencil"></i> 编辑
-                                                </a>
-                                                <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                    <i class="am-icon-trash"></i> 移除
-                                                </a>
+                                            <div class="am-dropdown" data-am-dropdown>
+                                                <div class="tpl-table-black-operation">
+                                                    <a href="javascript:;" class="am-dropdown-toggle" data-am-dropdown-toggle>
+                                                        <i class="am-icon-pencil"></i> 编辑
+                                                    </a>
+                                                    <a th:attr="data-id=${user.userId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
+                                                        <i class="am-icon-trash"></i> 移除
+                                                    </a>
+                                                </div>
+                                                <ul class="am-dropdown-content">
+                                                    <li><a th:attr="data-id=${user.userId}" href="javascript:;" class="one-rank" th:text="(${user.rank.toString()} eq 'grouper')?'设为组员':'设为组长'">是否设为组长</a></li>
+                                                    <li ><a th:attr="data-id=${user.userId}" href="javascript:;" class="one-upd-group" >更改分组</a></li>
+                                                </ul>
                                             </div>
                                         </td>
                                     </tr>
@@ -104,7 +112,53 @@
         </div>
     </div>
 </div>
-<div th:replace="fragments/footer::js"></div>
+    <!--alert-->
+    <div th:replace="fragments/alert::alert_group_user_remove"></div>
+
+    <div th:replace="fragments/footer::js"></div>
 </body>
+
+<script th:src="@{/js/l-checked.js}"></script>
+
+<script th:src="@{/js/l-modalAjax.js}"></script>
+
+<script>
+    $(function () {
+
+        //删除
+        $(".one-del").on('click',function () {
+            //当前元素查找父级元素
+            var $tr = $(this).closest('tr');
+            //获得组名
+            var jobNum = $tr.find('td').eq(2).html();
+            //获得人数
+            var name = $tr.find('td').eq(3).html();
+
+            var $oneDel= $('#oneDel-group-user-modal');
+
+            //设置工号、姓名
+            $oneDel.find("#group-user-jobNum").text(jobNum);
+
+            $oneDel.find("#group-user-name").text(name);
+
+            var myId = $(this).data('id');
+
+            oneDelModal($oneDel,'/group/removeUser',myId);
+
+        });
+
+        //删除已选择
+        $("#checked-del").on('click',function () {
+
+            var checkedId = checkedIds();
+
+            var $mulDel= $('#mulDel-group-user-modal');
+
+            mulDelModal($mulDel,'/group/removeUser',checkedId);
+
+        });
+
+    });
+</script>
 
 </html>
