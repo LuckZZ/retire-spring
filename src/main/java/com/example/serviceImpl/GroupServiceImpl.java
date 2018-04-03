@@ -38,6 +38,21 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
     }
 
     @Override
+    public Group findOneSuper(Integer groupId) {
+        Group group = groupDao.findOne(groupId);
+        long count = userDao.countByGroup(group);
+        User userGrouper = userDao.findByGroupAndRank(group,Rank.grouper);
+        Grouper grouper = grouperDao.findByUser(userGrouper);
+        group.setCount(count);
+        group.setGrouper(grouper);
+
+        List<User> users = userDao.findAllByGroup(group);
+        group.setUsers(users);
+
+        return group;
+    }
+
+    @Override
     public List<Group> findAll() {
         return groupDao.findAllByOrderByGroupId();
     }

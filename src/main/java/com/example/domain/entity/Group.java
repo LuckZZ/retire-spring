@@ -28,6 +28,9 @@ public class Group implements Serializable{
     @Transient
     private long count;
 
+    @Transient
+    private List<User> users = new ArrayList<>();
+
     public Group() {
 
     }
@@ -68,5 +71,13 @@ public class Group implements Serializable{
 
     public void setCount(long count) {
         this.count = count;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

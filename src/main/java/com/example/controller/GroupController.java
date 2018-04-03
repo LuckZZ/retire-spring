@@ -38,7 +38,7 @@ public class GroupController extends BaseController{
     @RequestMapping("/{id}")
     @LoggerManage(description = "分组详细")
     public String detail(@PathVariable Integer id, Model model){
-        Group group = groupService.findOne(id);
+        Group group = groupService.findOneSuper(id);
         model.addAttribute("group",group);
         return "admin/group_datail";
     }

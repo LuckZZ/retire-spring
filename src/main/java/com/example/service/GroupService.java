@@ -11,6 +11,13 @@ public interface GroupService extends BaseCrudService<Group,Integer>{
      */
     List<Group> findAllCustom();
 
+    /**
+     * 按照groupId查找group，并把gouper、count和List<User>赋值
+     * @param groupId
+     * @return
+     */
+    Group findOneSuper(Integer groupId);
+
     @Override
     List<Group> findAll();
 
