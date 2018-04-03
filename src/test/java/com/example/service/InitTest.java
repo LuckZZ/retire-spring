@@ -27,12 +27,15 @@ public class InitTest {
     private DutyService dutyService;
 
     @Test
-    public void save(){
-//        Group one = new Group("组一");
-//        Group two = new Group("组二");
-//        groupService.save(one);
-//        groupService.save(two);
+    public void initGroup(){
+        Group one = new Group("组一");
+        Group two = new Group("组二");
+        groupService.save(one);
+        groupService.save(two);
+    }
 
+    @Test
+    public void save(){
         Nation nation1 = new Nation("汉族");
         Nation nation2 = new Nation("壮族");
         nationService.save(nation1);

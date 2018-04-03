@@ -22,25 +22,26 @@ public class GroupController extends BaseController{
     private GroupService groupService;
 
     @ResponseBody
-    @RequestMapping("/groupList")
-    @LoggerManage(description = "分组列表")
-    public Response groupList(){
+    @RequestMapping("/groups")
+    @LoggerManage(description = "组集合")
+    public Response groups(){
         List<Group> groups = groupService.findAll();
         return result(groups, ExceptionMsg.SUCCESS);
     }
 
-    @RequestMapping("/groupSave")
-    @LoggerManage(description = "新建组")
-    public String groupSave(){
-        return "admin/group_save";
+    @RequestMapping("/groupList")
+    @LoggerManage(description = "分组列表")
+    public String groupList(Model model){
+        List<Group> groups = groupService.findAllCustom();
+        model.addAttribute("groups",groups);
+        return "admin/group_list";
     }
 
     @RequestMapping("/{id}")
     @LoggerManage(description = "分组详细")
-    public String group(@PathVariable Integer id, Model model){
-        //List<Group> groups = groupService.findAll();
+    public String detail(@PathVariable Integer id, Model model){
         Group group = groupService.findOne(id);
         model.addAttribute("group",group);
-        return "admin/group_list";
+        return "admin/group_datail";
     }
 }

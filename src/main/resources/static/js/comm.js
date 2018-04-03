@@ -34,7 +34,7 @@ function loadGroup() {
         async: false,
         type: 'POST',
         dataType: 'json',
-        url: '/group/groupList',
+        url: '/group/groups',
         error : function(XMLHttpRequest, textStatus, errorThrown) {
             console.log(XMLHttpRequest);
             console.log(textStatus);
@@ -42,7 +42,7 @@ function loadGroup() {
         },
         success: function(data){
             gGroups=data.data;
-            initFollows(gGroups);
+            initGroups(gGroups);
         }
     });
 }
@@ -51,7 +51,7 @@ function loadGroup() {
  * 生成html代码
  * @param gGroups
  */
-function initFollows(gGroups) {
+function initGroups(gGroups) {
     for(var i=0;i<gGroups.length;i++) {
         var groupId=gGroups[i].groupId;
         var groupName=gGroups[i].groupName;

@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="fragments/head::head_section('分组管理')">
+<head th:include="fragments/head::head_section('组管理')">
 </head>
 
 <body data-type="widgets">
-<script th:src="@{/assets/js/theme.js}"></script>
-<div class="am-g tpl-g">
+    <!--theme.js放到这，快速获得缓存的主题-->
+    <script th:src="@{/assets/js/theme.js}"></script>
+    <div class="am-g tpl-g">
     <!-- 头部 -->
     <div th:replace="fragments/header::header_section(Admin)"></div>
     <!-- 风格切换 -->
     <div th:replace="fragments/theme::theme_section"></div>
     <!-- 侧边导航栏 -->
-    <div th:replace="fragments/left_admin::left_section(${group.groupId})"></div>
+    <div th:replace="fragments/left_admin::left_section('groupList')"></div>
+
     <!-- 内容区域 -->
     <div class="tpl-content-wrapper">
 
@@ -20,8 +22,9 @@
             <div class="row">
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
+                        <!--这是新建组页面!-->
                         <div class="widget-head am-cf">
-                            <div class="widget-title  am-cf" th:text="${group.groupName}">第一组</div>
+                            <div class="widget-title am-fl">组管理</div>
                         </div>
                         <div class="widget-body  am-fr">
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
@@ -29,8 +32,6 @@
                                     <div class="am-btn-toolbar">
                                         <div class="am-btn-group am-btn-group-xs">
                                             <button type="button" class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 新增</button>
-                                            <button type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-save"></span> 保存</button>
-                                            <button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 审核</button>
                                             <button type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>
                                         </div>
                                     </div>
@@ -42,10 +43,6 @@
                                         <option value="option1">所有类别</option>
                                         <option value="option2">IT业界</option>
                                         <option value="option3">数码产品</option>
-                                        <option value="option3">笔记本电脑</option>
-                                        <option value="option3">平板电脑</option>
-                                        <option value="option3">只能手机</option>
-                                        <option value="option3">超极本</option>
                                     </select>
                                 </div>
                             </div>
@@ -59,69 +56,35 @@
                             </div>
 
                             <div class="am-u-sm-12">
-                                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black">
                                     <thead>
                                     <tr>
                                         <th><input type="checkbox"/></th>
                                         <th>序号</th>
-                                        <th>工号</th>
-                                        <th>姓名</th>
                                         <th>组别</th>
+                                        <th>组长</th>
+                                        <th>人数</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="gradeX">
-                                        <td><input type="checkbox"/></td>
-                                        <td>1</td>
-                                        <td>123456</td>
-                                        <td>测试用户一</td>
-                                        <td>测试组一</td>
-                                        <td>
-                                            <div class="tpl-table-black-operation">
-                                                <a href="javascript:;">
-                                                    <i class="am-icon-pencil"></i> 编辑
-                                                </a>
-                                                <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                    <i class="am-icon-trash"></i> 删除
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="even gradeC">
-                                        <td><input type="checkbox"/></td>
-                                        <td>2</td>
-                                        <td>123456 </td>
-                                        <td>测试用户一</td>
-                                        <td>测试组一 </td>
-                                        <td>
-                                            <div class="tpl-table-black-operation">
-                                                <a href="javascript:;">
-                                                    <i class="am-icon-pencil"></i> 编辑
-                                                </a>
-                                                <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                    <i class="am-icon-trash"></i> 删除
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="gradeX">
-                                        <td><input type="checkbox"/></td>
-                                        <td>3</td>
-                                        <td>123456</td>
-                                        <td>测试用户一</td>
-                                        <td>测试组一 </td>
-                                        <td>
-                                            <div class="tpl-table-black-operation">
-                                                <a href="javascript:;">
-                                                    <i class="am-icon-pencil"></i> 编辑
-                                                </a>
-                                                <a href="javascript:;" class="tpl-table-black-operation-del">
-                                                    <i class="am-icon-trash"></i> 删除
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                        <tr th:each="group:${groups}">
+                                            <td><input type="checkbox" th:value="${group.groupId}"/></td>
+                                            <td th:text="${group.groupId}">1 </td>
+                                            <td th:text="${group.groupName}">测试组一 </td>
+                                            <td th:text="${group.grouper}?${group.grouper.user.name}:''">测试组长</td>
+                                            <td th:text="${group.count}">200人</td>
+                                            <td>
+                                                <div class="tpl-table-black-operation">
+                                                    <a th:attr="data-id=${group.groupId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
+                                                        <i class="am-icon-trash"></i> 删除
+                                                    </a>
+                                                    <a th:attr="data-id=${group.groupId}" href="javascript:;" class="one-detail">
+                                                        <i class="am-icon-cog"></i> 详细
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -146,7 +109,7 @@
         </div>
     </div>
 </div>
-<div th:replace="fragments/footer::js"></div>
+    <div th:replace="fragments/footer::js"></div>
 </body>
 
 </html>

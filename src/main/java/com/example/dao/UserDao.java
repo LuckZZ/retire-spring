@@ -1,5 +1,7 @@
 package com.example.dao;
 
+import com.example.domain.entity.Group;
+import com.example.domain.entity.Grouper;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Rank;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +24,9 @@ public interface UserDao extends JpaRepository<User,Integer> {
     @Modifying(clearAutomatically=true)
     @Query("update User set rank=:rank where userId=:userId")
     int updateRank(@Param("rank") Rank rank, @Param("userId") Integer userId);
+
+    long countByGroup(Group group);
+
+    User findByGroupAndRank(Group group, Rank rank);
 
 }

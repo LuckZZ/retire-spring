@@ -20,10 +20,16 @@ public class Group implements Serializable{
     @Column(nullable = false,unique = true)
     private String groupName;   //组名称非空、唯一
 
-    @OneToMany(mappedBy="group")
-    private List<User> user = new ArrayList<>();    //一对多
+//    grouper不生成列
+    @Transient
+    private Grouper grouper;
+
+    //    count
+    @Transient
+    private long count;
 
     public Group() {
+
     }
 
     public Group(String groupName) {
@@ -48,12 +54,19 @@ public class Group implements Serializable{
         this.groupName = groupName;
     }
 
-    @Override
-    public String toString() {
-        return "Group{" +
-                "groupId=" + groupId +
-                ", groupName='" + groupName + '\'' +
-                ", user=" + user +
-                '}';
+    public Grouper getGrouper() {
+        return grouper;
+    }
+
+    public void setGrouper(Grouper grouper) {
+        this.grouper = grouper;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }
