@@ -10,4 +10,9 @@ public interface GroupService extends BaseCrudService<Group,Integer>{
      * @return
      */
     List<Group> findAllCustom();
+
+    @Override
+    List<Group> findAll();
+
+    boolean existsByGroupName(String groupName);
 }

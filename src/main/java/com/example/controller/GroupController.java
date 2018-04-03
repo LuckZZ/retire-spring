@@ -8,9 +8,7 @@ import com.example.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,4 +42,29 @@ public class GroupController extends BaseController{
         model.addAttribute("group",group);
         return "admin/group_datail";
     }
+
+    @ResponseBody
+    @RequestMapping("/exist")
+    @LoggerManage(description = "组名存在")
+    public boolean existsGroupName(@RequestParam(value = "groupName") String groupName){
+        boolean exist = groupService.existsByGroupName(groupName);
+        logger.info("组名存在:"+exist);
+        if (!exist){
+            return true;
+        }
+        return false;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @LoggerManage(description = "组保存")
+    public Response save(@RequestParam(value = "groupName") String groupName){
+        if (groupService.existsByGroupName(groupName)){
+            return  result(ExceptionMsg.FAILED);
+        }
+//            保存
+        groupService.save(new Group(groupName));
+        return result(ExceptionMsg.SUCCESS);
+    }
+
 }

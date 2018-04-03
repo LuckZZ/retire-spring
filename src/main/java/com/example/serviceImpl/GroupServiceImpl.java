@@ -26,7 +26,7 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
 
     @Override
     public List<Group> findAllCustom() {
-        List<Group> groups = groupDao.findAll();
+        List<Group> groups = groupDao.findAllByOrderByGroupId();
         for (Group group : groups) {
             long count = userDao.countByGroup(group);
             User user = userDao.findByGroupAndRank(group,Rank.grouper);
@@ -35,5 +35,15 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
             group.setGrouper(grouper);
         }
         return groups;
+    }
+
+    @Override
+    public List<Group> findAll() {
+        return groupDao.findAllByOrderByGroupId();
+    }
+
+    @Override
+    public boolean existsByGroupName(String groupName) {
+        return groupDao.existsByGroupName(groupName);
     }
 }

@@ -42,6 +42,9 @@ $(function () {
             retireTime:{
                 required:true,
                 compareDate:"#workTime"
+            },
+            groupName:{
+                required:true
             }
         },
         messages:{
@@ -73,6 +76,9 @@ $(function () {
             },
             retireTime:{
                 compareDate:"退休时间必须大于工作时间"
+            },
+            groupName:{
+                remote:"此组名已存在"
             }
         },
         errorPlacement: function(error, element) {
