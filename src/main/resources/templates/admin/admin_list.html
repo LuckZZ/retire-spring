@@ -76,16 +76,23 @@
                                                 <td th:text="${admin.lastTime}">2016-09-26</td>
                                                 <td th:text="${admin.canLogin.name}">是否允许登陆</td>
                                                 <td>
-                                                    <div class="tpl-table-black-operation">
-                                                        <a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-update">
-                                                            <i class="am-icon-pencil"></i> 编辑
-                                                        </a>
-                                                        <a th:attr="data-id=${admin.adminId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
-                                                            <i class="am-icon-trash"></i> 删除
-                                                        </a>
-                                                        <a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-detail">
-                                                            <i class="am-icon-cog"></i> 详细
-                                                        </a>
+                                                    <div class="am-dropdown" data-am-dropdown>
+                                                        <div class="tpl-table-black-operation">
+                                                            <a href="javascript:;" class="am-dropdown-toggle" data-am-dropdown-toggle>
+                                                                <i class="am-icon-pencil"></i> 编辑
+                                                            </a>
+                                                            <a th:attr="data-id=${admin.adminId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
+                                                                <i class="am-icon-trash"></i> 删除
+                                                            </a>
+                                                            <a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-detail">
+                                                                <i class="am-icon-cog"></i> 详细
+                                                            </a>
+                                                        </div>
+                                                        <ul class="am-dropdown-content">
+                                                            <li><a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-canLogin" th:text="(${admin.canLogin.toString()} eq 'yes')?'禁止登陆':'允许登陆'">是否允许登陆</a></li>
+                                                            <li ><a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-resetPwd" >重置密码</a></li>
+                                                            <li ><a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-update" >修改基本信息</a></li>
+                                                        </ul>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -114,14 +121,52 @@
         </div>
     </div>
 
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="updatePwd-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">重置密码
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <br/>
+                </div>
+                <form class="am-form tpl-form-border-form tpl-form-border-br" id="updatePwdForm" action="#">
+                    <input name="adminId" id="adminId" type="hidden">
+                    <div class="am-form-group">
+                        <label for="password" class="am-u-sm-3 am-form-label">重置密码</label>
+                        <div class="am-u-sm-9">
+                            <input name="password" type="password" class="tpl-form-input" id="password" placeholder="输入密码(6-10位)">
+                        </div>
+                    </div>
+                    <div class="am-form-group">
+                        <label for="passwordCfm" class="am-u-sm-3 am-form-label">确认密码</label>
+                        <!--data-equal-to密码验证-->
+                        <div class="am-u-sm-9">
+                            <input name="passwordCfm" type="password" class="tpl-form-input" id="passwordCfm" placeholder="再次输入密码">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+            </div>
+        </div>
+    </div>
+
     <!--alert-->
     <div th:replace="fragments/alert::alert_user_delete"></div>
 
     <div th:replace="fragments/footer::js"></div>
 </body>
 
-<script th:src="@{/js/l-checked.js}"></script>
+<!--jquery验证-->
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/messages_zh.min.js}"></script>
 
+<script th:src="@{/js/l-validate.js}"></script>
+
+<script th:src="@{/js/l-checked.js}"></script>
 <script th:src="@{/js/l-modalAjax.js}"></script>
 
 <script>
@@ -170,6 +215,44 @@
             mulDelModal($mulDel,'/admin/delete',checkedId);
 
         });
+
+        //切换是否允许登陆状态
+        $(".one-canLogin").on('click',function() {
+            var id = $(this).data('id');
+            ajaxAndReload('/admin/changeCanLogin',id);
+        });
+
+
+        //重置密码,打开模态框
+        $(".one-resetPwd").on('click',function(){
+            var id = $(this).data('id');
+            //为表单groupId赋值
+            $("#adminId").val(id);
+            var $promt = $('#updatePwd-modal').modal({
+                relatedTarget: this,
+                closeOnConfirm: false,
+                onConfirm: function(options) {
+                    var v = $("#updatePwdForm").valid();
+                    // 验证通过，提交并关闭模态框
+                    if(v){
+                        $("#updatePwdForm").submit();
+                        this.close();
+                    }
+                },
+                onCancel: function() {
+                }
+            });
+        });
+
+        //密码验证
+        $("#updatePwdForm").validate({
+            submitHandler:function(form){
+                var myform = $("#updatePwdForm");
+                //ajax提交form
+                myFormAjax(myform,"/admin/update/2");
+            }
+        });
+
 
     });
 </script>

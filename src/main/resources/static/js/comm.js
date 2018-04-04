@@ -67,7 +67,7 @@ function initGroups(gGroups) {
 
 /**
  * ajax提交form
- * @param paramForm
+ * @param paramForm 传递表单
  * @param paramUrl
  */
 function myFormAjax(paramForm,paramUrl) {
@@ -94,3 +94,35 @@ function myFormAjax(paramForm,paramUrl) {
         }
     });
 }
+
+/**
+ *
+ * @param paramUrl
+ * @param paramId 传递id
+ */
+function ajaxAndReload(paramUrl,paramId) {
+    $.ajax({
+        url: paramUrl,
+        type: "POST",
+        data:{
+            id:paramId
+        },
+        error: function ()
+        {
+            console.log("ajaxAndReload error function!");
+            toastr.error('出现错误！', '错误');
+        },
+        success: function (data)
+        {
+            if(data.rspCode == '000000') {
+                toastr.success('操作成功！', '操作成功');
+                window.location.reload();
+            }
+            else {
+                toastr.error('操作失败！', '操作失败');
+            }
+        }
+    });
+}
+
+//ssss

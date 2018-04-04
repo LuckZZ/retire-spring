@@ -16,4 +16,11 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
 
     void delete(Integer[] adminIds);
 
+    /**
+     *
+     * @param adminId 管理员id
+     * @return
+     */
+    boolean notCanLogin(Integer adminId);
+
 }

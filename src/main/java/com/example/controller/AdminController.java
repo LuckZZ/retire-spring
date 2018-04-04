@@ -100,6 +100,18 @@ public class AdminController extends BaseController{
        }
     }
 
+    @ResponseBody
+    @RequestMapping("/changeCanLogin")
+    @LoggerManage(description = "切换管理员登陆权限")
+    public Response changeCanLogin(@RequestParam(value = "id") String paramId){
+        Integer id = Integer.parseInt(paramId);
+        boolean b = adminService.notCanLogin(id);
+        if (b){
+            return result(ExceptionMsg.SUCCESS);
+        }
+        return result(ExceptionMsg.FAILED);
+    }
+
     @RequestMapping(value = "/updateView/{adminId}")
     @LoggerManage(description = "修改管理员界面")
     public String updateView(@PathVariable String adminId, Model model){

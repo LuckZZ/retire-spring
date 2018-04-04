@@ -50,4 +50,17 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
             adminDao.delete(adminIds[i]);
         }
     }
+
+    @Transactional
+    @Override
+    public boolean notCanLogin(Integer adminId) {
+        Admin admin = adminDao.findOne(adminId);
+        CanLogin oldCanLogin = admin.getCanLogin();
+        if (oldCanLogin == CanLogin.no){
+            adminDao.updateCanLogin(CanLogin.yes,adminId);
+        }else if(oldCanLogin == CanLogin.yes){
+            adminDao.updateCanLogin(CanLogin.no,adminId);
+        }
+        return true;
+    }
 }

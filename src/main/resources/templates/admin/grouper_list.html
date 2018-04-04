@@ -243,30 +243,7 @@
         //切换是否允许登陆状态
         $(".one-canLogin").on('click',function() {
             var id = $(this).data('id');
-            $.ajax({
-                url: "/grouper/changeCanLogin",
-                type: "POST",
-                data:{
-                    grouperId:id
-                },
-                error: function ()
-                {
-                    console.log("changeCanLogin error function!");
-                    toastr.error('出现错误！', '错误');
-                },
-                success: function (data)
-                {
-                    console.log("changeCanLogin success function!");
-
-                    if(data.rspCode == '000000') {
-                        toastr.success('更改组长登陆权限成功！', '操作成功');
-                        window.location.reload();
-                    }
-                    else {
-                        toastr.error('更改组长登陆权限失败！', '操作失败');
-                    }
-                }
-            });
+            ajaxAndReload('/grouper/changeCanLogin',id);
         });
 
 

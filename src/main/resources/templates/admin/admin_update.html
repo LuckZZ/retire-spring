@@ -32,7 +32,6 @@
                                 <div class="am-tabs" data-am-tabs>
                                     <ul class="am-tabs-nav am-nav am-nav-tabs">
                                         <li class="am-active"><a href="#tab1">修改基本信息</a></li>
-                                        <li><a href="#tab2">修改密码</a></li>
                                         <li><a href="#tab3">修改图片</a></li>
                                     </ul>
 
@@ -69,34 +68,6 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="am-form-group">
-                                                    <div class="am-u-sm-9 am-u-sm-push-3">
-                                                        <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-
-
-                                        </div>
-                                        <div class="am-tab-panel am-fade" id="tab2">
-
-                                            <form class="am-form tpl-form-border-form tpl-form-border-br" id="updateTwoForm" action="#" th:object="${admin}">
-
-                                                <input name="adminId" th:field="*{adminId}" type="hidden"/>
-                                                <div class="am-form-group">
-                                                    <label for="password" class="am-u-sm-3 am-form-label">重置密码</label>
-                                                    <div class="am-u-sm-9">
-                                                        <input name="password" type="password" class="tpl-form-input" id="password" placeholder="输入密码(6-10位)">
-                                                    </div>
-                                                </div>
-
-                                                <div class="am-form-group">
-                                                    <label for="passwordCfm" class="am-u-sm-3 am-form-label">确认密码</label>
-                                                    <!--data-equal-to密码验证-->
-                                                    <div class="am-u-sm-9">
-                                                        <input name="passwordCfm" type="password" class="tpl-form-input" id="passwordCfm" placeholder="再次输入密码">
-                                                    </div>
-                                                </div>
                                                 <div class="am-form-group">
                                                     <div class="am-u-sm-9 am-u-sm-push-3">
                                                         <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
@@ -226,15 +197,6 @@
                 var myform = $("#updateOneForm");
                 //ajax提交form
                 myFormAjax(myform,"/admin/update/1");
-            }
-        });
-
-
-        $("#updateTwoForm").validate({
-            submitHandler:function(form){
-                var myform = $("#updateTwoForm");
-                //ajax提交form
-                myFormAjax(myform,"/admin/update/2");
             }
         });
 

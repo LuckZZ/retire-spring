@@ -66,8 +66,8 @@ public class GrouperController extends BaseController{
     @ResponseBody
     @RequestMapping("/changeCanLogin")
     @LoggerManage(description = "切换组长登陆权限")
-    public Response changeCanLogin(@RequestParam(value = "grouperId") String grouperId){
-        Integer id = Integer.parseInt(grouperId);
+    public Response changeCanLogin(@RequestParam(value = "id") String paramId){
+        Integer id = Integer.parseInt(paramId);
         boolean b = grouperService.notCanLogin(id);
         if (b){
             return result(ExceptionMsg.SUCCESS);
