@@ -28,4 +28,27 @@ public class DataUtils {
         List<String> list = Arrays.asList(s);
         return list;
     }
+
+    /**
+     * list转化为string，元素之间用“,”隔开。如：abcd，efgh
+     * @param list
+     * @return
+     */
+    public static String listToString(List<String> list){
+        if (list == null){
+            return null;
+        }
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        for (String string : list) {
+            if (first){
+                first=false;
+            }else {
+                result.append(",");
+            }
+            result.append(string);
+        }
+        return result.toString();
+    }
+
 }

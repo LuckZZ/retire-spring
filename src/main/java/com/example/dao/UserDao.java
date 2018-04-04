@@ -26,7 +26,7 @@ public interface UserDao extends JpaRepository<User,Integer> {
 
     long countByGroup(Group group);
 
-    User findByGroupAndRank(Group group, Rank rank);
+    List<User> findAllByGroupAndRank(Group group, Rank rank);
 
     List<User> findAllByGroup(Group group);
 

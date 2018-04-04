@@ -20,9 +20,12 @@ public class Group implements Serializable{
     @Column(nullable = false,unique = true)
     private String groupName;   //组名称非空、唯一
 
-//    grouper不生成列
     @Transient
-    private Grouper grouper;
+    private List<Grouper> groupers = new ArrayList<>();
+
+//    组长们姓名
+    @Transient
+    private String groupersName;
 
     //    count
     @Transient
@@ -57,12 +60,12 @@ public class Group implements Serializable{
         this.groupName = groupName;
     }
 
-    public Grouper getGrouper() {
-        return grouper;
+    public List<Grouper> getGroupers() {
+        return groupers;
     }
 
-    public void setGrouper(Grouper grouper) {
-        this.grouper = grouper;
+    public void setGroupers(List<Grouper> groupers) {
+        this.groupers = groupers;
     }
 
     public long getCount() {
@@ -79,5 +82,13 @@ public class Group implements Serializable{
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public String getGroupersName() {
+        return groupersName;
+    }
+
+    public void setGroupersName(String groupersName) {
+        this.groupersName = groupersName;
     }
 }

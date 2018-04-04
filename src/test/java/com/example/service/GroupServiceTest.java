@@ -27,18 +27,4 @@ public class GroupServiceTest {
         System.out.println(count);*/
     }
 
-    @Test
-    public void  findAllCustom(){
-        List<Group> groups = groupService.findAllCustom();
-        for (Group group : groups) {
-            System.out.println(group.getCount());
-            if (group.getGrouper() != null)
-            {
-                System.out.println(group.getGrouper().getUser().getName());
-            }else {
-                System.out.println("null");
-            }
-
-        }
-    }
 }
