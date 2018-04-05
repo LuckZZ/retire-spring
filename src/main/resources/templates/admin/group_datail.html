@@ -111,6 +111,25 @@
         </div>
     </div>
 </div>
+
+<div class="am-modal am-modal-confirm" tabindex="-1" id="update-group-modal">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">更改分组
+            <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+        </div>
+        <div class="am-modal-bd">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+            </div>
+            <div class="am-u-sm-12" id="result-modal">
+            </div>
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+            <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+        </div>
+    </div>
+</div>
+
     <!--alert-->
     <div th:replace="fragments/alert::alert_group_user_remove"></div>
 
@@ -154,6 +173,44 @@
             var $mulDel= $('#mulDel-group-user-modal');
 
             mulDelModal($mulDel,'/group/removeUser',checkedId);
+
+        });
+
+        // one-upd-group
+        //    更改分组
+        $(".one-upd-group").on('click',function () {
+            var myId = $(this).data('id');
+            console.log("更改分组方法");
+            $("#result-modal").load('/user/changeGroupHtml',{value:myId});
+            //    打开模态框
+            $('#update-group-modal').modal({
+                onConfirm: function(options) {
+                    var updateGroupId = $("#update-group").val();
+                    $.ajax({
+                        url: "/user/changeGroup",
+                        type: "POST",
+                        data:{
+                            id:myId,
+                            groupId:updateGroupId
+                        },
+                        error: function ()
+                        {
+                            console.log("error function!");
+                            toastr.error('出现错误！', '错误');
+                        },
+                        success: function (data)
+                        {
+                            if(data.rspCode == '000000') {
+                                //toastr.success('操作成功！', '操作成功');
+                                window.location.reload();
+                            }
+                            else {
+                                toastr.error('操作失败！', '操作失败');
+                            }
+                        }
+                    });
+                }
+            });
 
         });
 
