@@ -227,4 +227,28 @@ public class UserController extends BaseController{
             return result(ExceptionMsg.FAILED);
         }*/
     }
+    @RequestMapping("/changeGroupHtml")
+    @LoggerManage(description = "修改组员分组页面")
+    public String changeGroupHtml(@RequestParam(value = "value") String value, Model model){
+        User user = userService.findOne(Integer.parseInt(value));
+//        传递user
+        model.addAttribute("user",user);
+        List<Group> groups = groupService.findAll();
+//        传递groups
+        model.addAttribute("groups",groups);
+        return "admin/user_updgroup_load";
+    }
+    @ResponseBody
+    @RequestMapping("/changeGroup")
+    @LoggerManage(description = "修改组员分组")
+    public Response changeGroupHtml(@RequestParam(value = "id") String userId,@RequestParam(value = "groupId") String groupId){
+       try {
+           userService.updateGroupByUseId(Integer.parseInt(groupId),Integer.parseInt(userId));
+           return result(ExceptionMsg.SUCCESS);
+       }catch (Exception e){
+           e.printStackTrace();
+           return result(ExceptionMsg.FAILED);
+       }
+    }
+
 }

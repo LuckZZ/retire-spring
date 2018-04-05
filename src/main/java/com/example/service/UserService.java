@@ -15,4 +15,6 @@ public interface UserService extends BaseCrudService<User,Integer>{
     List<User> findAllByJobNum(String jobNum);
 
     List<User> findAllByName(String name);
+
+    int updateGroupByUseId(Integer groupId, Integer userId);
 }

@@ -53,4 +53,10 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     public List<User> findAllByName(String name) {
         return userDao.findAllByName(name);
     }
+
+    @Transactional
+    @Override
+    public int updateGroupByUseId(Integer groupId, Integer userId) {
+        return userDao.updateGroupByUseId(groupId,userId);
+    }
 }
