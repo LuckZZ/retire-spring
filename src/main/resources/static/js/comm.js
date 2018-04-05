@@ -115,7 +115,7 @@ function ajaxAndReload(paramUrl,paramId) {
         success: function (data)
         {
             if(data.rspCode == '000000') {
-                toastr.success('操作成功！', '操作成功');
+                //toastr.success('操作成功！', '操作成功');
                 window.location.reload();
             }
             else {

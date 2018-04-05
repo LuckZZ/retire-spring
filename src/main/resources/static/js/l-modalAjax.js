@@ -20,7 +20,7 @@ function oneDelModal($oneDel,paramUrl,paramId) {
                 },
                 success: function(data){
                     if(data.rspCode == '000000') {
-                        toastr.success('删除成功！', '操作成功');
+                        //toastr.success('删除成功！', '操作成功');
                         location.reload();
                     }else if(data.rspCode == '000202'){
                         toastr.error(data.rspMsg, '操作失败');
@@ -58,7 +58,7 @@ function mulDelModal($mulDel,paramUrl,paramId) {
                 },
                 success: function(data){
                     if(data.rspCode == '000000') {
-                        toastr.success('删除成功！', '操作成功');
+                        //toastr.success('删除成功！', '操作成功');
                         location.reload();
                     }else if(data.rspCode == '000202'){
                         toastr.error(data.rspMsg, '操作失败');
