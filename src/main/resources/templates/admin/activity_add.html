@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/head::head_section('新增活动')">
+</head>
+
+<body data-type="widgets">
+    <script th:src="@{/assets/js/theme.js}"></script>
+    <div class="am-g tpl-g">
+        <!-- 头部 -->
+        <div th:replace="fragments/header::header_section(Admin)"></div>
+        <!-- 风格切换 -->
+        <div th:replace="fragments/theme::theme_section"></div>
+        <!-- 侧边导航栏 -->
+        <div th:replace="fragments/left_admin::left_section('activityList')"></div>
+
+        <!-- 内容区域 -->
+        <div class="tpl-content-wrapper">
+            <div class="row-content am-cf">
+                <div class="row">
+
+                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                        <div class="widget am-cf">
+                            <div class="widget-head am-cf">
+                                <div class="widget-title am-fl">新增活动 </div>
+                                <div class="widget-function am-fr">
+                                    <!--<a href="javascript:;" class="am-icon-cog"></a>-->
+                                </div>
+                            </div>
+                            <div class="widget-body am-fr">
+
+                                <form class="am-form tpl-form-border-form tpl-form-border-br" id="addActivityForm" action="#">
+
+                                    <div id="activityContent">
+
+                                    <div class="am-form-group">
+                                        <label for="activityName" class="am-u-sm-3 am-form-label">活动名称</label>
+                                        <div class="am-u-sm-7">
+                                            <input name="activityName"type="text" class="tpl-form-input" id="activityName" placeholder="输入活动名称">
+                                        </div>
+                                        <div class="am-u-sm-2">
+                                            <a class="am-icon-plus-circle am-text-success plus-row" href="javascript:;"></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <div class="am-u-sm-3 am-form-label">
+                                            <div class="am-dropdown" id="doc-dropdown-js">
+                                                <label class="am-form-label">未定义 </label><span id="doc-dropdown-toggle" class="am-icon-caret-down"></span>
+                                                <div class="am-dropdown-content">
+                                                    <li class="am-text-sm">编辑</li>
+                                                    <li>
+                                                        <div class="am-input-group am-input-group-sm">
+                                                            <input type="text" class="am-form-field">
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <button class="am-btn-sm am-btn-default am-btn-success">确定</button>
+                                                        <button class="am-btn-sm am-btn-default am-btn-danger">取消</button>
+                                                    </li>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="am-u-sm-7">
+                                            <input name="activityName"type="text" class="tpl-form-input">
+                                        </div>
+                                        <div class="am-u-sm-2">
+                                            <a class="am-icon-minus-circle am-text-danger minus-row"></a>
+                                        </div>
+                                    </div>
+
+
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <div class="am-u-sm-9 am-u-sm-push-3">
+                                            <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div th:replace="fragments/footer::js"></div>
+</body>
+
+<!--jquery验证-->
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/messages_zh.min.js}"></script>
+
+<script th:src="@{/js/l-validate.js}"></script>
+
+<script>
+
+    //移除一行
+    function removeGroup(v){
+        $(v).closest(".am-form-group").remove();
+    }
+
+    //显示修改按钮
+    function showPencil(v) {
+        $(v).find('.am-icon-pencil').show();
+    }
+
+    //隐藏修改按钮
+    function hidePencil(v) {
+        $(v).find('.am-icon-pencil').hide();
+    }
+
+    function updName(v) {
+        alert("abcd!");
+    }
+
+    $(function() {
+
+        var $dropdown = $('#doc-dropdown-js');
+
+        $('#doc-dropdown-toggle').on('click', function(e) {
+
+            $dropdown.dropdown('toggle');
+        });
+
+        //增加一行
+        $(".plus-row").on('click',function(){
+            var group ="                 <div class='am-form-group'  onmouseover='showPencil(this)' onmouseout='hidePencil(this)'>\n" +
+                "                                        <label class='am-u-sm-3 am-form-label'>未定义 <span class='am-icon-pencil' style='display: none' onclick='updName(this)'></span> </label>\n" +
+                "                                        <div class='am-u-sm-7'>\n" +
+                "                                            <input name='activityName'type='text' class='tpl-form-input'>\n" +
+                "                                        </div>\n" +
+                "                                        <div class='am-u-sm-2'>\n" +
+                "                                            <a class='am-icon-minus-circle am-text-danger minus-row' onclick='removeGroup(this)' href='javascript:;'></a>\n" +
+                "                                        </div>\n" +
+                "                                    </div>";
+            $("#activityContent .am-form-group:last").after(group);
+        });
+
+        // 提交时验证表单，small元素包裹错误信息
+/*        $("#addAdminForm").validate({
+            rules:{
+                jobNum: {
+                    required: true,
+                    remote: {
+                        url: '/admin/exist',
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            jobNum: function () {
+                                return $("#jobNum").val();
+                            }
+                        }
+                    }
+                }
+            },
+            submitHandler:function(form){
+                var myform = $("#addAdminForm");
+                //ajax提交form
+                myFormAjax(myform,"/admin/save");
+
+            }
+        });*/
+    });
+</script>
+
+</html>
