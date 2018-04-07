@@ -243,7 +243,7 @@
         //切换是否允许登陆状态
         $(".one-canLogin").on('click',function() {
             var id = $(this).data('id');
-            ajaxAndReload('/grouper/changeCanLogin',id);
+            idAjaxReload('/grouper/changeCanLogin',id);
         });
 
 
@@ -273,8 +273,7 @@
             submitHandler:function(form){
                 var myform = $("#updatePwdForm");
                 //ajax提交form
-                myFormAjax(myform,"/grouper/updatePwd");
-
+                formAjaxNoReload(myform,"/grouper/updatePwd");
             }
         });
 

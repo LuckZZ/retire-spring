@@ -63,4 +63,14 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
         }
         return true;
     }
+
+    @Transactional
+    @Override
+    public Admin save(Admin admin) {
+        //        设置canLogin的值
+        if(admin.getCanLogin() == null){
+            admin.setCanLogin(CanLogin.no);
+        }
+        return adminDao.save(admin);
+    }
 }

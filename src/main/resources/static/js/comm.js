@@ -70,7 +70,7 @@ function initGroups(gGroups) {
  * @param paramForm 传递表单
  * @param paramUrl
  */
-function myFormAjax(paramForm,paramUrl) {
+function formAjaxNoReload(paramForm,paramUrl) {
     $.ajax({
         url: paramUrl,
         type: "POST",
@@ -78,18 +78,15 @@ function myFormAjax(paramForm,paramUrl) {
         dataType: "json",
         error: function ()
         {
-            console.log("myFormAjax error function!");
+            console.log("formAjaxNoReload error function!");
             toastr.error('出现错误！', '错误');
         },
         success: function (data)
         {
-            console.log("myFormAjax success function!");
-
-            if(data.rspCode == '000000') {
-                toastr.success('操作成功！', '操作成功');
-            }
-            else {
-                toastr.error('操作失败！', '操作失败');
+            if (data.codeBool){
+                toastr.success(data.message, '操作成功');
+            }else {
+                toastr.error(data.message, '操作失败');
             }
         }
     });
@@ -100,7 +97,7 @@ function myFormAjax(paramForm,paramUrl) {
  * @param paramUrl
  * @param paramId 传递id
  */
-function ajaxAndReload(paramUrl,paramId) {
+function idAjaxReload(paramUrl,paramId) {
     $.ajax({
         url: paramUrl,
         type: "POST",
@@ -109,17 +106,15 @@ function ajaxAndReload(paramUrl,paramId) {
         },
         error: function ()
         {
-            console.log("ajaxAndReload error function!");
+            console.log("idAjaxReload error function!");
             toastr.error('出现错误！', '错误');
         },
         success: function (data)
         {
-            if(data.rspCode == '000000') {
-                //toastr.success('操作成功！', '操作成功');
-                window.location.reload();
-            }
-            else {
-                toastr.error('操作失败！', '操作失败');
+            if (data.codeBool){
+                location.reload();
+            }else {
+                toastr.error(data.message, '操作失败');
             }
         }
     });

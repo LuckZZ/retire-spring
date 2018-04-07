@@ -1,35 +1,65 @@
 package com.example.domain.result;
 
 public enum ExceptionMsg {
-    SUCCESS("000000", "操作成功"),
-    FAILED("999999","操作失败"),
-    ParamError("000001", "参数错误！"),
+    SUCCESS("操作成功",true),
+    FAILED("操作失败",false),
+    ParamError("参数错误！",false),
+    LoginNameOrPassWordError("用户名或者密码错误！",false),
 
-    LoginNameOrPassWordError("000100", "用户名或者密码错误！"),
-    JobNumUsed("000101","工号已存在"),
-    JobNumNotUsed("000102","工号不存在"),
-    PassWordError("000103","密码输入错误"),
+    JobNumNotUsed("工号不存在",true),
+    JobNumUsed("工号已存在",false),
 
-    AbleAdminDelete("000201","可以删除"),
+    AdminAddSuccess("新增管理员成功",true),
+    AdminAddFailed("新增管理员失败",false),
 
-    DisableAdminDelete("000202","用户有登录权限，不能删除");
+    AdminDelSuccess("删除管理员成功",true),
+    AdminDelFailed("删除管理员失败",false),
 
-    private String code;
-    private String msg;
+    ChangeCanLoginSuccess("切换登陆权限成功",true),
+    ChangeCanLoginFailed("切换登陆权限失败",false),
 
-    /**
-     *
-     * @param code 信息码
-     * @param msg 信息内容
-     */
-    private ExceptionMsg(String code, String msg) {
-        this.code = code;
-        this.msg = msg;
+    ResetPwdSuccess("重置密码成功",true),
+    ResetPwdFailed("重置密码失败",false),
+
+    AdminUpdSuccess("修改管理员成功",true),
+    AdminUpdFailed("修改管理员失败",false),
+
+    AbleAdminDelete("管理员删除成功",true),
+    DisableAdminDelete("用户有登录权限，不能删除",false),
+
+    UserAddSuccess("新增用户成功",true),
+    UserAddFailed("新增用户失败",false),
+
+    UserDelSuccess("删除用户成功",true),
+    UserDelFailed("删除用户失败",false),
+
+    UserUpdGroupSuccess("用户修改分组成功",true),
+    UserUpdGroupFailed("用户需要分组失败",false),
+
+    UserUpdSuccess("修改用户成功",true),
+    UserUpdFailed("修改用户失败",false),
+
+    GrouperRemoveSuccess("移除组长成功",true),
+    GrouperRemoveFailed("移除组长失败失败",false),
+
+    UserTypeSuccess("修改用户类型成功",true),
+    UserTypeFailed("修改用户类型失败",false);
+
+    private String message;
+    private boolean codeBool;
+
+    ExceptionMsg(String message, boolean codeBool) {
+        this.message = message;
+        this.codeBool = codeBool;
     }
-    public String getCode() {
-        return code;
+
+    public String getMessage() {
+        return message;
     }
-    public String getMsg() {
-        return msg;
+
+    public boolean isCodeBool() {
+        return codeBool;
     }
+
+
 }

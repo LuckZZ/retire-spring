@@ -19,14 +19,10 @@ function oneDelModal($oneDel,paramUrl,paramId) {
                     toastr.error('出现错误！', '错误');
                 },
                 success: function(data){
-                    if(data.rspCode == '000000') {
-                        //toastr.success('删除成功！', '操作成功');
+                    if (data.codeBool){
                         location.reload();
-                    }else if(data.rspCode == '000202'){
-                        toastr.error(data.rspMsg, '操作失败');
-                    }
-                    else {
-                        toastr.error('删除失败！', '操作失败');
+                    }else {
+                        toastr.error(data.message, '操作失败');
                     }
                 }
             });
@@ -57,14 +53,10 @@ function mulDelModal($mulDel,paramUrl,paramId) {
                     toastr.error('出现错误！', '错误');
                 },
                 success: function(data){
-                    if(data.rspCode == '000000') {
-                        //toastr.success('删除成功！', '操作成功');
+                    if (data.codeBool){
                         location.reload();
-                    }else if(data.rspCode == '000202'){
-                        toastr.error(data.rspMsg, '操作失败');
-                    }
-                    else {
-                        toastr.error('删除失败！', '操作失败');
+                    }else {
+                        toastr.error(data.message, '操作失败');
                     }
                 }
             });

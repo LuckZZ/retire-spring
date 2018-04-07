@@ -4,19 +4,19 @@ public class Response {
     /** 返回数据*/
     private Object data;
     /** 返回信息码*/
-    private String rspCode;
+    private Boolean codeBool;
     /** 返回信息内容*/
-    private String rspMsg;
+    private String message;
 
     public Response(ExceptionMsg msg){
-        this.rspCode=msg.getCode();
-        this.rspMsg=msg.getMsg();
+        this.codeBool=msg.isCodeBool();
+        this.message=msg.getMessage();
     }
 
     public Response(Object data, ExceptionMsg msg){
         this.data=data;
-        this.rspCode=msg.getCode();
-        this.rspMsg=msg.getMsg();
+        this.codeBool=msg.isCodeBool();
+        this.message=msg.getMessage();
     }
 
     public Object getData() {
@@ -27,19 +27,19 @@ public class Response {
         this.data = data;
     }
 
-    public String getRspCode() {
-        return rspCode;
+    public Boolean getCodeBool() {
+        return codeBool;
     }
 
-    public void setRspCode(String rspCode) {
-        this.rspCode = rspCode;
+    public void setCodeBool(Boolean codeBool) {
+        this.codeBool = codeBool;
     }
 
-    public String getRspMsg() {
-        return rspMsg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setRspMsg(String rspMsg) {
-        this.rspMsg = rspMsg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

@@ -78,10 +78,10 @@
                                                       </a>
                                                   </div>
                                                   <ul class="am-dropdown-content">
-                                                      <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-update" >发布</a></li>
-                                                      <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-resetPwd" >预览</a></li>
-                                                      <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-resetPwd" >修改</a></li>
-                                                      <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-resetPwd" >删除</a></li>
+                                                      <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-publish" >发布</a></li>
+                                                      <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-preview" >预览</a></li>
+                                                      <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-update" >修改</a></li>
+                                                      <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-delete" >删除</a></li>
                                                   </ul>
                                               </div>
                                         </td>
@@ -155,6 +155,13 @@
 
 <script>
     $(function() {
+        // one-publish
+
+   /*     $(".one-publish").on('click',function () {
+            var v = $(this).data('id');
+            oneDelModal($oneDel,'/activity/publish',myId);
+        });*/
+
         /*        // 修改
                 $(".one-update").on('click',function () {
                     var v = $(this).data('id');

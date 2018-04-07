@@ -58,9 +58,9 @@ public class GrouperController extends BaseController{
         Integer id = Integer.parseInt(userId);
         boolean b = grouperService.notGrouper(id);
         if (b){
-            return result(ExceptionMsg.SUCCESS);
+            return result(ExceptionMsg.UserTypeSuccess);
         }
-        return result(ExceptionMsg.FAILED);
+        return result(ExceptionMsg.UserTypeFailed);
     }
 
     @ResponseBody
@@ -70,9 +70,9 @@ public class GrouperController extends BaseController{
         Integer id = Integer.parseInt(paramId);
         boolean b = grouperService.notCanLogin(id);
         if (b){
-            return result(ExceptionMsg.SUCCESS);
+            return result(ExceptionMsg.ChangeCanLoginSuccess);
         }
-        return result(ExceptionMsg.FAILED);
+        return result(ExceptionMsg.ChangeCanLoginFailed);
     }
 
     @ResponseBody
@@ -81,7 +81,7 @@ public class GrouperController extends BaseController{
     public Response updatePwd(@RequestParam(value = "grouperId") String grouperId,@RequestParam(value = "password") String password){
         Integer id = Integer.parseInt(grouperId);
         grouperService.updatePwd(password,id);
-        return result(ExceptionMsg.SUCCESS);
+        return result(ExceptionMsg.ResetPwdSuccess);
     }
 
     @ResponseBody
@@ -92,9 +92,9 @@ public class GrouperController extends BaseController{
         Integer[] ids = DataUtils.turn(grouperIds);
         try {
             grouperService.remove(ids);
-            return result(ExceptionMsg.SUCCESS);
+            return result(ExceptionMsg.GrouperRemoveSuccess);
         }catch (Exception e){
-            return result(ExceptionMsg.FAILED);
+            return result(ExceptionMsg.GrouperRemoveFailed);
         }
     }
 }

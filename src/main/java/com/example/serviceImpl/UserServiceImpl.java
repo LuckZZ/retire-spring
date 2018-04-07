@@ -1,6 +1,8 @@
 package com.example.serviceImpl;
 import com.example.dao.UserDao;
 import com.example.domain.entity.User;
+import com.example.domain.enums.Exist;
+import com.example.domain.enums.Rank;
 import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +60,16 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Override
     public int updateGroupByUseId(Integer groupId, Integer userId) {
         return userDao.updateGroupByUseId(groupId,userId);
+    }
+
+    @Transactional
+    @Override
+    public User save(User user) {
+//        设置存在
+        user.setExist(Exist.yes);
+//        默认组员
+        user.setRank(Rank.user);
+
+        return userDao.save(user);
     }
 }

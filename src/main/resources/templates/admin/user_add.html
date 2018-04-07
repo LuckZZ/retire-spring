@@ -210,7 +210,7 @@
             submitHandler:function(form){
                 var myform = $("#addUserForm");
                 //ajax提交form
-                myFormAjax(myform,"/user/save");
+                formAjaxNoReload(myform,"/user/save");
             }
         });
     });

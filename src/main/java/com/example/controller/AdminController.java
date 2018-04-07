@@ -3,13 +3,10 @@ package com.example.controller;
 import com.example.comm.aop.LoggerManage;
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
-import com.example.domain.enums.Gender;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.AdminService;
 import com.example.utils.DataUtils;
-import com.example.utils.DateUtils;
-import com.example.utils.ImgUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @RequestMapping("/admin")
@@ -58,15 +52,10 @@ public class AdminController extends BaseController{
     @LoggerManage(description = "管理员保存")
     public Response save(@ModelAttribute(value = "admin") Admin admin){
         if(adminService.existsByJobNum(admin.getJobNum())){
-            return  result(ExceptionMsg.FAILED);
+            return  result(ExceptionMsg.JobNumUsed);
         }
-        //        设置canLogin的值
-        if(admin.getCanLogin() == null){
-            admin.setCanLogin(CanLogin.no);
-        }
-//            保存
         adminService.save(admin);
-        return result(ExceptionMsg.SUCCESS);
+        return result(ExceptionMsg.AdminAddSuccess);
     }
 
     /**
@@ -94,9 +83,9 @@ public class AdminController extends BaseController{
        }
        try {
             adminService.delete(ids);
-           return result(ExceptionMsg.SUCCESS);
+           return result(ExceptionMsg.AdminDelSuccess);
        }catch (Exception e){
-           return result(ExceptionMsg.FAILED);
+           return result(ExceptionMsg.AdminDelFailed);
        }
     }
 
@@ -107,9 +96,9 @@ public class AdminController extends BaseController{
         Integer id = Integer.parseInt(paramId);
         boolean b = adminService.notCanLogin(id);
         if (b){
-            return result(ExceptionMsg.SUCCESS);
+            return result(ExceptionMsg.ChangeCanLoginSuccess);
         }
-        return result(ExceptionMsg.FAILED);
+        return result(ExceptionMsg.ChangeCanLoginFailed);
     }
 
     @RequestMapping(value = "/updateView/{adminId}")
@@ -152,13 +141,13 @@ public class AdminController extends BaseController{
                 canLogin=CanLogin.yes;
             }
             adminService.updateNameAndCanLogin(name, canLogin, Integer.parseInt(adminId));
-            return result(ExceptionMsg.SUCCESS);
+            return result(ExceptionMsg.AdminUpdSuccess);
         }else if(typeId == 2){
 //            修改密码
             logger.info("修改密码");
             String password = request.getParameter("password");
             adminService.updatePassword(password,Integer.parseInt(adminId));
-            return result(ExceptionMsg.SUCCESS);
+            return result(ExceptionMsg.ResetPwdSuccess);
         }
         return result(ExceptionMsg.FAILED);
     }

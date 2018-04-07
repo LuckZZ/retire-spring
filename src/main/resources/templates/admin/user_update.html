@@ -296,7 +296,7 @@
             submitHandler:function(form){
                 var myform = $("#updateOneForm");
                 //ajax提交form
-                myFormAjax(myform,"/user/update");
+                formAjaxNoReload(myform,"/user/update");
             }
         });
 

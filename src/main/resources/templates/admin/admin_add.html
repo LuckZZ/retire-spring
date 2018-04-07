@@ -123,7 +123,7 @@
             submitHandler:function(form){
                 var myform = $("#addAdminForm");
                 //ajax提交form
-                myFormAjax(myform,"/admin/save");
+                formAjaxNoReload(myform,"/admin/save");
 
             }
         });

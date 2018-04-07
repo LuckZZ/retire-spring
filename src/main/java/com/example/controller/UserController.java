@@ -111,15 +111,10 @@ public class UserController extends BaseController{
     @LoggerManage(description = "用户保存")
     public Response save(@ModelAttribute(value = "user") User user){
         if(userService.existsByJobNum(user.getJobNum())){
-            return  result(ExceptionMsg.FAILED);
+            return  result(ExceptionMsg.JobNumUsed);
         }
-        user.setExist(Exist.yes);
-//        默认组员
-        user.setRank(Rank.user);
-//            保存
-        logger.info(user.getExist());
         userService.save(user);
-        return result(ExceptionMsg.SUCCESS);
+        return result(ExceptionMsg.UserAddSuccess);
     }
 
     @ResponseBody
@@ -128,9 +123,9 @@ public class UserController extends BaseController{
     public Response update(@ModelAttribute(value = "user") User user){
         boolean b=  userService.updateExceptId(user);
         if (b){
-            return result(ExceptionMsg.SUCCESS);
+            return result(ExceptionMsg.UserUpdSuccess);
         }
-        return result(ExceptionMsg.FAILED);
+        return result(ExceptionMsg.UserUpdFailed);
     }
 
     @RequestMapping(value = "/updateView/{userId}")
@@ -185,9 +180,9 @@ public class UserController extends BaseController{
 
         try {
             userService.delete(ids);
-            return result(ExceptionMsg.SUCCESS);
+            return result(ExceptionMsg.UserDelSuccess);
         }catch (Exception e){
-            return result(ExceptionMsg.FAILED);
+            return result(ExceptionMsg.UserDelFailed);
         }
     }
 
@@ -244,10 +239,10 @@ public class UserController extends BaseController{
     public Response changeGroupHtml(@RequestParam(value = "id") String userId,@RequestParam(value = "groupId") String groupId){
        try {
            userService.updateGroupByUseId(Integer.parseInt(groupId),Integer.parseInt(userId));
-           return result(ExceptionMsg.SUCCESS);
+           return result(ExceptionMsg.UserUpdGroupSuccess);
        }catch (Exception e){
            e.printStackTrace();
-           return result(ExceptionMsg.FAILED);
+           return result(ExceptionMsg.UserUpdGroupFailed);
        }
     }
 
