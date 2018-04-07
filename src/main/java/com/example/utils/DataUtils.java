@@ -51,4 +51,24 @@ public class DataUtils {
         return result.toString();
     }
 
+    /**
+     * String[]转换String[][]
+     * 用“;(英文分号)”或“；(中文分号)”分割分割字符串
+     * @param strs
+     * @return
+     */
+    public static String[][] oneStrToTwoStr(String[] strs){
+//        行
+        String[][] strss = new String[strs.length][];
+        for (int i = 0; i < strs.length; i++) {
+            String[] strArray = strs[i].split(";|；");
+//         列
+            strss[i] = new String[strArray.length];
+            for (int j = 0; j < strArray.length; j++) {
+                strss[i][j] = strArray[j];
+            }
+        }
+        return strss;
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.example.domain.entity;
 
+import com.example.domain.enums.ActivityStatus;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,12 +9,11 @@ import java.util.List;
 
 /**
  * Activtiy实体类有属性：
- * activity_id、activityName、placeName、expand、exist、
- * year
+ * activity_id、activityName、labelDefs、inputDefs、activityStatus
  */
 @Entity
 @Table(name = "tb_activity")
-public class Activity implements Serializable {
+public class Activity extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,24 +22,38 @@ public class Activity implements Serializable {
 
     @Column(nullable = false)
     private String activityName;    //活动名称非空
-    private String placeName;
-    private String expand;
 
-    @Column(nullable = false)
-    private Integer exist;          //活动存在状态非空
+//    自定义行
+    @Column
+    private String[] labelDefs;
 
-    @Column(nullable = true)
-    private Integer year;   //活动年份可以为空
+    @Column
+    private String[] inputDefs;
 
-    @OneToMany(mappedBy = "activity")
-    private List<JoinActivity> joinActivities = new ArrayList<>();  //一对多
+//    不生成列
+    @Transient
+    private String[][] inputDefss;
+
+//    活动状态
+    @Column
+    private ActivityStatus activityStatus;
+
+    public Activity() {
+    }
+
+    public Activity(String activityName, String[] labelDefs, String[] inputDefs) {
+        this.activityName = activityName;
+        this.labelDefs = labelDefs;
+        this.inputDefs = inputDefs;
+    }
+
     //set、get方法
 
     public Integer getActivityId() {
         return activityId;
     }
 
-    public void setActivityId(int activityId) {
+    public void setActivityId(Integer activityId) {
         this.activityId = activityId;
     }
 
@@ -50,43 +65,36 @@ public class Activity implements Serializable {
         this.activityName = activityName;
     }
 
-    public String getPlaceName() {
-        return placeName;
+
+    public String[] getLabelDefs() {
+        return labelDefs;
     }
 
-    public void setPlaceName(String placeName) {
-        this.placeName = placeName;
+    public void setLabelDefs(String[] labelDefs) {
+        this.labelDefs = labelDefs;
     }
 
-    public String getExpand() {
-        return expand;
+    public String[] getInputDefs() {
+        return inputDefs;
     }
 
-    public void setExpand(String expand) {
-        this.expand = expand;
+    public void setInputDefs(String[] inputDefs) {
+        this.inputDefs = inputDefs;
     }
 
-    public int getExist() {
-        return exist;
+    public String[][] getInputDefss() {
+        return inputDefss;
     }
 
-    public void setExist(int exist) {
-        this.exist = exist;
+    public void setInputDefss(String[][] inputDefss) {
+        this.inputDefss = inputDefss;
     }
 
-    public int getYear() {
-        return year;
+    public ActivityStatus getActivityStatus() {
+        return activityStatus;
     }
 
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public List<JoinActivity> getJoinActivities() {
-        return joinActivities;
-    }
-
-    public void setJoinActivities(List<JoinActivity> joinActivities) {
-        this.joinActivities = joinActivities;
+    public void setActivityStatus(ActivityStatus activityStatus) {
+        this.activityStatus = activityStatus;
     }
 }

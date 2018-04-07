@@ -1,5 +1,7 @@
 package com.example.service;
 
-public interface ActivityService {
+import com.example.domain.entity.Activity;
+
+public interface ActivityService extends BaseCrudService<Activity,Integer>{
 
 }

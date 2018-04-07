@@ -45,6 +45,14 @@ $(function () {
             },
             groupName:{
                 required:true
+            },
+            //活动名称
+            activityName:{
+                required:true
+            },
+            //自定义活动列
+            inputDef:{
+                required:true
             }
         },
         messages:{

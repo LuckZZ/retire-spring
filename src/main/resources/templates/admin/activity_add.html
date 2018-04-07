@@ -43,33 +43,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="am-form-group">
-                                        <div class="am-u-sm-3 am-form-label">
-                                            <div class="am-dropdown" id="doc-dropdown-js">
-                                                <label class="am-form-label">未定义 </label><span id="doc-dropdown-toggle" class="am-icon-caret-down"></span>
-                                                <div class="am-dropdown-content">
-                                                    <li class="am-text-sm">编辑</li>
-                                                    <li>
-                                                        <div class="am-input-group am-input-group-sm">
-                                                            <input type="text" class="am-form-field">
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <button class="am-btn-sm am-btn-default am-btn-success">确定</button>
-                                                        <button class="am-btn-sm am-btn-default am-btn-danger">取消</button>
-                                                    </li>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="am-u-sm-7">
-                                            <input name="activityName"type="text" class="tpl-form-input">
-                                        </div>
-                                        <div class="am-u-sm-2">
-                                            <a class="am-icon-minus-circle am-text-danger minus-row"></a>
-                                        </div>
-                                    </div>
-
-
                                     </div>
 
                                     <div class="am-form-group">
@@ -113,31 +86,101 @@
         $(v).find('.am-icon-pencil').hide();
     }
 
-    function updName(v) {
-        alert("abcd!");
+    //切换下拉框显示
+    function dropdownToggle(v) {
+
+        var $dropdown = $(v).closest('.doc-dropdown-js');
+
+        // var data = $dropdown.data('amui.dropdown');
+
+        var $label = $dropdown.find('.my-label');
+
+        var $input = $dropdown.find('.my-input');
+
+        //label显示的文本
+        var labelText = $label.text();
+
+        //设置input的值
+        $input.val(labelText);
+
+        $dropdown.dropdown('toggle');
+    }
+
+    //点击下拉框确定事件
+    function confirmDropdown(v) {
+        var $dropdown = $(v).closest('.doc-dropdown-js');
+
+        var $label = $dropdown.find('.my-label');
+
+        var $input = $dropdown.find('.my-input');
+
+        var v = $input.val();
+
+        //如果为空，点确定不关闭下拉框
+        if (v==''){
+            return;
+        }
+
+        //设置label的值
+        $label.text(v);
+
+        //关闭
+        $dropdown.dropdown('close');
+    }
+
+    //关闭下拉框
+    function closeDropdown(v) {
+        var $dropdown = $(v).closest('.doc-dropdown-js');
+        $dropdown.dropdown('close');
     }
 
     $(function() {
 
-        var $dropdown = $('#doc-dropdown-js');
+        $("#addActivityForm").validate({
+            submitHandler:function(form){
 
-        $('#doc-dropdown-toggle').on('click', function(e) {
+                //把每个inputDef的name设为同个值
+                $('#addActivityForm .inputDef').each(function() {
+                    $(this).attr('name', 'inputDef');
+                });
 
-            $dropdown.dropdown('toggle');
+                var myform = $("#addActivityForm");
+
+                //ajax提交form
+                myFormAjax(myform,"/activity/save");
+            }
         });
 
+        //解决多个相同的Name 只验证第一个的方案。把每个inputDef的name设为不同的值
+        var inputDefCount=0;
         //增加一行
         $(".plus-row").on('click',function(){
-            var group ="                 <div class='am-form-group'  onmouseover='showPencil(this)' onmouseout='hidePencil(this)'>\n" +
-                "                                        <label class='am-u-sm-3 am-form-label'>未定义 <span class='am-icon-pencil' style='display: none' onclick='updName(this)'></span> </label>\n" +
-                "                                        <div class='am-u-sm-7'>\n" +
-                "                                            <input name='activityName'type='text' class='tpl-form-input'>\n" +
-                "                                        </div>\n" +
-                "                                        <div class='am-u-sm-2'>\n" +
-                "                                            <a class='am-icon-minus-circle am-text-danger minus-row' onclick='removeGroup(this)' href='javascript:;'></a>\n" +
-                "                                        </div>\n" +
-                "                                    </div>";
-            $("#activityContent .am-form-group:last").after(group);
+            var $group="                  <div class=\"am-form-group\" onmouseover='showPencil(this)' onmouseout='hidePencil(this)'>\n" +
+                "                                            <div class=\"am-u-sm-3 am-form-label\">\n" +
+                "                                                <div class=\"am-dropdown doc-dropdown-js\">\n" +
+                "                                                    <span class=\"am-icon-pencil\" style='display: none' onclick=\"dropdownToggle(this)\"></span><label class=\"am-form-label my-label\">未定义</label>\n" +
+                "                                                    <div class=\"am-dropdown-content\">\n" +
+                "                                                        <li class=\"am-text-sm\">编辑</li>\n" +
+                "                                                        <li>\n" +
+                "                                                            <div class=\"am-input-group am-input-group-sm\">\n" +
+                "                                                                <input type=\"text\" name=\"labelDef\" value=\"未定义\" class=\"am-form-field my-input\">\n" +
+                "                                                            </div>\n" +
+                "                                                        </li>\n" +
+                "                                                        <li>\n" +
+                "                                                            <a type=\"button\" class=\"am-btn am-btn-success am-btn-sm\" href='javascript:;' onclick='confirmDropdown(this)'>确定</a>\n" +
+                "                                                            <a type=\"button\" class=\"am-btn am-btn-danger am-btn-sm\" href='javascript:;' onclick='closeDropdown(this)'>取消</a>\n" +
+                "                                                        </li>\n" +
+                "                                                    </div>\n" +
+                "                                                </div>\n" +
+                "                                            </div>\n" +
+                "                                            <div class=\"am-u-sm-7\">\n" +
+                "                                                <input type=\"text\" name=\"inputDef" + (inputDefCount++) + "\" class=\"tpl-form-input inputDef \" required>\n" +
+                "                                            </div>\n" +
+                "                                            <div class=\"am-u-sm-2\">\n" +
+                "                                                <a class=\"am-icon-minus-circle am-text-danger minus-row\" onclick='removeGroup(this)' href='javascript:;'></a>\n" +
+                "                                            </div>\n" +
+                "                                        </div>";
+            $("#activityContent .am-form-group:last").after($group);
         });
 
         // 提交时验证表单，small元素包裹错误信息
