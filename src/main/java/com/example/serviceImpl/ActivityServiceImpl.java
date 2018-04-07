@@ -32,4 +32,36 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
         }
         return activities;
     }
+
+    /**
+     * 草稿活动列表
+     * @param activityStatus
+     * @return
+     */
+    @Override
+    public List<Activity> findAllByActivityStatus(ActivityStatus activityStatus) {
+        List<Activity> activities = activityDao.findAllByActivityStatus(activityStatus);
+        for (Activity activity : activities) {
+            String[] strings = activity.getInputDefs();
+            String[][] strings1 = DataUtils.oneStrToTwoStr(strings);
+            activity.setInputDefss(strings1);
+        }
+        return activities;
+    }
+
+    /**
+     * 非草稿活动列表
+     * @param activityStatus
+     * @return
+     */
+    @Override
+    public List<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus) {
+        List<Activity> activities = activityDao.findAllByActivityStatusNot(activityStatus);
+        for (Activity activity : activities) {
+            String[] strings = activity.getInputDefs();
+            String[][] strings1 = DataUtils.oneStrToTwoStr(strings);
+            activity.setInputDefss(strings1);
+        }
+        return activities;
+    }
 }

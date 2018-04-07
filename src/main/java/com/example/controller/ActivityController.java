@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
 import com.example.domain.entity.Activity;
+import com.example.domain.enums.ActivityStatus;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.ActivityService;
@@ -27,15 +28,28 @@ public class ActivityController extends BaseController{
     @RequestMapping("/activityList")
     @LoggerManage(description = "活动列表")
     public String activityList(Model model){
-        List<Activity> activities = activityService.findAll();
+        List<Activity> activities = activityService.findAllByActivityStatusNot(ActivityStatus.draft);
         model.addAttribute("activities",activities);
         return "admin/activity_list";
     }
 
     @RequestMapping("/draftList")
     @LoggerManage(description = "草稿箱列表")
-    public String draft(){
+    public String draft(Model model){
+        List<Activity> activities = activityService.findAllByActivityStatus(ActivityStatus.draft);
+        model.addAttribute("activities",activities);
         return "admin/draft_list";
+    }
+
+    /**
+     * 进入增加活动草稿界面
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/addDraftView")
+    @LoggerManage(description = "增加活动草稿界面")
+    public String addDraftView(Model model){
+        return "admin/draft_add";
     }
 
     /**
@@ -43,10 +57,9 @@ public class ActivityController extends BaseController{
      * @param model
      * @return
      */
-    @RequestMapping(value = "/addView")
+    @RequestMapping(value = "/addActivityView")
     @LoggerManage(description = "增加活动界面")
-    public String addView(Model model){
-//        model.addAttribute("admin",new Admin());
+    public String addActivityView(Model model){
         return "admin/activity_add";
     }
 
