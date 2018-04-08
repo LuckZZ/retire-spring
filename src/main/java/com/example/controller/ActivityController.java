@@ -97,7 +97,7 @@ public class ActivityController extends BaseController{
 
     @ResponseBody
     @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @LoggerManage(description = "管理员保存")
+    @LoggerManage(description = "活动保存")
     public Response save(HttpServletRequest request){
         String activityName = request.getParameter("activityName");
         String[] labelDef = request.getParameterValues("labelDef");
@@ -108,5 +108,22 @@ public class ActivityController extends BaseController{
         activityService.save(activity);
 
         return result(ExceptionMsg.ActivityAddSuccess);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @LoggerManage(description = "活动修改")
+    public Response update(HttpServletRequest request){
+        String activityId = request.getParameter("activityId");
+        String activityName = request.getParameter("activityName");
+        String[] labelDef = request.getParameterValues("labelDef");
+        String[] inputDef = request.getParameterValues("inputDef");
+
+        Activity activity = new Activity(activityName,labelDef,inputDef);
+        activity.setActivityId(Integer.parseInt(activityId));
+
+        activityService.updateExceptId(activity);
+
+        return result(ExceptionMsg.ActivityUpdSuccess);
     }
 }

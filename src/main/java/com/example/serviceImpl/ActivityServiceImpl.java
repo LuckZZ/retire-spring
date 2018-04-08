@@ -77,6 +77,18 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
         return activityDao.updateActivityStatus(ActivityStatus.close,activityId);
     }
 
+    @Transactional
+    @Override
+    public boolean updateExceptId(Activity activity) {
+        if(activity.getActivityId() == null){
+            return false;
+        }
+//        保存到草稿箱
+        activity.setActivityStatus(ActivityStatus.draft);
+        activityDao.save(activity);
+        return true;
+    }
+
     /**
      * 根据id查找一条数据
      * @param activityId

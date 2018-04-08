@@ -33,10 +33,23 @@
 
                                     <div id="activityContent">
 
+                                        <!--这两个不显示出来，用于存储从后台传来的数据。js容易获取-->
+                                        <select id="labs" style="display:none;" disabled >
+                                            <option th:each="lab:${activity.labelDefs}" th:value="${lab}"></option>
+                                        </select>
+
+                                        <select id="inps" style="display:none;" disabled >
+                                            <option th:each="inp:${activity.inputDefs}" th:value="${inp}"></option>
+                                        </select>
+
+                                        <input name="activityId" th:field="*{activityId}" type="hidden" id="activityId"/>
+
                                     <div class="am-form-group">
                                         <label for="activityName" class="am-u-sm-3 am-form-label">活动名称</label>
                                         <div class="am-u-sm-7">
-                                            <input th:field="*{activityName}" name="activityName"type="text" class="tpl-form-input" id="activityName" placeholder="输入活动名称">
+                                            <!--diable不能传递数据-->
+                                            <input th:field="*{activityName}" name="activityName" type="hidden" id="activityName">
+                                            <input th:field="*{activityName}" type="text" class="tpl-form-input" disabled>
                                         </div>
                                         <div class="am-u-sm-2">
                                             <a class="am-icon-plus-circle am-text-success plus-row" href="javascript:;"></a>
@@ -134,47 +147,26 @@
 
     $(function() {
 
-        // 加载行 labelDefs inputDefs
-        //var labels = new Array()
-        // var labels = $("#labelDefs");
-       /* var labels = $("#labelDefs").val();
-        for(i=0;i<labels.length;i++){
-            alert("labels : " + labels[i]);
-        }*/
-        // alert(labels.length);
+        // 加载行 labs inps
+        var $labs = $("#labs option");
+        var $inps = $("#inps option");
+        for (i=0;i<$labs.length;i++){
+            // alert("aa:"+$labs[i].value);
+            generateRow($labs[i].value,$inps[i].value)
+        }
 
-        alert("aaaa!");
-        var labels = '${activity.labelDefs};';
-        alert(labels.length);
-
-
-        $("#addActivityForm").validate({
-            rules:{
-                activityName: {
-                    required: true,
-                    remote: {
-                        url: '/activity/exist',
-                        type: "post",
-                        dataType: "json",
-                        data: {
-                            jobNum: function () {
-                                return $("#activityName").val();
-                            }
-                        }
-                    }
-                }
-            },
+        $("#updateActivityForm").validate({
             submitHandler:function(form){
 
                 //把每个inputDef的name设为同个值
-                $('#addActivityForm .inputDef').each(function() {
+                $('#updateActivityForm .inputDef').each(function() {
                     $(this).attr('name', 'inputDef');
                 });
 
-                var myform = $("#addActivityForm");
+                var myform = $("#updateActivityForm");
 
                 //ajax提交form
-                formAjaxNoReload(myform,"/activity/save");
+                formAjaxNoReload(myform,"/activity/update");
             }
         });
 
@@ -185,30 +177,6 @@
 
         });
 
-        // 提交时验证表单，small元素包裹错误信息
-/*        $("#addAdminForm").validate({
-            rules:{
-                jobNum: {
-                    required: true,
-                    remote: {
-                        url: '/admin/exist',
-                        type: "post",
-                        dataType: "json",
-                        data: {
-                            jobNum: function () {
-                                return $("#jobNum").val();
-                            }
-                        }
-                    }
-                }
-            },
-            submitHandler:function(form){
-                var myform = $("#addAdminForm");
-                //ajax提交form
-                myFormAjax(myform,"/admin/save");
-
-            }
-        });*/
     });
 
     //解决多个相同的Name 只验证第一个的方案。把每个inputDef的name设为不同的值

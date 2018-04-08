@@ -60,7 +60,10 @@ public enum ExceptionMsg {
     ActivityAddFailed("新增活动失败",false),
 
     ActivityPublishSuccess("发布活动成功",true),
-    ActivityPublishFailed("发布活动失败",false);
+    ActivityPublishFailed("发布活动失败",false),
+
+    ActivityUpdSuccess("更新活动成功",true),
+    ActivityUpdFailed("更新活动失败",false);
 
     private String message;
     private boolean codeBool;
