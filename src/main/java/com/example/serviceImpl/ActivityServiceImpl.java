@@ -8,6 +8,7 @@ import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -31,6 +32,11 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
             activity.setInputDefss(strings1);
         }
         return activities;
+    }
+
+    @Override
+    public boolean existsByActivityName(String activityName) {
+        return activityDao.existsByActivityName(activityName);
     }
 
     /**
@@ -63,5 +69,25 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
             activity.setInputDefss(strings1);
         }
         return activities;
+    }
+
+    @Transactional
+    @Override
+    public int activityPublish(Integer activityId) {
+        return activityDao.updateActivityStatus(ActivityStatus.close,activityId);
+    }
+
+    /**
+     * 根据id查找一条数据
+     * @param activityId
+     * @return
+     */
+    @Override
+    public Activity findOne(Integer activityId) {
+        Activity activity = activityDao.findOne(activityId);
+        String[] strings = activity.getInputDefs();
+        String[][] strings1 = DataUtils.oneStrToTwoStr(strings);
+        activity.setInputDefss(strings1);
+        return activity;
     }
 }

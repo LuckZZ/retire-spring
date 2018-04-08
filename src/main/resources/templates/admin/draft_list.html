@@ -68,7 +68,11 @@
                                     <tr>
                                         <td th:text="${activity.activityId}">1</td>
                                         <td th:text="${activity.activityName}">活动一</td>
-                                        <td th:each="inputDef:${activity.inputDefs}" th:text="${inputDef}">inputDef</td>
+                                        <td th:each="defs:${activity.inputDefss}">
+                                            <select data-am-selected="{btnSize: 'sm'}">
+                                                <option th:each="def:${defs}" th:value="${def}" th:text="${def}">自定义列 </option>
+                                            </select>
+                                        </td>
                                         <td th:text="${activity.activityStatus.name}">草稿活动</td>
                                         <td>
                                               <div class="am-dropdown" data-am-dropdown>
@@ -79,7 +83,6 @@
                                                   </div>
                                                   <ul class="am-dropdown-content">
                                                       <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-publish" >发布</a></li>
-                                                      <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-preview" >预览</a></li>
                                                       <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-update" >修改</a></li>
                                                       <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-delete" >删除</a></li>
                                                   </ul>
@@ -111,41 +114,8 @@
     </div>
 </div>
 
-<!--<div class="am-modal am-modal-confirm" tabindex="-1" id="updatePwd-modal">
-    <div class="am-modal-dialog">
-        <div class="am-modal-hd">重置密码
-            <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
-        </div>
-        <div class="am-modal-bd">
-            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
-                <br/>
-            </div>
-            <form class="am-form tpl-form-border-form tpl-form-border-br" id="updatePwdForm" action="#">
-                <input name="adminId" id="adminId" type="hidden">
-                <div class="am-form-group">
-                    <label for="password" class="am-u-sm-3 am-form-label">重置密码</label>
-                    <div class="am-u-sm-9">
-                        <input name="password" type="password" class="tpl-form-input" id="password" placeholder="输入密码(6-10位)">
-                    </div>
-                </div>
-                <div class="am-form-group">
-                    <label for="passwordCfm" class="am-u-sm-3 am-form-label">确认密码</label>
-                    &lt;!&ndash;data-equal-to密码验证&ndash;&gt;
-                    <div class="am-u-sm-9">
-                        <input name="passwordCfm" type="password" class="tpl-form-input" id="passwordCfm" placeholder="再次输入密码">
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="am-modal-footer">
-            <span class="am-modal-btn" data-am-modal-cancel>取消</span>
-            <span class="am-modal-btn" data-am-modal-confirm>确定</span>
-        </div>
-    </div>
-</div>-->
-
 <!--alert-->
-<div th:replace="fragments/alert::alert_user_delete"></div>
+<div th:replace="fragments/alert::alert_activity"></div>
 
 <div th:replace="fragments/footer::js"></div>
 </body>
@@ -155,18 +125,28 @@
 
 <script>
     $(function() {
-        // one-publish
+        //发布
+        $(".one-publish").on('click',function () {
+            //当前元素查找父级元素
+            var $tr = $(this).closest('tr');
+            //获得工号
+            var name = $tr.find('td').eq(1).html();
+            var $onePublish= $('#onePublish-modal');
+            //设置活动名称
+            $onePublish.find("#publish-activityName").text(name);
 
-   /*     $(".one-publish").on('click',function () {
+            var myId = $(this).data('id');
+            oneDelModal($onePublish,'/activity/publish',myId);
+        });
+
+
+        //修改
+        $(".one-update").on('click',function () {
             var v = $(this).data('id');
-            oneDelModal($oneDel,'/activity/publish',myId);
-        });*/
+            window.location.href="/activity/updateView/"+v;
+        });
 
-        /*        // 修改
-                $(".one-update").on('click',function () {
-                    var v = $(this).data('id');
-                    window.location.href="/admin/updateView/"+v;
-                });
+        /*
 
                 // 详细
                 $(".one-detail").on('click',function () {

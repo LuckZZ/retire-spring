@@ -10,10 +10,7 @@ import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -24,6 +21,38 @@ public class ActivityController extends BaseController{
 
     @Autowired
     private ActivityService activityService;
+
+
+    /**
+     *
+     * @param activityName
+     * @return false：活动存在 true：活动不存在
+     */
+    @ResponseBody
+    @RequestMapping("/exist")
+    @LoggerManage(description = "管理员存在")
+    public boolean existsAdmin(@RequestParam(value = "activityName") String activityName){
+        boolean exist = activityService.existsByActivityName(activityName);
+        logger.info("用户存在:"+exist);
+        if (!exist){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 发布活动
+     * @param paramId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/publish")
+    @LoggerManage(description = "发布活动")
+    public Response publish(@RequestParam(value = "id") String paramId){
+        Integer id = Integer.parseInt(paramId);
+        activityService.activityPublish(id);
+        return result(ExceptionMsg.ActivityPublishSuccess);
+    }
 
     @RequestMapping("/activityList")
     @LoggerManage(description = "活动列表")
@@ -50,6 +79,20 @@ public class ActivityController extends BaseController{
     @LoggerManage(description = "增加活动界面")
     public String addActivityView(Model model){
         return "admin/activity_add";
+    }
+
+    /**
+     * 修改活动界面
+     * @param activityId
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/updateView/{activityId}")
+    @LoggerManage(description = "修改活动界面")
+    public String updateView(@PathVariable String activityId, Model model){
+        Activity activity = activityService.findOne(Integer.parseInt(activityId));
+        model.addAttribute("activity",activity);
+        return "admin/draft_update";
     }
 
     @ResponseBody

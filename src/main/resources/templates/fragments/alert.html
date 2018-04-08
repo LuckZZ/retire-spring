@@ -152,5 +152,43 @@
 
 </div>
 
+<div th:fragment="alert_activity">
+
+    <!--发布活动-->
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="onePublish-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">发布活动
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd">
+                <label>活动名称：</label>
+                <label id="publish-activityName"></label><br/>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+            </div>
+        </div>
+    </div>
+
+    <!--单个删除活动-->
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="oneDel-activity-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">移除
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd">
+                <label>活动名称：</label>
+                <label id="del-activityName"></label><br/>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 </body>
 </html>

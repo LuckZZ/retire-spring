@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface ActivityService extends BaseCrudService<Activity,Integer>{
 
+    boolean existsByActivityName(String activityName);
+
     List<Activity> findAllByActivityStatus(ActivityStatus activityStatus);
 
     List<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus);
+
+    int activityPublish(Integer activityId);
 
 }

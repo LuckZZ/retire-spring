@@ -58,6 +58,9 @@ public class DataUtils {
      * @return
      */
     public static String[][] oneStrToTwoStr(String[] strs){
+        if (strs == null){
+            return null;
+        }
 //        行
         String[][] strss = new String[strs.length][];
         for (int i = 0; i < strs.length; i++) {

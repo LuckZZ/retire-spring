@@ -12,7 +12,7 @@
         <!-- 风格切换 -->
         <div th:replace="fragments/theme::theme_section"></div>
         <!-- 侧边导航栏 -->
-        <div th:replace="fragments/left_admin::left_section('activityList')"></div>
+        <div th:replace="fragments/left_admin::left_section('draftList')"></div>
 
         <!-- 内容区域 -->
         <div class="tpl-content-wrapper">
@@ -22,21 +22,21 @@
                     <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                         <div class="widget am-cf">
                             <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">新增活动 </div>
+                                <div class="widget-title am-fl">修改活动 </div>
                                 <div class="widget-function am-fr">
                                     <!--<a href="javascript:;" class="am-icon-cog"></a>-->
                                 </div>
                             </div>
                             <div class="widget-body am-fr">
 
-                                <form class="am-form tpl-form-border-form tpl-form-border-br" id="addActivityForm" action="#">
+                                <form class="am-form tpl-form-border-form tpl-form-border-br" id="updateActivityForm" action="#" th:object="${activity}">
 
                                     <div id="activityContent">
 
                                     <div class="am-form-group">
                                         <label for="activityName" class="am-u-sm-3 am-form-label">活动名称</label>
                                         <div class="am-u-sm-7">
-                                            <input name="activityName"type="text" class="tpl-form-input" id="activityName" placeholder="输入活动名称">
+                                            <input th:field="*{activityName}" name="activityName"type="text" class="tpl-form-input" id="activityName" placeholder="输入活动名称">
                                         </div>
                                         <div class="am-u-sm-2">
                                             <a class="am-icon-plus-circle am-text-success plus-row" href="javascript:;"></a>
@@ -115,7 +115,7 @@
         var v = $input.val();
 
         //如果为空，点确定不关闭下拉框
-        if (v==''){
+        if (v=="undefined" || v==null || v.length == 0 || v==''){
             return;
         }
 
@@ -133,6 +133,20 @@
     }
 
     $(function() {
+
+        // 加载行 labelDefs inputDefs
+        //var labels = new Array()
+        // var labels = $("#labelDefs");
+       /* var labels = $("#labelDefs").val();
+        for(i=0;i<labels.length;i++){
+            alert("labels : " + labels[i]);
+        }*/
+        // alert(labels.length);
+
+        alert("aaaa!");
+        var labels = '${activity.labelDefs};';
+        alert(labels.length);
+
 
         $("#addActivityForm").validate({
             rules:{
@@ -164,36 +178,11 @@
             }
         });
 
-        //解决多个相同的Name 只验证第一个的方案。把每个inputDef的name设为不同的值
-        var inputDefCount=0;
         //增加一行
         $(".plus-row").on('click',function(){
-            var $group="                  <div class=\"am-form-group\" onmouseover='showPencil(this)' onmouseout='hidePencil(this)'>\n" +
-                "                                            <div class=\"am-u-sm-3 am-form-label\">\n" +
-                "                                                <div class=\"am-dropdown doc-dropdown-js\">\n" +
-                "                                                    <span class=\"am-icon-pencil\" style='display: none' onclick=\"dropdownToggle(this)\"></span><label class=\"am-form-label my-label\">未定义</label>\n" +
-                "                                                    <div class=\"am-dropdown-content\">\n" +
-                "                                                        <li class=\"am-text-sm\">编辑</li>\n" +
-                "                                                        <li>\n" +
-                "                                                            <div class=\"am-input-group am-input-group-sm\">\n" +
-                "                                                                <input type=\"text\" name=\"labelDef\" value=\"未定义\" class=\"am-form-field my-input\">\n" +
-                "                                                            </div>\n" +
-                "                                                        </li>\n" +
-                "                                                        <li>\n" +
-                "                                                            <a type=\"button\" class=\"am-btn am-btn-success am-btn-sm\" href='javascript:;' onclick='confirmDropdown(this)'>确定</a>\n" +
-                "                                                            <a type=\"button\" class=\"am-btn am-btn-danger am-btn-sm\" href='javascript:;' onclick='closeDropdown(this)'>取消</a>\n" +
-                "                                                        </li>\n" +
-                "                                                    </div>\n" +
-                "                                                </div>\n" +
-                "                                            </div>\n" +
-                "                                            <div class=\"am-u-sm-7\">\n" +
-                "                                                <input type=\"text\" name=\"inputDef" + (inputDefCount++) + "\" class=\"tpl-form-input inputDef \" required>\n" +
-                "                                            </div>\n" +
-                "                                            <div class=\"am-u-sm-2\">\n" +
-                "                                                <a class=\"am-icon-minus-circle am-text-danger minus-row\" onclick='removeGroup(this)' href='javascript:;'></a>\n" +
-                "                                            </div>\n" +
-                "                                        </div>";
-            $("#activityContent .am-form-group:last").after($group);
+
+            generateRow('未定义','');
+
         });
 
         // 提交时验证表单，small元素包裹错误信息
@@ -221,6 +210,38 @@
             }
         });*/
     });
+
+    //解决多个相同的Name 只验证第一个的方案。把每个inputDef的name设为不同的值
+    var inputDefCount=0;
+
+    function generateRow(rowName,rowValue) {
+        var $group="                  <div class=\"am-form-group\" onmouseover='showPencil(this)' onmouseout='hidePencil(this)'>\n" +
+            "                                            <div class=\"am-u-sm-3 am-form-label\">\n" +
+            "                                                <div class=\"am-dropdown doc-dropdown-js\">\n" +
+            "                                                    <span class=\"am-icon-pencil\" style='display: none' onclick=\"dropdownToggle(this)\"></span><label class=\"am-form-label my-label\">"+rowName+"</label>\n" +
+            "                                                    <div class=\"am-dropdown-content\">\n" +
+            "                                                        <li class=\"am-text-sm\">编辑</li>\n" +
+            "                                                        <li>\n" +
+            "                                                            <div class=\"am-input-group am-input-group-sm\">\n" +
+            "                                                                <input type=\"text\" name=\"labelDef\" value=\""+rowName+"\" class=\"am-form-field my-input\">\n" +
+            "                                                            </div>\n" +
+            "                                                        </li>\n" +
+            "                                                        <li>\n" +
+            "                                                            <a type=\"button\" class=\"am-btn am-btn-success am-btn-sm\" href='javascript:;' onclick='confirmDropdown(this)'>确定</a>\n" +
+            "                                                            <a type=\"button\" class=\"am-btn am-btn-danger am-btn-sm\" href='javascript:;' onclick='closeDropdown(this)'>取消</a>\n" +
+            "                                                        </li>\n" +
+            "                                                    </div>\n" +
+            "                                                </div>\n" +
+            "                                            </div>\n" +
+            "                                            <div class=\"am-u-sm-7\">\n" +
+            "                                                <input type=\"text\" value=\""+rowValue+"\" name=\"inputDef" + (inputDefCount++) + "\" class=\"tpl-form-input inputDef \" required>\n" +
+            "                                            </div>\n" +
+            "                                            <div class=\"am-u-sm-2\">\n" +
+            "                                                <a class=\"am-icon-minus-circle am-text-danger minus-row\" onclick='removeGroup(this)' href='javascript:;'></a>\n" +
+            "                                            </div>\n" +
+            "                                        </div>";
+        $("#activityContent .am-form-group:last").after($group);
+    }
 </script>
 
 </html>

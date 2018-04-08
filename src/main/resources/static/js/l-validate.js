@@ -87,6 +87,9 @@ $(function () {
             },
             groupName:{
                 remote:"此组名已存在"
+            },
+            activityName:{
+                remote:"此活动名已存在"
             }
         },
         errorPlacement: function(error, element) {
