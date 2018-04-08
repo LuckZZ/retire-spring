@@ -52,16 +52,26 @@ function loadGroup() {
  * @param gGroups
  */
 function initGroups(gGroups) {
+
+    var dynaGroupId = $('#dynaGroupId').data('id');
+    // alert("vvvv:"+dynaGroupId);
+
     for(var i=0;i<gGroups.length;i++) {
         var groupId=gGroups[i].groupId;
         var groupName=gGroups[i].groupName;
         var url = "/group/"+groupId;
         var id= groupId;
         var group= "<li class=\"sidebar-nav-link\">";
-        group = group+"<a href=\""+url+"\" id=\""+id+"\" th:class=\"(${activeId} eq '"+id+"')?'active':''\">";
+
+        if (dynaGroupId == id){
+            group = group+"<a href=\""+url+"\" id=\""+id+"\" class='active'>";
+        }else {
+            group = group+"<a href=\""+url+"\" id=\""+id+"\" class=''>";
+        }
         group = group + "<span class=\"am-icon-angle-right sidebar-nav-link-logo\"></span>"+groupName;
         group = group+"</a></li>";
-        $("#newGroup").after(group)
+        $("#dynaGroupId .sidebar-nav-link:last").after(group)
+
     }
 }
 

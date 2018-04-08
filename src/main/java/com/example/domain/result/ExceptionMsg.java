@@ -43,7 +43,18 @@ public enum ExceptionMsg {
     GrouperRemoveFailed("移除组长失败失败",false),
 
     UserTypeSuccess("修改用户类型成功",true),
-    UserTypeFailed("修改用户类型失败",false);
+    UserTypeFailed("修改用户类型失败",false),
+
+    GroupUsed("组名已存在",false),
+
+    GroupAddSuccess("新增组成功",true),
+    GroupAddFailed("新增组失败失败",false),
+
+    GroupDelSuccess("删除组成功",true),
+    GroupDelFailed("删除组失败",false),
+
+    GroupRemUserSuccess("移除组员成功",true),
+    GroupRemUserFailed("移除组员失败",false);
 
     private String message;
     private boolean codeBool;

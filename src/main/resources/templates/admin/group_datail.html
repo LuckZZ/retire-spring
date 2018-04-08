@@ -200,12 +200,10 @@
                         },
                         success: function (data)
                         {
-                            if(data.rspCode == '000000') {
-                                //toastr.success('操作成功！', '操作成功');
+                            if (data.codeBool){
                                 window.location.reload();
-                            }
-                            else {
-                                toastr.error('操作失败！', '操作失败');
+                            }else {
+                                toastr.error(data.message, '操作失败');
                             }
                         }
                     });

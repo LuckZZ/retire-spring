@@ -61,20 +61,14 @@
                 <i class="am-icon-table sidebar-nav-link-logo"></i> 分组管理
                 <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
             </a>
-            <ul class="sidebar-nav sidebar-nav-sub">
-                <li class="sidebar-nav-link" id="newGroup">
+            <ul class="sidebar-nav sidebar-nav-sub" th:attr="data-id=${activeId}" id="dynaGroupId">
+                <li class="sidebar-nav-link">
                     <a href="/group/groupList" id="groupList" th:class="(${activeId} eq 'groupList')?'active':''">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 组管理
                     </a>
                 </li>
          <!--       <li class="sidebar-nav-link" id="1">
                     <a href="/group/groupList" id="2" th:class="(${activeId} eq 'groupList')?'active':''">
-                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 第一组
-                    </a>
-                </li>-->
-                <!--点击分组管理列出所有的组-->
-    <!--            <li class="sidebar-nav-link" th:each="groups:${groups}">
-                    <a href="/group/groupList">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 第一组
                     </a>
                 </li>-->

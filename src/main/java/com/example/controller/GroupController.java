@@ -62,11 +62,11 @@ public class GroupController extends BaseController{
     @LoggerManage(description = "组保存")
     public Response save(@RequestParam(value = "groupName") String groupName){
         if (groupService.existsByGroupName(groupName)){
-            return  result(ExceptionMsg.FAILED);
+            return  result(ExceptionMsg.GroupUsed);
         }
 //            保存
         groupService.save(new Group(groupName));
-        return result(ExceptionMsg.SUCCESS);
+        return result(ExceptionMsg.GroupAddSuccess);
     }
 
 
@@ -80,9 +80,10 @@ public class GroupController extends BaseController{
 
         try {
             groupService.delete(ids);
-            return result(ExceptionMsg.SUCCESS);
+            return result(ExceptionMsg.GroupDelSuccess);
         }catch (Exception e){
-            return result(ExceptionMsg.FAILED);
+            e.printStackTrace();
+            return result(ExceptionMsg.GroupDelFailed);
         }
     }
 
@@ -96,9 +97,9 @@ public class GroupController extends BaseController{
 
         try {
             groupService.removeUser(ids);
-            return result(ExceptionMsg.SUCCESS);
+            return result(ExceptionMsg.GroupRemUserSuccess);
         }catch (Exception e){
-            return result(ExceptionMsg.FAILED);
+            return result(ExceptionMsg.GroupRemUserFailed);
         }
     }
 

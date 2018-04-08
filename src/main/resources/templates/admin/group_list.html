@@ -173,7 +173,7 @@
             submitHandler:function(form){
                 var myform = $("#addGroupForm");
                 //ajax提交form
-                myFormAjax(myform,"/group/save");
+                formAjaxNoReload(myform,"/group/save");
 
             }
         });
@@ -232,6 +232,12 @@
 
             mulDelModal($mulDel,'/group/delete',checkedId);
 
+        });
+
+        // one-detail详细
+        $(".one-detail").on('click',function(){
+            var v = $(this).data('id');
+            window.location.href="/group/"+v;
         });
 
     });
