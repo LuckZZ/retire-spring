@@ -42,17 +42,6 @@ public class ActivityController extends BaseController{
     }
 
     /**
-     * 进入增加活动草稿界面
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/addDraftView")
-    @LoggerManage(description = "增加活动草稿界面")
-    public String addDraftView(Model model){
-        return "admin/draft_add";
-    }
-
-    /**
      * 进入增加活动界面
      * @param model
      * @return
@@ -75,6 +64,6 @@ public class ActivityController extends BaseController{
 
         activityService.save(activity);
 
-        return result(ExceptionMsg.SUCCESS);
+        return result(ExceptionMsg.ActivityAddSuccess);
     }
 }

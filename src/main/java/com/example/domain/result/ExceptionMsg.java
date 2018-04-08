@@ -54,7 +54,10 @@ public enum ExceptionMsg {
     GroupDelFailed("删除组失败",false),
 
     GroupRemUserSuccess("移除组员成功",true),
-    GroupRemUserFailed("移除组员失败",false);
+    GroupRemUserFailed("移除组员失败",false),
+
+    ActivityAddSuccess("新增活动成功",true),
+    ActivityAddFailed("新增活动失败",false);
 
     private String message;
     private boolean codeBool;
