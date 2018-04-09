@@ -90,6 +90,20 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     }
 
     /**
+     * 活动开启中，不能删除
+     * @param activityId
+     * @return
+     */
+    @Override
+    public boolean canDelete(Integer activityId) {
+        Activity activity = activityDao.findOne(activityId);
+        if (activity.getActivityStatus() == ActivityStatus.open){
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 根据id查找一条数据
      * @param activityId
      * @return

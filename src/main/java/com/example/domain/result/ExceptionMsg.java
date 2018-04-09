@@ -63,7 +63,12 @@ public enum ExceptionMsg {
     ActivityPublishFailed("发布活动失败",false),
 
     ActivityUpdSuccess("更新活动成功",true),
-    ActivityUpdFailed("更新活动失败",false);
+    ActivityUpdFailed("更新活动失败",false),
+
+    ActivityDelSuccess("删除活动成功",true),
+    ActivityDelFailed("删除活动失败",false),
+
+    ActivityOpenDelFailed("开启状态的活动，不能删除",false);
 
     private String message;
     private boolean codeBool;

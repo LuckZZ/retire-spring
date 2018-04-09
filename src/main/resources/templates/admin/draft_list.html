@@ -129,10 +129,10 @@
         $(".one-publish").on('click',function () {
             //当前元素查找父级元素
             var $tr = $(this).closest('tr');
-            //获得工号
+            //设置活动名称
             var name = $tr.find('td').eq(1).html();
             var $onePublish= $('#onePublish-modal');
-            //设置活动名称
+
             $onePublish.find("#publish-activityName").text(name);
 
             var myId = $(this).data('id');
@@ -145,6 +145,24 @@
             var v = $(this).data('id');
             window.location.href="/activity/updateView/"+v;
         });
+
+
+
+
+        //删除
+        $(".one-delete").on('click',function () {
+            //当前元素查找父级元素
+            var $tr = $(this).closest('tr');
+            //设置活动名称
+            var name = $tr.find('td').eq(1).html();
+            var $onePublish= $('#oneDel-activity-modal');
+
+            $onePublish.find("#del-activityName").text(name);
+
+            var myId = $(this).data('id');
+            oneDelModal($onePublish,'/activity/delete',myId);
+        });
+
 
         /*
 
