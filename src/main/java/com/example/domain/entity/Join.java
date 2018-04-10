@@ -1,5 +1,7 @@
 package com.example.domain.entity;
 
+import com.example.domain.enums.Attend;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -8,12 +10,12 @@ import java.io.Serializable;
  * join_activity_id、user_id、activity_id、place_name、expand
  */
 @Entity
-@Table(name = "tb_join_activity")
-public class JoinActivity implements Serializable {
+@Table(name = "tb_join")
+public class Join implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "join_activity_id")
+    @Column(name = "join_id")
     private  Integer joinActivityId;        //主键、自增
 
     @ManyToOne
@@ -24,10 +26,17 @@ public class JoinActivity implements Serializable {
     @JoinColumn(name = "activity_id")
     private Activity activity;              //参加活动:活动 = 多对一
 
-    @Column(nullable = false)
-    private String placeName;            //报名地点非空
-    @Column(nullable = false)
-    private String expand;              //非空
+    //    自定义行
+    @Column
+    private String[] labelDefs;
+
+//    与activity的inputDefs不同；如activity的inputDefs（地点1；地点2），此处为（地点1）或（地点2）
+    @Column
+    private String[] inputDefs;
+
+//    是否参加活动字段
+    @Column
+    private Attend attend;
 
     //set、get方法
 
@@ -55,19 +64,27 @@ public class JoinActivity implements Serializable {
         this.activity = activity;
     }
 
-    public String getPlaceName() {
-        return placeName;
+    public String[] getLabelDefs() {
+        return labelDefs;
     }
 
-    public void setPlaceName(String placeName) {
-        this.placeName = placeName;
+    public void setLabelDefs(String[] labelDefs) {
+        this.labelDefs = labelDefs;
     }
 
-    public String getExpand() {
-        return expand;
+    public String[] getInputDefs() {
+        return inputDefs;
     }
 
-    public void setExpand(String expand) {
-        this.expand = expand;
+    public void setInputDefs(String[] inputDefs) {
+        this.inputDefs = inputDefs;
+    }
+
+    public Attend getAttend() {
+        return attend;
+    }
+
+    public void setAttend(Attend attend) {
+        this.attend = attend;
     }
 }

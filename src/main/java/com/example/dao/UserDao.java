@@ -38,4 +38,5 @@ public interface UserDao extends JpaRepository<User,Integer> {
     @Query(value = "update tb_user set group_id=?1 where user_id=?2", nativeQuery = true)
     int updateGroupByUseId(Integer groupId, Integer userId);
 
+    List<User> findAllByUserIdNotIn(List<Integer> userIds);
 }

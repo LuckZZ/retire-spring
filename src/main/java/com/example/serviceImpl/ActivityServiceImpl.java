@@ -110,6 +110,9 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
      */
     @Override
     public Activity findOne(Integer activityId) {
+        if (activityId == null){
+            return null;
+        }
         Activity activity = activityDao.findOne(activityId);
         String[] strings = activity.getInputDefs();
         String[][] strings1 = DataUtils.oneStrToTwoStr(strings);
