@@ -31,6 +31,7 @@
                                     <div class="am-btn-toolbar">
                                         <div class="am-btn-group am-btn-group-xs">
                                             <!--<a type="button" class="am-btn am-btn-default am-btn-success" href="/activity/addActivityView"><span class="am-icon-plus"></span> 新增</a>-->
+                                            <a type="button" class="am-btn am-btn-default am-btn-danger" href="javascript:;" id="checked-del"><span class="am-icon-trash-o"></span> 删除</a>
                                         </div>
                                     </div>
                                 </div>
@@ -57,6 +58,7 @@
                                 <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black" >
                                     <thead>
                                     <tr>
+                                        <th><input type="checkbox"/></th>
                                         <th>序号</th>
                                         <th>工号</th>
                                         <th>姓名</th>
@@ -68,6 +70,7 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="join:${joins}">
+                                        <td><input type="checkbox" th:value="${join.joinId}"/></td>
                                         <td th:text="${join.joinId}">序号1</td>
                                         <td th:text="${join.user.jobNum}">工号123456</td>
                                         <td th:text="${join.user.name}">姓名张三</td>
@@ -109,7 +112,7 @@
 </div>
 
 <!--alert-->
-<div th:replace="fragments/alert::alert_activity"></div>
+<div th:replace="fragments/alert::alert_user_delete"></div>
 
 <div th:replace="fragments/footer::js"></div>
 </body>
@@ -119,121 +122,6 @@
 
 <script>
     $(function() {
-
-        //是否参加change事件
-        $(".attend").on('change',function(){
-            var $tr = $(this).closest('tr');
-            var $div =  $tr.find('.tr-select');
-            if ($(this).val() == 'no'){
-                $div.hide();
-            }else {
-                $div.show();
-            }
-        });
-
-        //提交事件
-        $(".one-submit").on('click',function () {
-
-            //当前元素查找父级元素
-            var $tr = $(this).closest('tr');
-
-            // 不支持 MutationObserver 的浏览器使用 JS 操作 select 以后需要手动触发 `changed.selected.amui` 事件
-            $tr.find('select').each(function () {
-                $(this).trigger('changed.selected.amui');
-            });
-
-            //工号
-            var jobNum = $tr.find('td').eq(1).html();
-            //姓名
-            var name = $tr.find('td').eq(2).html();
-            //是否参加
-            var attend = $tr.find('.attend option:selected').text();
-
-            var $oneSubmit= $('#oneSubmit-modal');
-
-            $oneSubmit.find("#submit-jobNum").text(jobNum);
-            $oneSubmit.find("#submit-name").text(name);
-            $oneSubmit.find("#submit-attend").text(attend);
-
-            var userId = $(this).data('id');
-
-            var activityId = $tr.find('input[name="activityId"]').val();
-
-            var inputDefs = new Array();
-
-            $tr.find('select[name="inputDefs"]').each(function () {
-                inputDefs.push($(this).val());
-            });
-
-            var attendVal = $tr.find('.attend option:selected').val();
-
-            $oneSubmit.modal({
-                onConfirm: function(options) {
-                    $.ajaxSettings.traditional=true;
-                    $.ajax({
-                        async: false,
-                        type: 'POST',
-                        dataType: 'json',
-                        data:{
-                            userId:userId,
-                            activityId:activityId,
-                            inputDefs:inputDefs,
-                            attend:attendVal
-                        },
-                        url: '/join/joinActivity',
-                        error : function(XMLHttpRequest, textStatus, errorThrown) {
-                            toastr.error('出现错误！', '错误');
-                        },
-                        success: function(data){
-                            if (data.codeBool){
-                                 location.reload();
-                            }else {
-                                toastr.error(data.message, '操作失败');
-                            }
-                        }
-                    });
-                }
-            });
-
-            //移除暂存的实例
-            $oneSubmit.on('closed.modal.amui', function() {
-                $(this).removeData('amui.modal');
-            });
-
-
-     /*       $.ajax({
-                url: "/join/joinActivity",
-                type: "POST",
-                data:{
-                    id:paramId
-                },
-                error: function ()
-                {
-                    console.log("one-submit error function!");
-                    toastr.error('出现错误！', '错误');
-                },
-                success: function (data)
-                {
-                    if (data.codeBool){
-                        location.reload();
-                    }else {
-                        toastr.error(data.message, '操作失败');
-                    }
-                }
-            });*/
-        });
-
-/*        // 修改
-        $(".one-update").on('click',function () {
-            var v = $(this).data('id');
-            window.location.href="/admin/updateView/"+v;
-        });
-
-        // 详细
-        $(".one-detail").on('click',function () {
-            var v = $(this).data('id');
-            window.location.href="/admin/datailView/"+v;
-        });
 
         //删除
         $(".one-del").on('click',function () {
@@ -253,7 +141,7 @@
 
             var myId = $(this).data('id');
 
-            oneDelModal($oneDel,'/admin/delete',myId);
+            oneDelModal($oneDel,'/join/delete',myId);
 
         });
 
@@ -264,10 +152,9 @@
 
             var $mulDel= $('#mulDel-modal');
 
-            mulDelModal($mulDel,'/admin/delete',checkedId);
+            mulDelModal($mulDel,'/join/delete',checkedId);
 
-        });*/
-
+        });
 
     });
 </script>

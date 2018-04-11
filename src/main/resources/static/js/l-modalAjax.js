@@ -29,6 +29,8 @@ function oneDelModal($oneDel,paramUrl,paramId) {
 
         }
     });
+    //移除暂存的实例
+    removeModalData($oneDel);
 }
 
 /**
@@ -63,5 +65,7 @@ function mulDelModal($mulDel,paramUrl,paramId) {
 
         }
     });
+    //移除暂存的实例
+    removeModalData($mulDel);
 
 }

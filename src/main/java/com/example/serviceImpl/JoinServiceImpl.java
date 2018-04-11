@@ -13,6 +13,7 @@ import com.example.service.JoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,5 +79,13 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     @Override
     public List<Join> findAllByActivity_ActivityId(Integer activityId) {
         return joinDao.findAllByActivity_ActivityId(activityId);
+    }
+
+    @Transactional
+    @Override
+    public void delete(Integer[] joinIds) {
+        for (int i = 0; i < joinIds.length; i ++){
+            joinDao.delete(joinIds[i]);
+        }
     }
 }

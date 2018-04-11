@@ -8,6 +8,7 @@ import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.ActivityService;
 import com.example.service.JoinService;
+import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,24 +64,32 @@ public class JoinController extends BaseController{
 
         try {
             Integer userId = Integer.parseInt(request.getParameter("userId"));
-
             Integer activityId = Integer.parseInt(request.getParameter("activityId"));
-
             String[] inputDefs = request.getParameterValues("inputDefs");
-
             String attend = request.getParameter("attend");
 
             joinService.save(userId,activityId,inputDefs,attend);
 
             return result(ExceptionMsg.JoinSuccess);
-
         }catch (Exception e){
-
             e.printStackTrace();
-
             return result(ExceptionMsg.JoinFailed);
-
         }
+    }
 
+    @ResponseBody
+    @RequestMapping(value = "/delete")
+    @LoggerManage(description = "删除活动")
+    public Response delete(HttpServletRequest request){
+
+        String[] joinIds = request.getParameterValues("id");
+        Integer[] ids = DataUtils.turn(joinIds);
+
+        try {
+            joinService.delete(ids);
+            return result(ExceptionMsg.JoinDelSuccess);
+        }catch (Exception e){
+            return result(ExceptionMsg.JoinDelFailed);
+        }
     }
 }

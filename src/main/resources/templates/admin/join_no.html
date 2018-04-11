@@ -213,78 +213,9 @@
             });
 
             //移除暂存的实例
-            $oneSubmit.on('closed.modal.amui', function() {
-                $(this).removeData('amui.modal');
-            });
-
-
-     /*       $.ajax({
-                url: "/join/joinActivity",
-                type: "POST",
-                data:{
-                    id:paramId
-                },
-                error: function ()
-                {
-                    console.log("one-submit error function!");
-                    toastr.error('出现错误！', '错误');
-                },
-                success: function (data)
-                {
-                    if (data.codeBool){
-                        location.reload();
-                    }else {
-                        toastr.error(data.message, '操作失败');
-                    }
-                }
-            });*/
-        });
-
-/*        // 修改
-        $(".one-update").on('click',function () {
-            var v = $(this).data('id');
-            window.location.href="/admin/updateView/"+v;
-        });
-
-        // 详细
-        $(".one-detail").on('click',function () {
-            var v = $(this).data('id');
-            window.location.href="/admin/datailView/"+v;
-        });
-
-        //删除
-        $(".one-del").on('click',function () {
-            //当前元素查找父级元素
-            var $tr = $(this).closest('tr');
-            //获得工号
-            var jobNum = $tr.find('td').eq(2).html();
-            //获得姓名
-            var name = $tr.find('td').eq(3).html();
-
-            var $oneDel= $('#oneDel-modal');
-
-            //设置工号、姓名
-            $oneDel.find("#jobNum").text(jobNum);
-
-            $oneDel.find("#name").text(name);
-
-            var myId = $(this).data('id');
-
-            oneDelModal($oneDel,'/admin/delete',myId);
+            removeModalData($oneSubmit);
 
         });
-
-        //删除已选择
-        $("#checked-del").on('click',function () {
-
-            var checkedId = checkedIds();
-
-            var $mulDel= $('#mulDel-modal');
-
-            mulDelModal($mulDel,'/admin/delete',checkedId);
-
-        });*/
-
 
     });
 </script>

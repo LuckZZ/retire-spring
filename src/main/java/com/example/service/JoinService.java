@@ -14,4 +14,6 @@ public interface JoinService extends BaseCrudService<Join,Integer>{
 
     List<Join> findAllByActivity_ActivityId(Integer activityId);
 
+    void delete(Integer[] joinIds);
+
 }

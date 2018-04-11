@@ -130,4 +130,13 @@ function idAjaxReload(paramUrl,paramId) {
     });
 }
 
-//ssss
+/**
+ * 移除模态框暂存实例
+ * @param $modal
+ */
+function removeModalData($modal) {
+    //移除暂存的实例
+    $modal.on('closed.modal.amui', function() {
+        $(this).removeData('amui.modal');
+    });
+}
