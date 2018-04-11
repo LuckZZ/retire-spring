@@ -9,4 +9,6 @@ import java.util.List;
 public interface JoinDao extends JpaRepository<Join,Integer> {
 
     List<Join> findAllByActivity_ActivityId(Integer activityId);
+
+    long countByActivity_ActivityId(Integer activityId);
 }

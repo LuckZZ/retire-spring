@@ -17,7 +17,7 @@ public interface ActivityService extends BaseCrudService<Activity,Integer>{
 
     boolean updateExceptId(Activity activity);
 
-    boolean canDelete(Integer activityId);
+    boolean canJoin(Integer activityId);
 
     int notActivityStatus(Integer activityId);
 

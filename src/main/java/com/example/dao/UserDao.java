@@ -2,6 +2,7 @@ package com.example.dao;
 
 import com.example.domain.entity.Group;
 import com.example.domain.entity.User;
+import com.example.domain.enums.Exist;
 import com.example.domain.enums.Rank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -39,4 +40,6 @@ public interface UserDao extends JpaRepository<User,Integer> {
     int updateGroupByUseId(Integer groupId, Integer userId);
 
     List<User> findAllByUserIdNotIn(List<Integer> userIds);
+
+    long countByExist(Exist exist);
 }

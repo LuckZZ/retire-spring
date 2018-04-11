@@ -30,13 +30,20 @@ public class Activity extends BaseEntity implements Serializable {
     @Column
     private String[] inputDefs;
 
+    //    活动状态
+    @Column
+    private ActivityStatus activityStatus;
+
 //    不生成列
     @Transient
     private String[][] inputDefss;
 
-//    活动状态
-    @Column
-    private ActivityStatus activityStatus;
+    //    不生成列
+    @Transient
+    private long joinOkCount;
+    //    不生成列
+    @Transient
+    private long userCount;
 
     public Activity() {
     }
@@ -96,5 +103,21 @@ public class Activity extends BaseEntity implements Serializable {
 
     public void setActivityStatus(ActivityStatus activityStatus) {
         this.activityStatus = activityStatus;
+    }
+
+    public long getJoinOkCount() {
+        return joinOkCount;
+    }
+
+    public void setJoinOkCount(long joinOkCount) {
+        this.joinOkCount = joinOkCount;
+    }
+
+    public long getUserCount() {
+        return userCount;
+    }
+
+    public void setUserCount(long userCount) {
+        this.userCount = userCount;
     }
 }

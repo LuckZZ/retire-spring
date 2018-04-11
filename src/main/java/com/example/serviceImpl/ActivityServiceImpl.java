@@ -1,8 +1,11 @@
 package com.example.serviceImpl;
 
 import com.example.dao.ActivityDao;
+import com.example.dao.JoinDao;
+import com.example.dao.UserDao;
 import com.example.domain.entity.Activity;
 import com.example.domain.enums.ActivityStatus;
+import com.example.domain.enums.Exist;
 import com.example.service.ActivityService;
 import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,12 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     @Autowired
     private ActivityDao activityDao;
 
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private JoinDao joinDao;
+
     @Override
     public Activity save(Activity activity) {
 //        把活动保存到草稿箱
@@ -27,9 +36,7 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     public List<Activity> findAll() {
         List<Activity> activities = activityDao.findAll();
         for (Activity activity : activities) {
-            String[] strings = activity.getInputDefs();
-            String[][] strings1 = DataUtils.oneStrToTwoStr(strings);
-            activity.setInputDefss(strings1);
+            activity = assignActivity(activity);
         }
         return activities;
     }
@@ -48,9 +55,7 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     public List<Activity> findAllByActivityStatus(ActivityStatus activityStatus) {
         List<Activity> activities = activityDao.findAllByActivityStatus(activityStatus);
         for (Activity activity : activities) {
-            String[] strings = activity.getInputDefs();
-            String[][] strings1 = DataUtils.oneStrToTwoStr(strings);
-            activity.setInputDefss(strings1);
+            activity = assignActivity(activity);
         }
         return activities;
     }
@@ -64,9 +69,7 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     public List<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus) {
         List<Activity> activities = activityDao.findAllByActivityStatusNot(activityStatus);
         for (Activity activity : activities) {
-            String[] strings = activity.getInputDefs();
-            String[][] strings1 = DataUtils.oneStrToTwoStr(strings);
-            activity.setInputDefss(strings1);
+            activity = assignActivity(activity);
         }
         return activities;
     }
@@ -90,14 +93,14 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     }
 
     /**
-     * 活动开启中，不能删除
+     * 活动关闭中，不能报名和删除报名
      * @param activityId
      * @return
      */
     @Override
-    public boolean canDelete(Integer activityId) {
+    public boolean canJoin(Integer activityId) {
         Activity activity = activityDao.findOne(activityId);
-        if (activity.getActivityStatus() == ActivityStatus.open){
+        if (activity.getActivityStatus() == ActivityStatus.close){
             return false;
         }
         return true;
@@ -134,9 +137,20 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
             return null;
         }
         Activity activity = activityDao.findOne(activityId);
+        activity = assignActivity(activity);
+        return activity;
+    }
+
+    private Activity assignActivity(Activity activity){
         String[] strings = activity.getInputDefs();
         String[][] strings1 = DataUtils.oneStrToTwoStr(strings);
+        long joinOkSize = joinDao.countByActivity_ActivityId(activity.getActivityId());
+        long userCount = userDao.countByExist(Exist.yes);
+
         activity.setInputDefss(strings1);
+        activity.setJoinOkCount(joinOkSize);
+        activity.setUserCount(userCount);
+
         return activity;
     }
 }

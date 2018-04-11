@@ -69,8 +69,7 @@ public class JoinController extends BaseController{
             String[] inputDefs = request.getParameterValues("inputDefs");
             String attend = request.getParameter("attend");
 
-            Activity activity = activityService.findOne(activityId);
-            if (activity.getActivityStatus() == ActivityStatus.close){
+            if (!activityService.canJoin(activityId)){
                 return result(ExceptionMsg.JoinForCloseFailed);
             }
 
@@ -93,8 +92,7 @@ public class JoinController extends BaseController{
 
         try {
 
-            Activity activity = activityService.findOne(Integer.parseInt(activityId));
-            if (activity.getActivityStatus() == ActivityStatus.close){
+            if (!activityService.canJoin(Integer.parseInt(activityId))){
                 return result(ExceptionMsg.JoinDelForCloseFailed);
             }
 

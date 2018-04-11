@@ -133,10 +133,6 @@ public class ActivityController extends BaseController{
     public Response delete(@RequestParam(value = "id") String paramId){
 
         Integer activityId = Integer.parseInt(paramId);
-//        返回false，不能删除
-        if (!activityService.canDelete(activityId)){
-            return result(ExceptionMsg.ActivityOpenDelFailed);
-        }
         activityService.delete(activityId);
 
         return result(ExceptionMsg.ActivityDelSuccess);
