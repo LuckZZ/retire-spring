@@ -4,6 +4,7 @@ import com.example.comm.aop.LoggerManage;
 import com.example.domain.bean.JoinsDisplay;
 import com.example.domain.entity.Activity;
 import com.example.domain.entity.Join;
+import com.example.domain.enums.ActivityStatus;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.ActivityService;
@@ -68,6 +69,11 @@ public class JoinController extends BaseController{
             String[] inputDefs = request.getParameterValues("inputDefs");
             String attend = request.getParameter("attend");
 
+            Activity activity = activityService.findOne(activityId);
+            if (activity.getActivityStatus() == ActivityStatus.close){
+                return result(ExceptionMsg.JoinForCloseFailed);
+            }
+
             joinService.save(userId,activityId,inputDefs,attend);
 
             return result(ExceptionMsg.JoinSuccess);
@@ -78,14 +84,20 @@ public class JoinController extends BaseController{
     }
 
     @ResponseBody
-    @RequestMapping(value = "/delete")
-    @LoggerManage(description = "删除活动")
-    public Response delete(HttpServletRequest request){
+    @RequestMapping(value = "/delete/{activityId}")
+    @LoggerManage(description = "删除报名")
+    public Response delete(@PathVariable String activityId, HttpServletRequest request){
 
         String[] joinIds = request.getParameterValues("id");
         Integer[] ids = DataUtils.turn(joinIds);
 
         try {
+
+            Activity activity = activityService.findOne(Integer.parseInt(activityId));
+            if (activity.getActivityStatus() == ActivityStatus.close){
+                return result(ExceptionMsg.JoinDelForCloseFailed);
+            }
+
             joinService.delete(ids);
             return result(ExceptionMsg.JoinDelSuccess);
         }catch (Exception e){

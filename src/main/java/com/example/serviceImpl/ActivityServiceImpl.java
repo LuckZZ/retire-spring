@@ -104,6 +104,26 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     }
 
     /**
+     * 转换活动状态
+     * @param activityId
+     * @return
+     */
+    @Transactional
+    @Override
+    public int notActivityStatus(Integer activityId) {
+
+        Activity activity = activityDao.findOne(activityId);
+
+        if (activity.getActivityStatus() == ActivityStatus.open){
+            return activityDao.updateActivityStatus(ActivityStatus.close,activityId);
+        }else if (activity.getActivityStatus() == ActivityStatus.close){
+            return activityDao.updateActivityStatus(ActivityStatus.open,activityId);
+        }
+
+        return 0;
+    }
+
+    /**
      * 根据id查找一条数据
      * @param activityId
      * @return

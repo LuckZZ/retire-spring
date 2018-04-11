@@ -58,7 +58,10 @@
                                 <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black" >
                                     <thead>
                                     <tr>
-                                        <th><input type="checkbox"/></th>
+                                        <th>
+                                            <input type="hidden" th:value="${activity.activityId}" id="activityId"/>
+                                            <input type="checkbox"/>
+                                        </th>
                                         <th>序号</th>
                                         <th>工号</th>
                                         <th>姓名</th>
@@ -141,7 +144,9 @@
 
             var myId = $(this).data('id');
 
-            oneDelModal($oneDel,'/join/delete',myId);
+            var activityId = $("#activityId").val();
+
+            oneDelModal($oneDel,'/join/delete/'+activityId,myId);
 
         });
 
@@ -152,7 +157,9 @@
 
             var $mulDel= $('#mulDel-modal');
 
-            mulDelModal($mulDel,'/join/delete',checkedId);
+            var activityId = $("#activityId").val();
+
+            mulDelModal($mulDel,'/join/delete/'+activityId,checkedId);
 
         });
 

@@ -19,4 +19,6 @@ public interface ActivityService extends BaseCrudService<Activity,Integer>{
 
     boolean canDelete(Integer activityId);
 
+    int notActivityStatus(Integer activityId);
+
 }

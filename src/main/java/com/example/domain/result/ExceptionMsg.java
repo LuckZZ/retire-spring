@@ -68,13 +68,19 @@ public enum ExceptionMsg {
     ActivityDelSuccess("删除活动成功",true),
     ActivityDelFailed("删除活动失败",false),
 
+    ActivityStatusSuccess("切换活动状态成功",true),
+    ActivityStatusFailed("切换活动状态失败",false),
+
     ActivityOpenDelFailed("开启状态的活动，不能删除",false),
 
     JoinSuccess("活动报名成功",true),
     JoinFailed("活动报名失败",false),
 
     JoinDelSuccess("活动删除成功",true),
-    JoinDelFailed("活动删除失败",false);
+    JoinDelFailed("活动删除失败",false),
+
+    JoinForCloseFailed("活动已关闭不能报名",false),
+    JoinDelForCloseFailed("活动已关闭不能删除",false);
 
     private String message;
     private boolean codeBool;

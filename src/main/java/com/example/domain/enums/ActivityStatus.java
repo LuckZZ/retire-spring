@@ -4,7 +4,7 @@ package com.example.domain.enums;
  * 活动状态
  */
 public enum ActivityStatus {
-    draft("草稿"),open("打开报名"),close("关闭报名");
+    draft("草稿"),open("打开"),close("关闭");
     private String name;
 
     private ActivityStatus(String name) {

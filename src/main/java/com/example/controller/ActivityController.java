@@ -141,4 +141,26 @@ public class ActivityController extends BaseController{
 
         return result(ExceptionMsg.ActivityDelSuccess);
     }
+
+/*    @ResponseBody
+    @RequestMapping("/publish")
+    @LoggerManage(description = "发布活动")
+    public Response publish(@RequestParam(value = "id") String paramId){
+        Integer id = Integer.parseInt(paramId);
+        activityService.activityPublish(id);
+        return result(ExceptionMsg.ActivityPublishSuccess);
+    }*/
+
+    @ResponseBody
+    @RequestMapping("/notActivityStatus")
+    @LoggerManage(description = "修改活动状态")
+    public Response notActivityStatus(@RequestParam(value = "id") String activityId){
+        try {
+            activityService.notActivityStatus(Integer.parseInt(activityId));
+            return result(ExceptionMsg.ActivityStatusSuccess);
+        }catch (Exception e){
+            e.printStackTrace();
+            return result(ExceptionMsg.ActivityStatusFailed);
+        }
+    }
 }
