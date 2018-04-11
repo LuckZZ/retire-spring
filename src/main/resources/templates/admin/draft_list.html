@@ -80,11 +80,13 @@
                                                       <a href="javascript:;" class="am-dropdown-toggle" data-am-dropdown-toggle>
                                                           <i class="am-icon-pencil"></i> 编辑
                                                       </a>
+                                                      <a th:attr="data-id=${activity.activityId}" href="javascript:;" class="tpl-table-black-operation-del one-delete">
+                                                          <i class="am-icon-trash"></i> 删除
+                                                      </a>
                                                   </div>
                                                   <ul class="am-dropdown-content">
                                                       <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-publish" >发布</a></li>
                                                       <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-update" >修改</a></li>
-                                                      <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-delete" >删除</a></li>
                                                   </ul>
                                               </div>
                                         </td>
@@ -155,12 +157,12 @@
             var $tr = $(this).closest('tr');
             //设置活动名称
             var name = $tr.find('td').eq(1).html();
-            var $onePublish= $('#oneDel-activity-modal');
+            var $oneDel= $('#oneDel-activity-modal');
 
-            $onePublish.find("#del-activityName").text(name);
+            $oneDel.find("#del-activityName").text(name);
 
             var myId = $(this).data('id');
-            oneDelModal($onePublish,'/activity/delete',myId);
+            oneDelModal($oneDel,'/activity/delete',myId);
         });
 
 

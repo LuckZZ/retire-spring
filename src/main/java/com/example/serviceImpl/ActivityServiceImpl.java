@@ -4,6 +4,8 @@ import com.example.dao.ActivityDao;
 import com.example.dao.JoinDao;
 import com.example.dao.UserDao;
 import com.example.domain.entity.Activity;
+import com.example.domain.entity.Join;
+import com.example.domain.entity.User;
 import com.example.domain.enums.ActivityStatus;
 import com.example.domain.enums.Exist;
 import com.example.service.ActivityService;
@@ -152,5 +154,16 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
         activity.setUserCount(userCount);
 
         return activity;
+    }
+
+    /**
+     * 先删除join表，再删除activity
+     * @param activityId
+     */
+    @Transactional
+    @Override
+    public void delete(Integer activityId) {
+       joinDao.deleteAllByActivity_ActivityId(activityId);
+       activityDao.delete(activityId);
     }
 }
