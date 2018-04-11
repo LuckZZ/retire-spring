@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface JoinDao extends JpaRepository<Join,Integer> {
 
-    List<Join> findAllByActivity(Activity activity);
+    List<Join> findAllByActivity_ActivityId(Integer activityId);
 }

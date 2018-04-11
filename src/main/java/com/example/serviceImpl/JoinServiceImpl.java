@@ -34,7 +34,7 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
         //      活动
         Activity activity = activityService.findOne(activityId);
 
-        List<Join> joins = joinDao.findAllByActivity(activity);
+        List<Join> joins = joinDao.findAllByActivity_ActivityId(activityId);
 
 //        参加的用户id
         List<Integer> userIds = new ArrayList<>();
@@ -64,10 +64,19 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
         Activity activity = activityService.findOne(activityId);
 
         if (attend.equals("no")){
-            Join join = new Join(user,activity,null,null,Attend.no);
+            String[] labs = new String[activity.getLabelDefs().length];
+            for (int i = 0; i < labs.length; i++) {
+                labs[i] = "无";
+            }
+            Join join = new Join(user,activity,labs,Attend.no);
             return joinDao.save(join);
         }
-        Join join = new Join(user,activity,activity.getLabelDefs(),inputDefs,Attend.yes);
+        Join join = new Join(user,activity,inputDefs,Attend.yes);
         return joinDao.save(join);
+    }
+
+    @Override
+    public List<Join> findAllByActivity_ActivityId(Integer activityId) {
+        return joinDao.findAllByActivity_ActivityId(activityId);
     }
 }

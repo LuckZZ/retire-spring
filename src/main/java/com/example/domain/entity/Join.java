@@ -16,7 +16,7 @@ public class Join implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "join_id")
-    private  Integer joinActivityId;        //主键、自增
+    private  Integer joinId;        //主键、自增
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -25,10 +25,6 @@ public class Join implements Serializable {
     @ManyToOne
     @JoinColumn(name = "activity_id")
     private Activity activity;              //参加活动:活动 = 多对一
-
-    //    自定义行
-    @Column
-    private String[] labelDefs;
 
 //    与activity的inputDefs不同；如activity的inputDefs（地点1；地点2），此处为（地点1）或（地点2）
     @Column
@@ -41,22 +37,22 @@ public class Join implements Serializable {
     public Join() {
     }
 
-    public Join(User user, Activity activity, String[] labelDefs, String[] inputDefs, Attend attend) {
+    public Join(User user, Activity activity, String[] inputDefs, Attend attend) {
         this.user = user;
         this.activity = activity;
-        this.labelDefs = labelDefs;
         this.inputDefs = inputDefs;
         this.attend = attend;
     }
 
     //set、get方法
 
-    public Integer getJoinActivityId() {
-        return joinActivityId;
+
+    public Integer getJoinId() {
+        return joinId;
     }
 
-    public void setJoinActivityId(Integer joinActivityId) {
-        this.joinActivityId = joinActivityId;
+    public void setJoinId(Integer joinId) {
+        this.joinId = joinId;
     }
 
     public User getUser() {
@@ -73,14 +69,6 @@ public class Join implements Serializable {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
-    }
-
-    public String[] getLabelDefs() {
-        return labelDefs;
-    }
-
-    public void setLabelDefs(String[] labelDefs) {
-        this.labelDefs = labelDefs;
     }
 
     public String[] getInputDefs() {
