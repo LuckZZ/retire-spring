@@ -2,6 +2,8 @@ package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
 import com.example.domain.bean.JoinsDisplay;
+import com.example.domain.result.ExceptionMsg;
+import com.example.domain.result.Response;
 import com.example.service.JoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,14 +35,28 @@ public class JoinController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "/joinActivity")
     @LoggerManage(description = "活动报名")
-    public String joinActivity(HttpServletRequest request){
+    public Response joinActivity(HttpServletRequest request){
 
+        try {
+            Integer userId = Integer.parseInt(request.getParameter("userId"));
 
+            Integer activityId = Integer.parseInt(request.getParameter("activityId"));
 
- /*       JoinsDisplay joinsDisplay = joinService.joinNo(Integer.parseInt(activityId));
+            String[] inputDefs = request.getParameterValues("inputDefs");
 
-        model.addAttribute("joinsDisplay", joinsDisplay);*/
+            String attend = request.getParameter("attend");
 
-        return "admin/join_no";
+            joinService.save(userId,activityId,inputDefs,attend);
+
+            return result(ExceptionMsg.JoinSuccess);
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+
+            return result(ExceptionMsg.JoinFailed);
+
+        }
+
     }
 }

@@ -83,8 +83,8 @@
                                         </td>
 
                                         <td>
-                                            <!--<input name="userId" th:field="${user.userId}" type="hidden"/>
-                                            <input name="activityId" th:field="${joinsDisplay.activity.activityId}" type="hidden"/>-->
+                                            <input name="userId" th:value="${user.userId}" type="hidden"/>
+                                            <input name="activityId" th:value="${joinsDisplay.activity.activityId}" type="hidden"/>
 
                                             <select data-am-selected="{btnSize: 'sm'}" name="attend" class="attend">
                                                 <option value="yes" th:text="参加"></option>
@@ -153,6 +153,12 @@
 
             //当前元素查找父级元素
             var $tr = $(this).closest('tr');
+
+            // 不支持 MutationObserver 的浏览器使用 JS 操作 select 以后需要手动触发 `changed.selected.amui` 事件
+            $tr.find('select').each(function () {
+                $(this).trigger('changed.selected.amui');
+            });
+
             //工号
             var jobNum = $tr.find('td').eq(1).html();
             //姓名
@@ -166,7 +172,17 @@
             $oneSubmit.find("#submit-name").text(name);
             $oneSubmit.find("#submit-attend").text(attend);
 
-            var userId = $()
+            var userId = $(this).data('id');
+
+            var activityId = $tr.find('input[name="activityId"]').val();
+
+            var inputDefs = new Array();
+
+            $tr.find('select[name="inputDefs"]').each(function () {
+                inputDefs.push($(this).val());
+            });
+
+            var attendVal = $tr.find('.attend option:selected').val();
 
             $oneSubmit.modal({
                 onConfirm: function(options) {
@@ -176,7 +192,10 @@
                         type: 'POST',
                         dataType: 'json',
                         data:{
-                            id:paramId
+                            userId:userId,
+                            activityId:activityId,
+                            inputDefs:inputDefs,
+                            attend:attendVal
                         },
                         url: '/join/joinActivity',
                         error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -184,15 +203,20 @@
                         },
                         success: function(data){
                             if (data.codeBool){
-                                location.reload();
+                                 location.reload();
                             }else {
                                 toastr.error(data.message, '操作失败');
                             }
                         }
                     });
-
                 }
             });
+
+            //移除暂存的实例
+            $oneSubmit.on('closed.modal.amui', function() {
+                $(this).removeData('amui.modal');
+            });
+
 
      /*       $.ajax({
                 url: "/join/joinActivity",

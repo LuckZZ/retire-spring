@@ -7,6 +7,7 @@ import com.example.domain.bean.JoinsDisplay;
 import com.example.domain.entity.Activity;
 import com.example.domain.entity.Join;
 import com.example.domain.entity.User;
+import com.example.domain.enums.Attend;
 import com.example.service.ActivityService;
 import com.example.service.JoinService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,18 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
         JoinsDisplay joinDisplays = new JoinsDisplay(users, activity);
 
         return joinDisplays;
+    }
+
+    @Override
+    public Join save(Integer userId, Integer activityId, String[] inputDefs, String attend) {
+        User user = userDao.findOne(userId);
+        Activity activity = activityService.findOne(activityId);
+
+        if (attend.equals("no")){
+            Join join = new Join(user,activity,null,null,Attend.no);
+            return joinDao.save(join);
+        }
+        Join join = new Join(user,activity,activity.getLabelDefs(),inputDefs,Attend.yes);
+        return joinDao.save(join);
     }
 }

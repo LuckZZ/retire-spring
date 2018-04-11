@@ -38,6 +38,17 @@ public class Join implements Serializable {
     @Column
     private Attend attend;
 
+    public Join() {
+    }
+
+    public Join(User user, Activity activity, String[] labelDefs, String[] inputDefs, Attend attend) {
+        this.user = user;
+        this.activity = activity;
+        this.labelDefs = labelDefs;
+        this.inputDefs = inputDefs;
+        this.attend = attend;
+    }
+
     //set、get方法
 
     public Integer getJoinActivityId() {
