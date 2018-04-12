@@ -8,6 +8,7 @@ import com.example.domain.result.Response;
 import com.example.service.AdminService;
 import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,15 @@ public class AdminController extends BaseController{
 
     @RequestMapping("/adminList")
     @LoggerManage(description = "管理员列表")
-    public String adminList(Model model){
-        List<Admin> admins = adminService.findAll();
-        model.addAttribute("admins",admins);
+    public String adminList(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page){
+       /* List<Admin> admins = adminService.findAll();
+        model.addAttribute("admins",admins);*/
+        Page<Admin> datas = adminService.findAdminNoCriteria(page, 5);
+        model.addAttribute("datas",datas);
+    /*    System.out.println("getTotalPages:"+datas.getTotalPages());
+        System.out.println("getTotalElements:"+datas.getTotalElements());
+        System.out.println("getNumber:"+datas.getNumber());
+        System.out.println("getSize:"+datas.getSize());*/
         return "admin/admin_list";
     }
 

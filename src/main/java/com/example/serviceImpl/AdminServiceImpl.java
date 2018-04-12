@@ -3,10 +3,11 @@ package com.example.serviceImpl;
 import com.example.dao.AdminDao;
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
-import com.example.domain.result.ExceptionMsg;
-import com.example.domain.result.Response;
 import com.example.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -62,6 +63,12 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
             adminDao.updateCanLogin(CanLogin.no,adminId);
         }
         return true;
+    }
+
+    @Override
+    public Page<Admin> findAdminNoCriteria(Integer page, Integer size) {
+        Pageable pageable = new PageRequest(page,size);
+        return adminDao.findAll(pageable);
     }
 
     @Transactional

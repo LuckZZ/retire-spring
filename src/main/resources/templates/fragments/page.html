@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="page(datas,url)">
+    <div class="am-u-lg-12 am-cf">
+        <div class="am-fr">
+            <!--总页数小于7-->
+            <ul th:if="${datas.totalPages le 7}" class="am-pagination tpl-pagination">
+                <li th:if="${datas.number > 0}">
+                    <a th:href="@{${url}(page=${datas.number-1})}" class="">上一页</a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(1, datas.totalPages)}" th:classappend="${(datas.number + 1) eq i} ? 'am-active' : ''">
+                    <a th:href="@{${url}(page=${i-1})}" th:text="${i}">1</a>
+                </li>
+                <li th:unless="${datas.number + 1 == datas.totalPages}">
+                    <a th:href="@{${url}(page=${datas.number+1})}" class="">下一页</a>
+                </li>
+            </ul>
+            <!--总页数大于7-->
+<!--            <ul th:if="${datas.totalPages gt 7}" class="am-pagination tpl-pagination">
+                <li th:if="${datas.number > 0}">
+                    <a th:href="@{${url}(page=${datas.number-1})}" class="">上一页</a>
+                </li>
+                <li class="am-pagination-first" th:classappend="${(datas.number + 1) eq 1} ? 'am-active' : ''">
+                    <a th:href="@{?page=1}">1</a>
+                </li>
+                &lt;!&ndash; 当前页面小于等于4 &ndash;&gt;
+                <li th:if="${(datas.number + 1) le 4}" th:each="i : ${#numbers.sequence(2,5)}"
+                    th:classappend="${(datas.number + 1) eq i} ? 'am-active' : ''" >
+                    <a th:href="@{?page={page}(page=${i})}">
+                        <span th:text="${i}"></span>
+                    </a>
+                </li>
+                <li th:if="${(datas.number + 1) le 4}">
+                    <a href="javascript:void(0);">
+                        <span aria-hidden="true">...</span>
+                    </a>
+                </li>
+                &lt;!&ndash; 最后一页与当前页面之差，小于等于3 &ndash;&gt;
+                <li th:if="${(datas.totalPages-(datas.number + 1)) le 3}">
+                    <a href="javascript:void(0);" >
+                        <span aria-hidden="true">...</span>
+                    </a>
+                </li>
+                <li th:if="${(datas.totalPages-(datas.number + 1)) le 3}" th:each="i : ${#numbers.sequence(datas.totalPages-4, datas.totalPages-1)}"
+                    th:classappend="${(datas.number + 1) eq i} ? 'am-active' : ''" >
+                    <a th:href="@{?page={page}(page=${i})}">
+                        <span th:text="${i}"></span>
+                    </a>
+                </li>
+                &lt;!&ndash; 最后一页与当前页面之差大于3，且  当前页面大于4&ndash;&gt;
+                <li th:if="${((datas.number + 1) gt 4) && ((datas.totalPages-(datas.number + 1)) gt 3 )}">
+                    <a href="javascript:void(0);">
+                        <span aria-hidden="true">...</span>
+                    </a>
+                </li>
+                <li th:if="${((datas.number + 1) gt 4) && ((datas.totalPages-(datas.number + 1)) gt 3 )}"
+                    th:classappend="${(datas.number + 1) eq (datas.number + 1)} ? 'am-active' : ''">
+                    <a th:href="@{?page={page}(page=${datas.number+1})}" th:text="${datas.number+1}">number</a>
+                </li>
+                <li th:if="${((datas.number + 1) gt 4) && ((datas.totalPages-(datas.number + 1)) gt 3 )}">
+                    <a th:href="@{?page={page}(page=${datas.number+2})}" th:text="${datas.number+2}">number</a>
+                </li>
+                <li th:if="${((datas.number + 1) gt 4) && ((datas.totalPages-(datas.number + 1)) gt 3 )}">
+                    <a th:href="@{?page={page}(page=${datas.number+3})}" th:text="${datas.number+3}">number</a>
+                </li>
+
+                <li th:if="${((datas.number + 1) gt 4) && ((datas.totalPages-(datas.number + 1)) gt 3 )}">
+                    <a href="javascript:void(0);">
+                        <span aria-hidden="true">...</span>
+                    </a>
+                </li>
+                &lt;!&ndash; 最后一页 &ndash;&gt;
+                <li th:classappend="${(datas.number + 1) eq datas.totalPages} ? 'am-active' : ''" >
+                    <a th:href="@{?page={page}(page=${datas.totalPages})}" th:text="${datas.totalPages}">endPage</a>
+                </li>
+                &lt;!&ndash; 下一页 &ndash;&gt;
+                <li th:classappend="*{last} ? 'disabled' : ''" th:unless="${datas.number + 1 == datas.totalPages}">
+                    <a th:href="@{?page={page}(page=${datas.number+2})}">
+                        <span aria-hidden="true">下一页</span>
+                    </a>
+                </li>
+            </ul>-->
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -3,6 +3,9 @@ package com.example.service;
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
 import com.example.domain.result.Response;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public interface AdminService extends BaseCrudService<Admin,Integer>{
 
@@ -22,5 +25,7 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
      * @return
      */
     boolean notCanLogin(Integer adminId);
+
+    Page<Admin> findAdminNoCriteria(Integer page, Integer size);
 
 }

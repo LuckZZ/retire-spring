@@ -68,7 +68,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="admin:${admins}">
+                                            <tr th:each="admin:${datas}">
                                                 <td><input type="checkbox" th:value="${admin.adminId}"/></td>
                                                 <td th:text="${admin.adminId}">1</td>
                                                 <td th:text="${admin.jobNum}">123456</td>
@@ -100,7 +100,8 @@
                                     </table>
                                 </div>
                                 <!--分页-->
-                            <!--    <div class="am-u-lg-12 am-cf">
+                                <div th:replace="fragments/page::page(${datas},'/admin/adminList')"></div>
+            <!--                    <div class="am-u-lg-12 am-cf">
                                     <div class="am-fr">
                                         <ul class="am-pagination tpl-pagination">
                                             <li class="am-disabled"><a href="#">«</a></li>
@@ -110,9 +111,36 @@
                                             <li><a href="#">4</a></li>
                                             <li><a href="#">5</a></li>
                                             <li><a href="#">»</a></li>
+
+                                            &lt;!&ndash; 上一页&ndash;&gt;
+                                            <li data-th-classappend="${datas.first} ? 'am-disabled' : ''">
+                                                <a href="/admin/adminList" data-th-attr="pageIndex=${datas.number} - 1" aria-label="Previous">
+                                                    <span aria-hidden="true">«</span>
+                                                </a>
+                                            </li>
+
+                                            &lt;!&ndash; 迭代生成页码&ndash;&gt;
+                                            <li data-th-each="i : ${#numbers.sequence(1, datas.totalPages)}"
+                                                data-th-classappend="${(datas.number + 1) eq i} ? 'am-active' : ''" >
+                                                <a data-th-attr="pageIndex=${i} - 1" th:href="@{/admin/adminList(param1=1,param2=2)}">
+                                                    <span data-th-text="${i}"></span>
+                                                </a>
+                                            </li>
+
+                                            &lt;!&ndash;下一页 &ndash;&gt;
+                                            <li data-th-classappend="${datas.last} ? 'am-disabled' : ''">
+                                                <a href="javascript:void(0);" data-th-attr="pageIndex=${datas.number} + 1" aria-label="Next">
+                                                    <span aria-hidden="true">»</span>
+                                                </a>
+                                            </li>
+
                                         </ul>
                                     </div>
                                 </div>-->
+
+
+                                <!--<div th:include="fragments/page :: pager" th:remove="tag"></div>-->
+
                             </div>
                         </div>
                     </div>
