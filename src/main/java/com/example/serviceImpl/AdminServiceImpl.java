@@ -1,5 +1,6 @@
 package com.example.serviceImpl;
 
+import com.example.comm.Constant;
 import com.example.dao.AdminDao;
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
@@ -66,8 +67,8 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
     }
 
     @Override
-    public Page<Admin> findAdminNoCriteria(Integer page, Integer size) {
-        Pageable pageable = new PageRequest(page,size);
+    public Page<Admin> findAdminNoCriteria(Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return adminDao.findAll(pageable);
     }
 

@@ -26,6 +26,6 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
      */
     boolean notCanLogin(Integer adminId);
 
-    Page<Admin> findAdminNoCriteria(Integer page, Integer size);
+    Page<Admin> findAdminNoCriteria(Integer page);
 
 }

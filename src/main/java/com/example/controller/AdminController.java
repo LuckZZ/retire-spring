@@ -28,7 +28,7 @@ public class AdminController extends BaseController{
     public String adminList(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page){
        /* List<Admin> admins = adminService.findAll();
         model.addAttribute("admins",admins);*/
-        Page<Admin> datas = adminService.findAdminNoCriteria(page, 5);
+        Page<Admin> datas = adminService.findAdminNoCriteria(page);
         model.addAttribute("datas",datas);
     /*    System.out.println("getTotalPages:"+datas.getTotalPages());
         System.out.println("getTotalElements:"+datas.getTotalElements());
