@@ -37,18 +37,17 @@
                             </div>
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
                                 <div class="am-form-group tpl-table-list-select">
-                                    <select data-am-selected="{btnSize: 'sm'}">
-                                        <option value="option1">类别</option>
-                                        <option value="option2">工号</option>
-                                        <option value="option3">姓名</option>
+                                    <select data-am-selected="{btnSize: 'sm'}"  id="head-select-key">
+                                        <option value="search-jobNum">工号</option>
+                                        <option value="search-name">姓名</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field ">
+                                    <input type="text" class="am-form-field"  id="head-select-input">
                                     <span class="am-input-group-btn">
-            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
+            <button id="head-select-btn" class="am-btn am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
           </span>
                                 </div>
                             </div>
@@ -72,7 +71,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user:${users}">
+                                    <tr th:each="user:${datas}">
                                         <td><input type="checkbox" th:value="${user.userId}" /></td>
                                         <td th:text="${user.userId}">1</td>
                                         <td th:text="${user.jobNum}">123456</td>
@@ -108,19 +107,8 @@
                                 </table>
                             </div>
                             <!--分页-->
-                            <!--    <div class="am-u-lg-12 am-cf">
-                                    <div class="am-fr">
-                                        <ul class="am-pagination tpl-pagination">
-                                            <li class="am-disabled"><a href="#">«</a></li>
-                                            <li class="am-active"><a href="#">1</a></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li><a href="#">4</a></li>
-                                            <li><a href="#">5</a></li>
-                                            <li><a href="#">»</a></li>
-                                        </ul>
-                                    </div>
-                                </div>-->
+                            <div th:replace="fragments/page::page(${datas})"></div>
+
                         </div>
                     </div>
                 </div>
@@ -160,6 +148,22 @@
 
 <script>
     $(function() {
+
+        // 头部搜索
+        $("#head-select-btn").on('click',function(){
+            var key = $("#head-select-key").val();
+            var input = $("#head-select-input").val().trim();
+            if (key == 'search-jobNum' && input != ''){
+                window.location.href="/user/userList/1/"+input;
+            }else if(key == 'search-name' && input != ''){
+                window.location.href="/user/userList/2/"+input;
+            }
+            if(input == ''){
+                window.location.href="/user/userList";
+            }
+        });
+
+
         // 修改
         $(".one-update").on('click',function () {
             var v = $(this).data('id');

@@ -4,6 +4,8 @@ import com.example.domain.entity.Group;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Exist;
 import com.example.domain.enums.Rank;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -42,4 +44,8 @@ public interface UserDao extends JpaRepository<User,Integer> {
     List<User> findAllByUserIdNotIn(List<Integer> userIds);
 
     long countByExist(Exist exist);
+
+    Page<User> findAllByJobNum(String jobNum, Pageable pageable);
+
+    Page<User> findAllByName(String name, Pageable pageable);
 }

@@ -11,6 +11,7 @@ import com.example.service.*;
 import com.example.utils.DataUtils;
 import com.example.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,10 +44,35 @@ public class UserController extends BaseController{
 
    @RequestMapping("/userList")
    @LoggerManage(description = "组员列表")
-    public String userList(Model model){
-       List<User> users = userService.findAll();
-       model.addAttribute("users",users);
+    public String userList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+       Page<User> datas = userService.findAllNoCriteria(page);
+       model.addAttribute("datas",datas);
        return "admin/user_list";
+    }
+
+    /**
+     *
+     * @param model
+     * @param type 0：根据工号查询；1：根据姓名查询
+     * @param value
+     * @return
+     */
+    @RequestMapping("/userList/{type}/{value}")
+    @LoggerManage(description = "组长列表BySearch")
+    public String grouperListByType(Model model, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        if (type == 1 && value != null){
+//        根据工号
+            Page<User> datas = userService.findAllByJobNum(value,page);
+            model.addAttribute("datas",datas);
+            return "admin/user_list";
+        }else if (type == 2 && value != null){
+//        根据姓名
+            Page<User> datas = userService.findAllByName(value,page);
+            model.addAttribute("datas",datas);
+            return "admin/user_list";
+        }
+//        重定向
+        return "redirect:/user/user_list";
     }
 
     /**

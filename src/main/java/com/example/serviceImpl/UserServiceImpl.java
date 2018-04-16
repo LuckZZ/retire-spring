@@ -1,10 +1,14 @@
 package com.example.serviceImpl;
+import com.example.comm.Constant;
 import com.example.dao.UserDao;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Exist;
 import com.example.domain.enums.Rank;
 import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -60,6 +64,18 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Override
     public int updateGroupByUseId(Integer groupId, Integer userId) {
         return userDao.updateGroupByUseId(groupId,userId);
+    }
+
+    @Override
+    public Page<User> findAllByJobNum(String jobNum, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return userDao.findAllByJobNum(jobNum,pageable);
+    }
+
+    @Override
+    public Page<User> findAllByName(String name, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return userDao.findAllByName(name,pageable);
     }
 
     @Transactional
