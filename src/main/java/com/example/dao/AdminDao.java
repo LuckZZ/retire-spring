@@ -2,6 +2,8 @@ package com.example.dao;
 
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,5 +26,9 @@ public interface AdminDao extends JpaRepository<Admin, Integer> {
     @Modifying(clearAutomatically=true)
     @Query("update Admin set canLogin=:canLogin where adminId=:adminId")
     int updateCanLogin(@Param("canLogin") CanLogin canLogin, @Param("adminId") Integer adminId);
+
+    Page<Admin> findAllByJobNum(String jobNum, Pageable pageable);
+
+    Page<Admin> findAllByName(String name, Pageable pageable);
 
 }

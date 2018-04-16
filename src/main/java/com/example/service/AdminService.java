@@ -26,4 +26,8 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
      */
     boolean notCanLogin(Integer adminId);
 
+    Page<Admin> findAllByJobNum(String jobNum, Integer page);
+
+    Page<Admin> findAllByName(String name, Integer page);
+
 }

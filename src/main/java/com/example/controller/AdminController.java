@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
 import com.example.domain.entity.Admin;
+import com.example.domain.entity.User;
 import com.example.domain.enums.CanLogin;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
@@ -29,6 +30,31 @@ public class AdminController extends BaseController{
         Page<Admin> datas = adminService.findAllNoCriteria(page);
         model.addAttribute("datas",datas);
         return "admin/admin_list";
+    }
+
+    /**
+     *
+     * @param model
+     * @param type 0：根据工号查询；1：根据姓名查询
+     * @param value
+     * @return
+     */
+    @RequestMapping("/adminList/{type}/{value}")
+    @LoggerManage(description = "管理员列表BySearch")
+    public String adminListByType(Model model, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        if (type == 1 && value != null){
+//        根据工号
+            Page<Admin> datas = adminService.findAllByJobNum(value,page);
+            model.addAttribute("datas",datas);
+            return "admin/admin_list";
+        }else if (type == 2 && value != null){
+//        根据姓名
+            Page<Admin> datas = adminService.findAllByName(value,page);
+            model.addAttribute("datas",datas);
+            return "admin/admin_list";
+        }
+//        重定向
+        return "redirect:/admin/admin_list";
     }
 
     /**

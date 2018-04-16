@@ -58,8 +58,8 @@ public class UserController extends BaseController{
      * @return
      */
     @RequestMapping("/userList/{type}/{value}")
-    @LoggerManage(description = "组长列表BySearch")
-    public String grouperListByType(Model model, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    @LoggerManage(description = "用户列表BySearch")
+    public String userListByType(Model model, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
         if (type == 1 && value != null){
 //        根据工号
             Page<User> datas = userService.findAllByJobNum(value,page);
