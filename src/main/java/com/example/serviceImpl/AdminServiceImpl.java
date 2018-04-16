@@ -66,12 +66,6 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
         return true;
     }
 
-    @Override
-    public Page<Admin> findAdminNoCriteria(Integer page) {
-        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return adminDao.findAll(pageable);
-    }
-
     @Transactional
     @Override
     public Admin save(Admin admin) {

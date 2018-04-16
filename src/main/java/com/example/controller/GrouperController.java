@@ -23,10 +23,10 @@ import java.util.List;
 @Controller
 public class GrouperController extends BaseController{
     @Autowired
-    GrouperService grouperService;
+    private GrouperService grouperService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @RequestMapping("/grouperList")
     @LoggerManage(description = "组长列表")

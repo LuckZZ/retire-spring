@@ -1,5 +1,6 @@
 package com.example.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -50,4 +51,11 @@ public interface BaseCrudService<T, ID extends Serializable>{
      * @return
      */
     boolean exist(ID id);
+
+    /**
+     * 分页，查出所有的数据
+     * @param page 页码
+     * @return
+     */
+    Page<T> findAllNoCriteria(Integer page);
 }

@@ -26,14 +26,8 @@ public class AdminController extends BaseController{
     @RequestMapping("/adminList")
     @LoggerManage(description = "管理员列表")
     public String adminList(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page){
-       /* List<Admin> admins = adminService.findAll();
-        model.addAttribute("admins",admins);*/
-        Page<Admin> datas = adminService.findAdminNoCriteria(page);
+        Page<Admin> datas = adminService.findAllNoCriteria(page);
         model.addAttribute("datas",datas);
-    /*    System.out.println("getTotalPages:"+datas.getTotalPages());
-        System.out.println("getTotalElements:"+datas.getTotalElements());
-        System.out.println("getNumber:"+datas.getNumber());
-        System.out.println("getSize:"+datas.getSize());*/
         return "admin/admin_list";
     }
 
