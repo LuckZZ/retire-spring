@@ -53,6 +53,15 @@
                             </div>
 
                             <div class="am-u-sm-12">
+                                <a type="button" class="am-btn am-btn-sm am-fr" id="super-search-btn">高级搜索</a>
+                            </div>
+
+                            <div class="am-u-sm-12" id="super-search-content" style="display:none;">
+                                <!--abcd!-->
+                                <div th:replace="fragments/user_search::content"></div>
+                            </div>
+
+                            <div class="am-u-sm-12">
                                 <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black">
                                     <thead>
                                     <tr>
@@ -148,6 +157,18 @@
 
 <script>
     $(function() {
+
+        //高级搜索 super-search-btn super-search-content
+        $("#super-search-btn").on('click',function(){
+            var $content = $("#super-search-content");
+            if($content.is(':hidden')){
+                $(this).text('普通搜索');
+                $content.show();
+            }else{
+                $(this).text('高级搜索');
+                $content.hide();
+            }
+        });
 
         // 头部搜索
         $("#head-select-btn").on('click',function(){

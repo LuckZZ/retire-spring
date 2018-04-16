@@ -47,6 +47,9 @@ public class UserController extends BaseController{
     public String userList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
        Page<User> datas = userService.findAllNoCriteria(page);
        model.addAttribute("datas",datas);
+
+       assignModel(model);
+
        return "admin/user_list";
     }
 
@@ -101,32 +104,9 @@ public class UserController extends BaseController{
     @LoggerManage(description = "增加用户界面")
     public String addView(Model model){
 
-//        所有的组
-        List<Group> groups = groupService.findAll();
-
-//        所有的民族
-        List<Nation> nations = nationService.findAll();
-
-        //        所有的政治面貌
-        List<Politics> politicss = politicsService.findAll();
-
-        //        所有的政治面貌
-        List<Department> departments = departmentService.findAll();
-
-        //        所有的政治面貌
-        List<Duty> duties = dutyService.findAll();
-
         model.addAttribute("user",new User());
 
-        model.addAttribute("groups",groups);
-
-        model.addAttribute("nations",nations);
-
-        model.addAttribute("politicss",politicss);
-
-        model.addAttribute("departments",departments);
-
-        model.addAttribute("duties",duties);
+        assignModel(model);
 
         return "admin/user_add";
     }
@@ -160,30 +140,7 @@ public class UserController extends BaseController{
         User user = userService.findOne(Integer.parseInt(userId));
         model.addAttribute("user",user);
 
-        //        所有的组
-        List<Group> groups = groupService.findAll();
-
-//        所有的民族
-        List<Nation> nations = nationService.findAll();
-
-        //        所有的政治面貌
-        List<Politics> politicss = politicsService.findAll();
-
-        //        所有的政治面貌
-        List<Department> departments = departmentService.findAll();
-
-        //        所有的政治面貌
-        List<Duty> duties = dutyService.findAll();
-
-        model.addAttribute("groups",groups);
-
-        model.addAttribute("nations",nations);
-
-        model.addAttribute("politicss",politicss);
-
-        model.addAttribute("departments",departments);
-
-        model.addAttribute("duties",duties);
+        assignModel(model);
 
         return "admin/user_update";
     }
@@ -270,6 +227,36 @@ public class UserController extends BaseController{
            e.printStackTrace();
            return result(ExceptionMsg.UserUpdGroupFailed);
        }
+    }
+
+
+    private Model assignModel(Model model){
+        //        所有的组
+        List<Group> groups = groupService.findAll();
+
+//        所有的民族
+        List<Nation> nations = nationService.findAll();
+
+        //        所有的政治面貌
+        List<Politics> politicss = politicsService.findAll();
+
+        //        所有的部门
+        List<Department> departments = departmentService.findAll();
+
+        //        所有的职务
+        List<Duty> duties = dutyService.findAll();
+
+        model.addAttribute("groups",groups);
+
+        model.addAttribute("nations",nations);
+
+        model.addAttribute("politicss",politicss);
+
+        model.addAttribute("departments",departments);
+
+        model.addAttribute("duties",duties);
+
+        return model;
     }
 
 }
