@@ -9,6 +9,7 @@ import com.example.service.GrouperService;
 import com.example.service.UserService;
 import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,10 +31,35 @@ public class GrouperController extends BaseController{
 
     @RequestMapping("/grouperList")
     @LoggerManage(description = "组长列表")
-    public String grouperList(Model model){
-        List<Grouper> groupers = grouperService.findAll();
-        model.addAttribute("groupers",groupers);
+    public String grouperList(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page){
+        Page<Grouper> datas = grouperService.findAllNoCriteria(page);
+        model.addAttribute("datas",datas);
         return "admin/grouper_list";
+    }
+
+    /**
+     *
+     * @param model
+     * @param type 0：根据工号查询；1：根据姓名查询
+     * @param value
+     * @return
+     */
+    @RequestMapping("/grouperList/{type}/{value}")
+    @LoggerManage(description = "组长列表BySearch")
+    public String grouperListByType(Model model, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        if (type == 1 && value != null){
+//        根据工号
+            Page<Grouper> datas = grouperService.findAllByUser_JobNum(value,page);
+            model.addAttribute("datas",datas);
+            return "admin/grouper_list";
+        }else if (type == 2 && value != null){
+//        根据姓名
+            Page<Grouper> datas = grouperService.findAllByUser_Name(value,page);
+            model.addAttribute("datas",datas);
+            return "admin/grouper_list";
+        }
+//        重定向
+        return "redirect:/grouper/grouperList";
     }
 
     @RequestMapping("/addHtml/{type}")

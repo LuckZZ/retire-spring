@@ -1,5 +1,6 @@
 package com.example.serviceImpl;
 
+import com.example.comm.Constant;
 import com.example.dao.GrouperDao;
 import com.example.dao.UserDao;
 import com.example.domain.entity.Grouper;
@@ -8,6 +9,9 @@ import com.example.domain.enums.CanLogin;
 import com.example.domain.enums.Rank;
 import com.example.service.GrouperService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -85,4 +89,17 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
             grouperDao.delete(grouperId);
         }
      }
+
+    @Override
+    public Page<Grouper> findAllByUser_JobNum(String jobNum, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return grouperDao.findAllByUser_JobNum(jobNum, pageable);
+    }
+
+    @Override
+    public Page<Grouper> findAllByUser_Name(String name, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return grouperDao.findAllByUser_Name(name, pageable);
+    }
+
 }

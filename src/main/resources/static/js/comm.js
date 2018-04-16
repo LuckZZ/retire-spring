@@ -3,6 +3,17 @@ var gGroups;
 $(function () {
     loadGroup();
     toastrOpt();
+
+    //如果不支持trim函数
+    if (!String.prototype.trim){
+        /*---------------------------------------
+         * 清除字符串两端空格，包含换行符、制表符
+         *---------------------------------------*/
+        String.prototype.trim = function () {
+            return this.replace(/(^[\s\n\t]+|[\s\n\t]+$)/g, "");
+        }
+    }
+
 })
 
 /**

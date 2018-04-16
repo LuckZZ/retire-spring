@@ -4,8 +4,11 @@
 <div th:fragment="page(datas)">
     <div class="am-u-lg-12 am-cf">
         <div class="am-fr">
-            <!--总页数小于等于7-->
-            <ul th:if="${datas.totalPages le 7}" class="am-pagination tpl-pagination">
+            <!--总页数为1时，不显示分页-->
+
+            <!--总页数小于等于7且大于1-->
+            <ul th:if="${(datas.totalPages le 7) && (datas.totalPages gt 1)}" class="am-pagination tpl-pagination">
+            <!--<ul th:if="${datas.totalPages le 7}" class="am-pagination tpl-pagination">-->
                 <li th:if="${datas.number > 0}">
                     <a th:href="@{?page={page}(page=${datas.number-1})}" class="">上一页</a>
                 </li>

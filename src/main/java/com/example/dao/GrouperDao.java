@@ -3,6 +3,8 @@ package com.example.dao;
 import com.example.domain.entity.Grouper;
 import com.example.domain.entity.User;
 import com.example.domain.enums.CanLogin;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,5 +25,9 @@ public interface GrouperDao extends JpaRepository<Grouper, Integer> {
     int updatePwd(@Param("password") String password, @Param("grouperId") Integer grouperId);
 
     Grouper findByUser(User user);
+
+    Page<Grouper> findAllByUser_JobNum(String jobNum, Pageable pageable);
+
+    Page<Grouper> findAllByUser_Name(String name, Pageable pageable);
 
 }

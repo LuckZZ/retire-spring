@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.domain.entity.Grouper;
+import org.springframework.data.domain.Page;
 
 public interface GrouperService extends BaseCrudService<Grouper,Integer>{
 
@@ -25,4 +26,9 @@ public interface GrouperService extends BaseCrudService<Grouper,Integer>{
      * @param grouperIds
      */
     void remove(Integer[] grouperIds);
+
+    Page<Grouper> findAllByUser_JobNum(String jobNum, Integer page);
+
+    Page<Grouper> findAllByUser_Name(String name, Integer page);
+
 }
