@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.User;
 import org.springframework.data.domain.Page;
 
@@ -26,5 +27,7 @@ public interface UserService extends BaseCrudService<User,Integer>{
     boolean updateExistYes(Integer userId);
 
     boolean updateExistNO(Integer userId, String passTime);
+
+    Page<User> findAllUserCriteria(Integer page, UserSearchForm userSearchForm);
 
 }

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="content">
-    <form class="am-form tpl-form-border-form tpl-form-border-br" id="user-search-form" method="post" action="#">
+    <form class="am-form tpl-form-border-form tpl-form-border-br" id="user-search-form" method="post" action="/user/userList/superSearch" th:object="${userSearchForm}">
         <div class="am-u-sm-4">
             <div class="am-form-group am-form-group-sm">
                 <label for="group" class="am-u-sm-3 am-form-label">组别</label>

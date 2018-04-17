@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
+import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.*;
 import com.example.domain.enums.Exist;
 import com.example.domain.enums.Gender;
@@ -51,6 +52,18 @@ public class UserController extends BaseController{
        assignModel(model);
 
        return "admin/user_list";
+    }
+
+    @RequestMapping("/userList/superSearch")
+    @LoggerManage(description = "组员高级搜索列表")
+    public String superSearch(Model model, @ModelAttribute(value = "user") UserSearchForm userSearchForm, @RequestParam(value = "page", defaultValue = "0") Integer page){
+
+        Page<User> datas = userService.findAllUserCriteria(page, userSearchForm);
+        model.addAttribute("datas",datas);
+
+        assignModel(model);
+
+        return "admin/user_list";
     }
 
     /**
@@ -269,6 +282,9 @@ public class UserController extends BaseController{
         //        所有的职务
         List<Duty> duties = dutyService.findAll();
 
+//        用于用户高级搜索
+        UserSearchForm userSearchForm = new UserSearchForm();
+
         model.addAttribute("groups",groups);
 
         model.addAttribute("nations",nations);
@@ -278,6 +294,8 @@ public class UserController extends BaseController{
         model.addAttribute("departments",departments);
 
         model.addAttribute("duties",duties);
+
+        model.addAttribute("userSearchForm",userSearchForm);
 
         return model;
     }

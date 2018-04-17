@@ -1,6 +1,9 @@
 package com.example.serviceImpl;
 import com.example.comm.Constant;
+import com.example.dao.GroupDao;
 import com.example.dao.UserDao;
+import com.example.domain.bean.UserSearchForm;
+import com.example.domain.entity.Group;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Exist;
 import com.example.domain.enums.Rank;
@@ -9,9 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -102,4 +111,40 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
 
         return userDao.save(user);
     }
+
+    @Override
+    public Page<User> findAllUserCriteria(Integer page, UserSearchForm userSearchForm) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        Page<User> datas = userDao.findAll(new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> list = new ArrayList<>();
+                if ("-1"!=userSearchForm.getGroup()){
+                    list.add(cb.equal(root.join("group").get("groupId").as(Integer.class), Integer.parseInt(userSearchForm.getGroup())));
+                }
+                if ("-1"!=userSearchForm.getGender()){
+                    list.add(cb.equal(root.join("gender").get("name").as(String.class), userSearchForm.getGroup()));
+                }
+                if ("-1"!=userSearchForm.getRank()){
+
+                }
+                if ("-1"!=userSearchForm.getDuty()){
+
+                }
+                if ("-1"!=userSearchForm.getDepartment()){
+
+                }
+                if ("-1"!=userSearchForm.getExist()){
+
+                }
+                if ("-1"!=userSearchForm.getPolitics()){
+
+                }
+                Predicate[] p = new Predicate[list.size()];
+                return cb.and(list.toArray(p));
+            }
+        }, pageable);
+        return datas;
+    }
+
 }
