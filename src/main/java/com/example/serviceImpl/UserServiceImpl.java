@@ -80,6 +80,20 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
 
     @Transactional
     @Override
+    public boolean updateExistYes(Integer userId) {
+        userDao.updateExist(Exist.yes, null, userId);
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public boolean updateExistNO(Integer userId, String passTime) {
+        userDao.updateExist(Exist.no, passTime, userId);
+        return true;
+    }
+
+    @Transactional
+    @Override
     public User save(User user) {
 //        设置存在
         user.setExist(Exist.yes);

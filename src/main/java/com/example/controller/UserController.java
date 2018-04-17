@@ -229,6 +229,29 @@ public class UserController extends BaseController{
        }
     }
 
+    /**
+     *
+     * @param existType 1:设置在世 2：设置去世和更新去世时间
+     * @param userId
+     * @param passTime
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/changeExist/{existType}")
+    @LoggerManage(description = "修改组员状态")
+    public Response changeExist(@PathVariable int existType, @RequestParam(value = "id") String userId, @RequestParam(value = "passTime", defaultValue = "") String passTime){
+        try {
+            if (existType == 1){
+                userService.updateExistYes(Integer.parseInt(userId));
+            }else if(existType == 2){
+                userService.updateExistNO(Integer.parseInt(userId), passTime);
+            }
+            return result(ExceptionMsg.UserExistSuccess);
+        }catch (Exception e){
+            e.printStackTrace();
+            return result(ExceptionMsg.UserExistFailed);
+        }
+    }
 
     private Model assignModel(Model model){
         //        所有的组

@@ -80,7 +80,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user:${datas}">
+                                    <tr th:each="user:${datas}" th:class="(${user.exist.toString()} eq 'yes')?'':'pass-user'">
                                         <td><input type="checkbox" th:value="${user.userId}" /></td>
                                         <td th:text="${user.userId}">1</td>
                                         <td th:text="${user.jobNum}">123456</td>
@@ -108,6 +108,9 @@
                                                 <ul class="am-dropdown-content">
                                                     <li ><a th:attr="data-id=${user.userId}" href="javascript:;" class="one-upd-group" >更改分组</a></li>
                                                     <li ><a th:attr="data-id=${user.userId}" href="javascript:;" class="one-update" >修改基本信息</a></li>
+                                                    <li th:if="${user.exist.toString() eq 'yes'}"><a th:attr="data-id=${user.userId}" href="javascript:;" class="one-exist-no" >设为离世人员</a></li>
+                                                    <li th:if="${user.exist.toString() eq 'no'}"><a th:attr="data-id=${user.userId}" href="javascript:;" class="one-exist-ok" >设为在世人员</a></li>
+                                                    <li th:if="${user.exist.toString() eq 'no'}"><a th:attr="data-id=${user.userId},data-pass=${user.passTime}" href="javascript:;" class="one-exist-no" >更改离世时间</a></li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -144,8 +147,36 @@
     </div>
 </div>
 
+<div class="am-modal am-modal-confirm" tabindex="-1" id="pass-time-modal">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">离世人员
+            <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+        </div>
+        <div class="am-modal-bd">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+            </div>
+            <div class="am-u-sm-12">
+                <form class="am-form tpl-form-border-form tpl-form-border-br">
+                    <div class="am-form-group">
+                        <label for="passTime" class="am-u-sm-3 am-form-label">离世时间</label>
+                        <div class="am-u-sm-9">
+                            <input name="passTime" id="passTime" type="text" class="tpl-form-input" placeholder="离世日期" data-am-datepicker="" readonly="">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+            <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+        </div>
+    </div>
+</div>
+
 <!--alert-->
 <div th:replace="fragments/alert::alert_user_delete"></div>
+
+<div th:replace="fragments/alert::alert_user_exist"></div>
 
 <div th:replace="fragments/footer::js"></div>
 
@@ -184,6 +215,63 @@
             }
         });
 
+        //设置为在世人员 one-exist-ok
+        $(".one-exist-ok").on('click',function(){
+            //当前元素查找父级元素
+            var $tr = $(this).closest('tr');
+            //获得工号
+            var jobNum = $tr.find('td').eq(2).html();
+            //获得姓名
+            var name = $tr.find('td').eq(3).html();
+
+            var $oneExistOK= $('#oneExistOK-modal');
+
+            //设置工号、姓名
+            $oneExistOK.find(".jobNum").text(jobNum);
+
+            $oneExistOK.find(".name").text(name);
+
+            var myId = $(this).data('id');
+
+            oneDelModal($oneExistOK,'/user/changeExist/1',myId);
+        });
+
+
+        //设置为离世人员 one-exist-no
+        $(".one-exist-no").on('click',function(){
+            var myId = $(this).data('id');
+            var pass = $(this).data('pass');
+            //    打开模态框
+            $('#pass-time-modal').modal({
+                onConfirm: function(options) {
+                    var passTime = $("#passTime").val();
+                    $.ajax({
+                        url: "/user/changeExist/2",
+                        type: "POST",
+                        data:{
+                            id:myId,
+                            passTime:passTime
+                        },
+                        error: function ()
+                        {
+                            console.log("error function!");
+                            toastr.error('出现错误！', '错误');
+                        },
+                        success: function (data)
+                        {
+                            if (data.codeBool){
+                                location.reload();
+                            }else {
+                                toastr.error(data.message, '操作失败');
+                            }
+                        }
+                    });
+                }
+            });
+            //移除暂存的实例
+            removeModalData($('#pass-time-modal'));
+        });
+
 
         // 修改
         $(".one-update").on('click',function () {
@@ -203,7 +291,7 @@
             var $tr = $(this).closest('tr');
             //获得工号
             var jobNum = $tr.find('td').eq(2).html();
-            //获得密码
+            //获得姓名
             var name = $tr.find('td').eq(3).html();
 
            var $oneDel= $('#oneDel-modal');
@@ -229,8 +317,8 @@
             mulDelModal($mulDel,'/user/delete',checkedId);
 
         });
-        // one-upd-group
-    //    更改分组
+
+    //    更改分组 one-upd-group
         $(".one-upd-group").on('click',function () {
             var myId = $(this).data('id');
             console.log("更改分组方法");

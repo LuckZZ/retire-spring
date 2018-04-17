@@ -27,6 +27,10 @@ public interface UserDao extends JpaRepository<User,Integer> {
     @Query("update User set rank=:rank where userId=:userId")
     int updateRank(@Param("rank") Rank rank, @Param("userId") Integer userId);
 
+    @Modifying(clearAutomatically=true)
+    @Query("update User set exist=:exist, passTime=:passTime where userId=:userId")
+    int updateExist(@Param("exist") Exist exist, @Param("passTime") String passTime, @Param("userId") Integer userId);
+
     long countByGroup(Group group);
 
     List<User> findAllByGroupAndRank(Group group, Rank rank);

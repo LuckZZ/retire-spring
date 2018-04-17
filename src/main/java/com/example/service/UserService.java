@@ -23,4 +23,8 @@ public interface UserService extends BaseCrudService<User,Integer>{
 
     Page<User> findAllByName(String name, Integer page);
 
+    boolean updateExistYes(Integer userId);
+
+    boolean updateExistNO(Integer userId, String passTime);
+
 }

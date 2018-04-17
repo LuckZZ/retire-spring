@@ -2,6 +2,10 @@
 .error{
     color:red;
 }
+/*去世用户行的颜色*/
+.pass-user{
+    color:red;
+}
 
 /*去掉type="number"后的箭头*/
 input[type=number] {

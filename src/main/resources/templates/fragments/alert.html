@@ -58,6 +58,29 @@
 
 </div>
 
+<div th:fragment="alert_user_exist">
+
+    <!--设置为在世人员-->
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="oneExistOK-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">恢复为在世人员
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd">
+                <label>工号：</label>
+                <label class="jobNum"></label><br/>
+                <label>姓名：</label>
+                <label class="name"></label><br/>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 
 <div th:fragment="alert_group_delete">
 

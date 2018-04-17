@@ -45,6 +45,9 @@ public enum ExceptionMsg {
     UserTypeSuccess("修改用户类型成功",true),
     UserTypeFailed("修改用户类型失败",false),
 
+    UserExistSuccess("修改用户存在状态成功",true),
+    UserExistFailed("修改用户存在状态失败",false),
+
     GroupUsed("组名已存在",false),
 
     GroupAddSuccess("新增组成功",true),
