@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="content">
-    <form class="am-form tpl-form-border-form tpl-form-border-br" id="user-search-form" action="#">
+    <form class="am-form tpl-form-border-form tpl-form-border-br" id="user-search-form" method="post" action="#">
         <div class="am-u-sm-4">
             <div class="am-form-group am-form-group-sm">
                 <label for="group" class="am-u-sm-3 am-form-label">组别</label>
@@ -14,23 +14,30 @@
                 </div>
             </div>
             <div class="am-form-group am-form-group-sm">
-                <label for="jobNum" class="am-u-sm-3 am-form-label">性别</label>
+                <label for="gender" class="am-u-sm-3 am-form-label">性别</label>
                 <div class="am-u-sm-9">
-                    <input name="jobNum" type="number" class="tpl-form-input" id="jobNum" placeholder="输入工号(6位)"/>
+                    <select name="gender" id="gender" data-am-selected="{btnSize: 'sm'}">
+                        <option value="-1">所有</option>
+                        <option value="male">男</option>
+                        <option value="female">女</option>
+                    </select>
                 </div>
             </div>
 
             <div class="am-form-group am-form-group-sm">
-                <label for="jobNum" class="am-u-sm-3 am-form-label">类型</label>
+                <label for="rank" class="am-u-sm-3 am-form-label">类型</label>
                 <div class="am-u-sm-9">
-                    <input name="jobNum" type="number" class="tpl-form-input" id="jobNum" placeholder="输入工号(6位)"/>
+                    <select name="rank" id="rank" data-am-selected="{btnSize: 'sm'}">
+                        <option value="-1">所有</option>
+                        <option value="grouper">组长</option>
+                        <option value="user">组员</option>
+                    </select>
                 </div>
             </div>
 
             <div class="am-form-group am-form-group-sm">
                 <div class="am-u-sm-9 am-u-sm-push-3">
                     <button type="submit" class="am-btn am-btn-sm am-btn-primary tpl-btn-bg-color-success">提交</button>
-                    <button type="submit" class="am-btn am-btn-sm">清除</button>
                 </div>
             </div>
         </div>
@@ -59,9 +66,12 @@
         </div>
         <div class="am-u-sm-4">
             <div class="am-form-group am-form-group-sm">
-                <label for="jobNum" class="am-u-sm-3 am-form-label">在世去世</label>
+                <label for="exist" class="am-u-sm-3 am-form-label">离退类型</label>
                 <div class="am-u-sm-9">
-                    <input name="jobNum" type="number" class="tpl-form-input" id="jobNum" placeholder="输入工号(6位)"/>
+                    <select name="exist" id="exist" data-am-selected="{btnSize: 'sm'}">
+                        <option value="yes">退休人员</option>
+                        <option value="no">离世人员</option>
+                    </select>
                 </div>
             </div>
 
