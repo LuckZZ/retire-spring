@@ -188,11 +188,13 @@
 <script>
     $(function() {
 
+        //先复制一份form表单，为高级搜索后，点击分页并提交上次表单使用
+        var $userSearchFormClone = $('#user-search-form').clone();
         // pageDiv 分页a标签
         $("#pageDiv a").on('click',function () {
             var href = $(this).attr('href');
-            $("#user-search-form").attr("action",href);
-            $("#user-search-form").submit();
+            $userSearchFormClone.attr("action",href);
+            $userSearchFormClone.submit();
             return false;
         });
 
