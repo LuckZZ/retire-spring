@@ -4,8 +4,10 @@ import com.example.dao.GroupDao;
 import com.example.dao.UserDao;
 import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.Group;
+import com.example.domain.entity.Politics;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Exist;
+import com.example.domain.enums.Gender;
 import com.example.domain.enums.Rank;
 import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,26 +121,26 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> list = new ArrayList<>();
-                if ("-1"!=userSearchForm.getGroup()){
+                if (!"-1".equals(userSearchForm.getGroup())){
                     list.add(cb.equal(root.join("group").get("groupId").as(Integer.class), Integer.parseInt(userSearchForm.getGroup())));
                 }
-                if ("-1"!=userSearchForm.getGender()){
-                    list.add(cb.equal(root.join("gender").get("name").as(String.class), userSearchForm.getGroup()));
+                if (!"-1".equals(userSearchForm.getGender())){
+                    list.add(cb.equal(root.get("gender").as(Gender.class), Gender.valueOf(userSearchForm.getGender())));
                 }
-                if ("-1"!=userSearchForm.getRank()){
-
+                if (!"-1".equals(userSearchForm.getRank())){
+                    list.add(cb.equal(root.get("rank").as(Rank.class), Rank.valueOf(userSearchForm.getRank())));
                 }
-                if ("-1"!=userSearchForm.getDuty()){
-
+                if (!"-1".equals(userSearchForm.getDuty())){
+                    list.add(cb.equal(root.join("duty").get("dutyId").as(Integer.class), Integer.parseInt(userSearchForm.getDuty())));
                 }
-                if ("-1"!=userSearchForm.getDepartment()){
-
+                if (!"-1".equals(userSearchForm.getDepartment())){
+                    list.add(cb.equal(root.join("department").get("departmentId").as(Integer.class), Integer.parseInt(userSearchForm.getDepartment())));
                 }
-                if ("-1"!=userSearchForm.getExist()){
-
+                if (!"-1".equals(userSearchForm.getExist())){
+                    list.add(cb.equal(root.get("exist").as(Exist.class), Exist.valueOf(userSearchForm.getExist())));
                 }
-                if ("-1"!=userSearchForm.getPolitics()){
-
+                if (!"-1".equals(userSearchForm.getPolitics())){
+                    list.add(cb.equal(root.join("politics").get("politicsId").as(Politics.class), Integer.parseInt(userSearchForm.getPolitics())));
                 }
                 Predicate[] p = new Predicate[list.size()];
                 return cb.and(list.toArray(p));

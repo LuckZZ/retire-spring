@@ -63,6 +63,9 @@ public class UserController extends BaseController{
 
         assignModel(model);
 
+//        搜索表单的值，再传入页面
+        model.addAttribute("userSearchForm",userSearchForm);
+
         return "admin/user_list";
     }
 
