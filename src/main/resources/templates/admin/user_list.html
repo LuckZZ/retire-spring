@@ -187,6 +187,15 @@
 
 <script>
     $(function() {
+
+        // pageDiv 分页a标签
+        $("#pageDiv a").on('click',function () {
+            var href = $(this).attr('href');
+            $("#user-search-form").attr("action",href);
+            $("#user-search-form").submit();
+            return false;
+        });
+
         //高级搜索 super-search-btn super-search-content
         $("#super-search-btn").on('click',function(){
             var $content = $("#super-search-content");
