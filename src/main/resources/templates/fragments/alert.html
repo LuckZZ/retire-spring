@@ -219,5 +219,108 @@
 
 </div>
 
+<div th:fragment="alert_excel">
+    <!--导出用户-->
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="uer-excel-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">导出用户
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd">
+                <div class="am-u-sm-12">
+                    <br/>
+                </div>
+                <form class="am-form" id="export-user-form" action="/excel/exportUser" method="post" th:object="${userSearchForm}">
+                    <div class="am-u-sm-5 am-u-sm-offset-1">
+                        <div class="am-form-group am-fl">
+                            <label class="am-block">导出范围： </label>
+                            <label class="am-radio">
+                                <input type="radio" name="exportScope" value="all" checked required> 导出全部
+                            </label>
+                            <label class="am-radio">
+                                <input type="radio" name="exportScope" value="selected"> 导出选中
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="am-u-sm-5 am-u-sm-offset-1">
+                        <div class="am-form-group">
+                            <label class="am-block">自定义导出列： </label>
+                            <!--垂直滚动-->
+                            <div class="am-scrollable-vertical">
+                                <div class="am-fl">
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="jobNum" checked name="item"> 工号
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="name" checked name="item"> 姓名
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="group" name="item"> 组别
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="rank" name="item"> 类型
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="gender" name="item"> 性别
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="nation" name="item"> 民族
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="tel" name="item"> 电话
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="mate" name="item"> 配偶
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="address" name="item"> 地址
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="department" name="item"> 部门
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="duty" name="item"> 职务
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="politics" name="item"> 政治面貌
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="birth" name="item"> 出生日期
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="workTime" name="item"> 工作时间
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="option1" name="item"> 退休时间
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="retireTime" name="item"> 离世时间
+                                    </label>
+                                    <label class="am-checkbox">
+                                        <input type="checkbox" value="other" name="item"> 备注
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div style="display: none" id="hide-form">
+
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 </body>
 </html>

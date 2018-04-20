@@ -56,7 +56,7 @@ public class UserController extends BaseController{
 
     @RequestMapping("/userList/superSearch")
     @LoggerManage(description = "组员高级搜索列表")
-    public String superSearch(Model model, @ModelAttribute(value = "user") UserSearchForm userSearchForm, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    public String superSearch(Model model, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, @RequestParam(value = "page", defaultValue = "0") Integer page){
 
         Page<User> datas = userService.findAllUserCriteria(page, userSearchForm);
         model.addAttribute("datas",datas);
