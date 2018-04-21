@@ -6,13 +6,12 @@ import com.example.dao.UserDao;
 import com.example.domain.entity.Group;
 import com.example.domain.entity.Grouper;
 import com.example.domain.entity.User;
-import com.example.domain.enums.Rank;
 import com.example.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,16 +26,12 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
     private GrouperDao grouperDao;
 
     @Override
-    public List<Group> findAllCustom() {
-        List<Group> groups = groupDao.findAllByOrderByGroupId();
+    public Page<Group> findAllNoCriteria(Integer page) {
+        Page<Group> groups = super.findAllNoCriteria(page);
         for (Group group : groups) {
             long count = userDao.countByGroup(group);
-//            查找此组是组长身份的用户
-            List<User> userGroupers = userDao.findAllByGroupAndRank(group,Rank.grouper);
-            List<Grouper> groupers = new ArrayList<>();
-            for (User uG: userGroupers) {
-                groupers.add(grouperDao.findByUser(uG));
-            }
+//            查找此组组长
+            List<Grouper> groupers = grouperDao.findAllByUser_Group_GroupId(group.getGroupId());
             group.setCount(count);
             group.setGroupers(groupers);
             group.setGroupersName(groupersToName(groupers));
@@ -48,23 +43,14 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
     public Group findOneSuper(Integer groupId) {
         Group group = groupDao.findOne(groupId);
         long count = userDao.countByGroup(group);
-        //            查找此组是组长身份的用户
-        List<User> userGroupers = userDao.findAllByGroupAndRank(group,Rank.grouper);
-        List<Grouper> groupers = new ArrayList<>();
-        for (User uG: userGroupers) {
-            groupers.add(grouperDao.findByUser(uG));
-        }
+        //            查找此组组长
+        List<Grouper> groupers = grouperDao.findAllByUser_Group_GroupId(group.getGroupId());
         group.setCount(count);
         group.setGroupers(groupers);
         group.setGroupersName(groupersToName(groupers));
         List<User> users = userDao.findAllByGroup(group);
         group.setUsers(users);
         return group;
-    }
-
-    @Override
-    public List<Group> findAll() {
-        return groupDao.findAllByOrderByGroupId();
     }
 
     @Override

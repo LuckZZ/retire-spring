@@ -40,9 +40,7 @@
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
                                 <div class="am-form-group tpl-table-list-select">
                                     <select data-am-selected="{btnSize: 'sm'}">
-                                        <option value="option1">所有类别</option>
-                                        <option value="option2">IT业界</option>
-                                        <option value="option3">数码产品</option>
+                                        <option value="option3">组名</option>
                                     </select>
                                 </div>
                             </div>
@@ -68,7 +66,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="group:${groups}">
+                                        <tr th:each="group:${datas}">
                                             <td><input type="checkbox" th:value="${group.groupId}"/></td>
                                             <td th:text="${group.groupId}">1 </td>
                                             <td th:text="${group.groupName}">测试组一 </td>
@@ -89,19 +87,8 @@
                                 </table>
                             </div>
                             <!--分页-->
-                            <!--    <div class="am-u-lg-12 am-cf">
-                                    <div class="am-fr">
-                                        <ul class="am-pagination tpl-pagination">
-                                            <li class="am-disabled"><a href="#">«</a></li>
-                                            <li class="am-active"><a href="#">1</a></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li><a href="#">4</a></li>
-                                            <li><a href="#">5</a></li>
-                                            <li><a href="#">»</a></li>
-                                        </ul>
-                                    </div>
-                                </div>-->
+                            <div th:replace="fragments/page::page(${datas})"></div>
+
                         </div>
                     </div>
                 </div>

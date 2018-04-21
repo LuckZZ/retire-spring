@@ -78,6 +78,7 @@
                                         <th>职务</th>
                                         <th>部门</th>
                                         <th>政治面貌</th>
+                                        <th th:if="${userSearchForm.exist} eq 'no'">离世日期</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -94,6 +95,7 @@
                                         <td th:text="${user.duty.dutyName}" >职务</td>
                                         <td th:text="${user.department.departmentName}" >部门</td>
                                         <td th:text="${user.politics.politicsName}">政治面貌</td>
+                                        <td th:if="${userSearchForm.exist} eq 'no'" th:text="${user.passTime}">离世日期</td>
                                         <td>
                                             <div class="am-dropdown" data-am-dropdown>
                                                 <div class="tpl-table-black-operation">

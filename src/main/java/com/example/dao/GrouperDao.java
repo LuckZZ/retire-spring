@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface GrouperDao extends JpaRepository<Grouper, Integer> {
 
     @Modifying(clearAutomatically=true)
@@ -29,5 +31,7 @@ public interface GrouperDao extends JpaRepository<Grouper, Integer> {
     Page<Grouper> findAllByUser_JobNum(String jobNum, Pageable pageable);
 
     Page<Grouper> findAllByUser_Name(String name, Pageable pageable);
+
+    List<Grouper> findAllByUser_Group_GroupId(Integer groupId);
 
 }

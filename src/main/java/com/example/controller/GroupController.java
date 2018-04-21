@@ -7,6 +7,7 @@ import com.example.domain.result.Response;
 import com.example.service.GroupService;
 import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +32,11 @@ public class GroupController extends BaseController{
 
     @RequestMapping("/groupList")
     @LoggerManage(description = "分组列表")
-    public String groupList(Model model){
-        List<Group> groups = groupService.findAllCustom();
-        model.addAttribute("groups",groups);
+    public String groupList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+
+        Page<Group> datas = groupService.findAllNoCriteria(page);
+        model.addAttribute("datas",datas);
+
         return "admin/group_list";
     }
 

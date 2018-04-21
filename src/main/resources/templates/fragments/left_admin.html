@@ -62,16 +62,20 @@
                 <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
             </a>
             <ul class="sidebar-nav sidebar-nav-sub" th:attr="data-id=${activeId}" id="dynaGroupId">
-                <li class="sidebar-nav-link">
-                    <a href="/group/groupList" id="groupList" th:class="(${activeId} eq 'groupList')?'active':''">
-                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 组管理
-                    </a>
-                </li>
-         <!--       <li class="sidebar-nav-link" id="1">
-                    <a href="/group/groupList" id="2" th:class="(${activeId} eq 'groupList')?'active':''">
-                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 第一组
-                    </a>
-                </li>-->
+
+                <!--垂直滚动-->
+                <div class="am-scrollable-vertical">
+                    <li class="sidebar-nav-link">
+                        <a href="/group/groupList" id="groupList" th:class="(${activeId} eq 'groupList')?'active':''">
+                            <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 组管理
+                        </a>
+                    </li>
+             <!--       <li class="sidebar-nav-link" id="1">
+                        <a href="/group/groupList" id="2" th:class="(${activeId} eq 'groupList')?'active':''">
+                            <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 第一组
+                        </a>
+                    </li>-->
+                </div>
 
             </ul>
         </li>
