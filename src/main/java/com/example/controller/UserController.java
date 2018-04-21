@@ -46,7 +46,7 @@ public class UserController extends BaseController{
    @RequestMapping("/userList")
    @LoggerManage(description = "组员列表")
     public String userList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
-       Page<User> datas = userService.findAllNoCriteria(page);
+       Page<User> datas = userService.findAllUserCriteria(page,new UserSearchForm());
        model.addAttribute("datas",datas);
 
        assignModel(model);
@@ -179,11 +179,7 @@ public class UserController extends BaseController{
         Integer[] ids = DataUtils.turn(userIds);
 
         try {
-            System.out.println("id size:"+userIds.length);
-            for (String id : userIds) {
-                System.out.println(id);
-            }
-            //userService.delete(ids);
+            userService.delete(ids);
             return result(ExceptionMsg.UserDelSuccess);
         }catch (Exception e){
             return result(ExceptionMsg.UserDelFailed);
@@ -240,7 +236,7 @@ public class UserController extends BaseController{
     @ResponseBody
     @RequestMapping("/changeGroup")
     @LoggerManage(description = "修改组员分组")
-    public Response changeGroupHtml(@RequestParam(value = "id") String userId,@RequestParam(value = "groupId") String groupId){
+    public Response changeGroupHtml(@RequestParam(value = "param1") String userId,@RequestParam(value = "param2") String groupId){
        try {
            userService.updateGroupByUseId(Integer.parseInt(groupId),Integer.parseInt(userId));
            return result(ExceptionMsg.UserUpdGroupSuccess);
@@ -260,7 +256,7 @@ public class UserController extends BaseController{
     @ResponseBody
     @RequestMapping("/changeExist/{existType}")
     @LoggerManage(description = "修改组员状态")
-    public Response changeExist(@PathVariable int existType, @RequestParam(value = "id") String userId, @RequestParam(value = "passTime", defaultValue = "") String passTime){
+    public Response changeExist(@PathVariable int existType, @RequestParam(value = "param1") String userId, @RequestParam(value = "param2", defaultValue = "") String passTime){
         try {
             if (existType == 1){
                 userService.updateExistYes(Integer.parseInt(userId));

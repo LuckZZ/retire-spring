@@ -196,25 +196,26 @@
         //先复制一份form表单，为高级搜索后，点击分页并提交上次表单使用
         var $userSearchFormClone = $('#user-search-form').clone();
 
+        //用户id
+        var userId;
+
         // 导出数据
         $("#excel-user").on('click',function(){
             //    打开模态框
-            $('#uer-excel-modal').modal({
-                onConfirm: function(options) {
-                    var $form =  $('#export-user-form');
-                    var $hideForm = $('#hide-form');
-                    $searchForm = $userSearchFormClone.clone();
-                    $searchForm.find("select").each(function () {
-                       // 添加元素
-                        $hideForm.append(this);
-                    });
-                    $form.submit();
-                    //清除添加的元素
-                     $hideForm.empty();
-                }
+            $('#uer-excel-modal').modal();
+        });
+
+        $("#uer-excel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            var $form =  $('#export-user-form');
+            var $hideForm = $('#hide-form');
+            $searchForm = $userSearchFormClone.clone();
+            $searchForm.find("select").each(function () {
+                // 添加元素
+                $hideForm.append(this);
             });
-            //移除暂存的实例
-            // removeModalData($('#uer-excel-modal'));
+            $form.submit();
+            //清除添加的元素
+            $hideForm.empty();
         });
 
         // pageDiv 分页a标签
@@ -267,47 +268,30 @@
 
             $oneExistOK.find(".name").text(name);
 
-            var myId = $(this).data('id');
+            userId = $(this).data('id');
 
-            oneDelModal($oneExistOK,'/user/changeExist/1',myId);
+            $oneExistOK.modal();
+
+        });
+
+        $("#oneExistOK-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            twoIdAjaxReload('/user/changeExist/1', userId, "");
         });
 
 
         //设置为离世人员 one-exist-no
         $(".one-exist-no").on('click',function(){
-            var myId = $(this).data('id');
-            var pass = $(this).data('pass');
+            userId = $(this).data('id');
+            // var pass = $(this).data('pass');
             //    打开模态框
-            $('#pass-time-modal').modal({
-                onConfirm: function(options) {
-                    var passTime = $("#passTime").val();
-                    $.ajax({
-                        url: "/user/changeExist/2",
-                        type: "POST",
-                        data:{
-                            id:myId,
-                            passTime:passTime
-                        },
-                        error: function ()
-                        {
-                            console.log("error function!");
-                            toastr.error('出现错误！', '错误');
-                        },
-                        success: function (data)
-                        {
-                            if (data.codeBool){
-                                location.reload();
-                            }else {
-                                toastr.error(data.message, '操作失败');
-                            }
-                        }
-                    });
-                }
-            });
-            //移除暂存的实例
-            removeModalData($('#pass-time-modal'));
+            $('#pass-time-modal').modal();
         });
 
+        //重写去世时间模态框的确认方法
+        $("#pass-time-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+            var passTime = $("#passTime").val();
+            twoIdAjaxReload('/user/changeExist/2', userId, passTime);
+        });
 
         // 修改
         $(".one-update").on('click',function () {
@@ -337,57 +321,43 @@
 
             $oneDel.find("#name").text(name);
 
-            var myId = $(this).data('id');
+            userId = $(this).data('id');
 
-            oneDelModal($oneDel,'/user/delete',myId);
+            $oneDel.modal();
 
         });
 
+        //重写删除用户模态框的确认方法
+        $("#oneDel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            idAjaxReload('/user/delete',userId);
+        });
+
+
         //删除已选择
         $("#checked-del").on('click',function () {
+            $('#mulDel-modal').modal();
+            userId = checkedIds();
+        });
 
-            var checkedId = checkedIds();
-
-            var $mulDel= $('#mulDel-modal');
-
-            mulDelModal($mulDel,'/user/delete',checkedId);
-
+        //重写批量删除用户模态框的确认方法
+        $("#mulDel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+            idAjaxReload('/user/delete',userId);
         });
 
     //    更改分组 one-upd-group
         $(".one-upd-group").on('click',function () {
-            var myId = $(this).data('id');
-            console.log("更改分组方法");
-            $("#result-modal").load('/user/changeGroupHtml',{value:myId});
+            userId = $(this).data('id');
+            $("#result-modal").load('/user/changeGroupHtml',{value:userId});
             //    打开模态框
-            $('#update-group-modal').modal({
-                onConfirm: function(options) {
-                    var updateGroupId = $("#update-group").val();
-                    $.ajax({
-                        url: "/user/changeGroup",
-                        type: "POST",
-                        data:{
-                            id:myId,
-                            groupId:updateGroupId
-                        },
-                        error: function ()
-                        {
-                            console.log("error function!");
-                            toastr.error('出现错误！', '错误');
-                        },
-                        success: function (data)
-                        {
-                            if (data.codeBool){
-                                location.reload();
-                            }else {
-                                toastr.error(data.message, '操作失败');
-                            }
-                        }
-                    });
-                }
-            });
-
+            $('#update-group-modal').modal();
         });
+
+        //重写更改分组模态框的确认方法
+        $("#update-group-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+            var updateGroupId = $("#update-group").val();
+            twoIdAjaxReload('/user/changeGroup', userId, updateGroupId);
+        });
+
     });
 </script>
 

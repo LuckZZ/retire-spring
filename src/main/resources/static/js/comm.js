@@ -119,6 +119,7 @@ function formAjaxNoReload(paramForm,paramUrl) {
  * @param paramId 传递id
  */
 function idAjaxReload(paramUrl,paramId) {
+    $.ajaxSettings.traditional=true;
     $.ajax({
         url: paramUrl,
         type: "POST",
@@ -141,13 +142,27 @@ function idAjaxReload(paramUrl,paramId) {
     });
 }
 
-/**
- * 移除模态框暂存实例
- * @param $modal
- */
-function removeModalData($modal) {
-    //移除暂存的实例
-    $modal.on('closed.modal.amui', function() {
-        $(this).removeData('amui.modal');
+function twoIdAjaxReload(paramUrl,paramVal1,paramVal2) {
+    $.ajax({
+        url: paramUrl,
+        type: "POST",
+        data:{
+            param1:paramVal1,
+            param2:paramVal2
+        },
+        error: function ()
+        {
+            console.log("idAjaxReload error function!");
+            toastr.error('出现错误！', '错误');
+        },
+        success: function (data)
+        {
+            if (data.codeBool){
+                location.reload();
+            }else {
+                toastr.error(data.message, '操作失败');
+            }
+        }
     });
 }
+

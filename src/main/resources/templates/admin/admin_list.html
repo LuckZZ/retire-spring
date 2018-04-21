@@ -160,6 +160,10 @@
 
 <script>
     $(function() {
+
+        //管理员id
+        var adminId;
+
         // 头部搜索
         $("#head-select-btn").on('click',function(){
             var key = $("#head-select-key").val();
@@ -202,21 +206,29 @@
 
             $oneDel.find("#name").text(name);
 
-            var myId = $(this).data('id');
+            adminId = $(this).data('id');
 
-            oneDelModal($oneDel,'/admin/delete',myId);
+            $oneDel.modal();
 
+        });
+
+        //重写删除用户模态框的确认方法
+        $("#oneDel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            idAjaxReload('/admin/delete',adminId);
         });
 
         //删除已选择
         $("#checked-del").on('click',function () {
 
-            var checkedId = checkedIds();
+            adminId = checkedIds();
 
-            var $mulDel= $('#mulDel-modal');
+            $('#mulDel-modal').modal();
 
-            mulDelModal($mulDel,'/admin/delete',checkedId);
+        });
 
+        //重写批量删除用户模态框的确认方法
+        $("#mulDel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+            idAjaxReload('/admin/delete',adminId);
         });
 
         //切换是否允许登陆状态
@@ -231,7 +243,7 @@
             var id = $(this).data('id');
             //为表单groupId赋值
             $("#adminId").val(id);
-            var $promt = $('#updatePwd-modal').modal({
+            $('#updatePwd-modal').modal({
                 relatedTarget: this,
                 closeOnConfirm: false,
                 onConfirm: function(options) {

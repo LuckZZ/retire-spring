@@ -6,19 +6,19 @@ package com.example.domain.bean;
  */
 public class UserSearchForm {
 //    组别
-    private String group;
+    private String group = "-1";
 //    性别
-    private String gender;
+    private String gender = "-1";
 //      类型
-    private String rank;
+    private String rank = "-1";
 //    职务
-    private String duty;
+    private String duty = "-1";
 //     部门
-    private String department;
+    private String department = "-1";
 //            离退类型
-    private String exist;
+    private String exist = "yes";
 //    政治面貌
-    private String politics;
+    private String politics = "-1";
 
     public String getGroup() {
         return group;

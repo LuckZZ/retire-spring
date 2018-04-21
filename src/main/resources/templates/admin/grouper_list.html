@@ -198,6 +198,9 @@
 <script>
     $(function(){
 
+        //组长id
+        var grouperId;
+
         // 头部搜索
         $("#head-select-btn").on('click',function(){
             var key = $("#head-select-key").val();
@@ -265,8 +268,6 @@
                         $("#updatePwdForm").submit();
                         this.close();
                     }
-                },
-                onCancel: function() {
                 }
             });
         });
@@ -298,22 +299,30 @@
 
             $oneDel.find("#name").text(name);
 
-            var myId = $(this).data('id');
+            grouperId = $(this).data('id');
 
-            oneDelModal($oneDel,'/grouper/remove',myId);
+            $oneDel.modal();
 
+        });
+
+        //重写删除用户模态框的确认方法
+        $("#oneDel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            idAjaxReload('/grouper/remove',grouperId);
         });
 
 
         //删除已选择
         $("#checked-del").on('click',function () {
 
-            var checkedId = checkedIds();
+            grouperId = checkedIds();
 
-            var $mulDel= $('#mulDel-modal');
+            $('#mulDel-modal').modal();
 
-            mulDelModal($mulDel,'/grouper/remove',checkedId);
+        });
 
+        //重写批量删除用户模态框的确认方法
+        $("#mulDel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+            idAjaxReload('/grouper/remove',grouperId);
         });
 
     });
