@@ -1,9 +1,7 @@
 package com.example.serviceImpl;
 import com.example.comm.Constant;
-import com.example.dao.GroupDao;
 import com.example.dao.UserDao;
 import com.example.domain.bean.UserSearchForm;
-import com.example.domain.entity.Group;
 import com.example.domain.entity.Politics;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Exist;
@@ -117,7 +115,17 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Override
     public Page<User> findAllUserCriteria(Integer page, UserSearchForm userSearchForm) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        Page<User> datas = userDao.findAll(new Specification<User>() {
+        Page<User> datas = userDao.findAll(userSpecification(userSearchForm), pageable);
+        return datas;
+    }
+
+    @Override
+    public List<User> findAllUserCriteria(UserSearchForm userSearchForm) {
+        return userDao.findAll(userSpecification(userSearchForm));
+    }
+
+    private Specification userSpecification(UserSearchForm userSearchForm){
+        Specification<User> specification = new Specification<User>() {
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> list = new ArrayList<>();
@@ -145,8 +153,8 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
                 Predicate[] p = new Predicate[list.size()];
                 return cb.and(list.toArray(p));
             }
-        }, pageable);
-        return datas;
+        };
+        return specification;
     }
 
 }

@@ -203,13 +203,14 @@
                 onConfirm: function(options) {
                     var $form =  $('#export-user-form');
                     var $hideForm = $('#hide-form');
-                    $userSearchFormClone.find("select").each(function () {
+                    $searchForm = $userSearchFormClone.clone();
+                    $searchForm.find("select").each(function () {
                        // 添加元素
                         $hideForm.append(this);
                     });
                     $form.submit();
                     //清除添加的元素
-                    // $hideForm.empty();
+                     $hideForm.empty();
                 }
             });
             //移除暂存的实例

@@ -30,4 +30,6 @@ public interface UserService extends BaseCrudService<User,Integer>{
 
     Page<User> findAllUserCriteria(Integer page, UserSearchForm userSearchForm);
 
+    List<User> findAllUserCriteria(UserSearchForm userSearchForm);
+
 }

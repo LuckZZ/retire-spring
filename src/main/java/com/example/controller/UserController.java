@@ -179,7 +179,11 @@ public class UserController extends BaseController{
         Integer[] ids = DataUtils.turn(userIds);
 
         try {
-            userService.delete(ids);
+            System.out.println("id size:"+userIds.length);
+            for (String id : userIds) {
+                System.out.println(id);
+            }
+            //userService.delete(ids);
             return result(ExceptionMsg.UserDelSuccess);
         }catch (Exception e){
             return result(ExceptionMsg.UserDelFailed);

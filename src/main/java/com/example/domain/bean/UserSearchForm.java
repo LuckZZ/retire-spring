@@ -75,4 +75,17 @@ public class UserSearchForm {
     public void setPolitics(String politics) {
         this.politics = politics;
     }
+
+    @Override
+    public String toString() {
+        return "UserSearchForm{" +
+                "group='" + group + '\'' +
+                ", gender='" + gender + '\'' +
+                ", rank='" + rank + '\'' +
+                ", duty='" + duty + '\'' +
+                ", department='" + department + '\'' +
+                ", exist='" + exist + '\'' +
+                ", politics='" + politics + '\'' +
+                '}';
+    }
 }
