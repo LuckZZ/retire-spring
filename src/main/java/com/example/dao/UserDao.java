@@ -32,7 +32,7 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     @Query("update User set exist=:exist, passTime=:passTime where userId=:userId")
     int updateExist(@Param("exist") Exist exist, @Param("passTime") String passTime, @Param("userId") Integer userId);
 
-    long countByGroup(Group group);
+    long countByGroup_GroupId(Integer groupId);
 
     List<User> findAllByGroup(Group group);
 

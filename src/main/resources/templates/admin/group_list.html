@@ -141,6 +141,8 @@
 <script>
     $(function () {
 
+        var groupId;
+
         // 提交时验证表单，small元素包裹错误信息
         $("#addGroupForm").validate({
             rules:{
@@ -204,22 +206,29 @@
 
             $oneDel.find("#count").text(count);
 
-            var myId = $(this).data('id');
+            groupId = $(this).data('id');
 
-            oneDelModal($oneDel,'/group/delete',myId);
+            $oneDel.modal();
 
         });
+
+        //重写删除组模态框的确认方法
+        $("#oneDel-group-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            idAjaxReload('/group/delete',groupId);
+        });
+
 
         //删除已选择
         $("#checked-del").on('click',function () {
-
-            var checkedId = checkedIds();
-
-            var $mulDel= $('#mulDel-group-modal');
-
-            mulDelModal($mulDel,'/group/delete',checkedId);
-
+            groupId = checkedIds();
+            $('#mulDel-group-modal').modal();
         });
+
+        //重写批量删除组模态框的确认方法
+        $("#mulDel-group-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+            idAjaxReload('/group/delete',groupId);
+        });
+
 
         // one-detail详细
         $(".one-detail").on('click',function(){

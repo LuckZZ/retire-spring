@@ -29,7 +29,7 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
     public Page<Group> findAllNoCriteria(Integer page) {
         Page<Group> groups = super.findAllNoCriteria(page);
         for (Group group : groups) {
-            long count = userDao.countByGroup(group);
+            long count = userDao.countByGroup_GroupId(group.getGroupId());
 //            查找此组组长
             List<Grouper> groupers = grouperDao.findAllByUser_Group_GroupId(group.getGroupId());
             group.setCount(count);
@@ -42,9 +42,9 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
     @Override
     public Group findOneSuper(Integer groupId) {
         Group group = groupDao.findOne(groupId);
-        long count = userDao.countByGroup(group);
+        long count = userDao.countByGroup_GroupId(groupId);
         //            查找此组组长
-        List<Grouper> groupers = grouperDao.findAllByUser_Group_GroupId(group.getGroupId());
+        List<Grouper> groupers = grouperDao.findAllByUser_Group_GroupId(groupId);
         group.setCount(count);
         group.setGroupers(groupers);
         group.setGroupersName(groupersToName(groupers));
@@ -62,10 +62,12 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
     @Override
     public void delete(Integer[] groupIds) {
 //        查看是否有未分组，如果没有，新建未分组
-        Group newGroup = newGroup();
         for (Integer groupId : groupIds) {
-            Group group = groupDao.findOne(groupId);
-            userDao.updateGroup(newGroup.getGroupId(), groupId);
+            long count = userDao.countByGroup_GroupId(groupId);
+            if (count != 0){
+                Group newGroup = newGroup();
+                userDao.updateGroup(newGroup.getGroupId(), groupId);
+            }
         }
         for (Integer groupId : groupIds) {
 //            删除分组

@@ -33,10 +33,8 @@ public class GroupController extends BaseController{
     @RequestMapping("/groupList")
     @LoggerManage(description = "分组列表")
     public String groupList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
-
         Page<Group> datas = groupService.findAllNoCriteria(page);
         model.addAttribute("datas",datas);
-
         return "admin/group_list";
     }
 
