@@ -46,12 +46,15 @@ public class ExcelController extends BaseController{
 
         String[] item = request.getParameterValues("item");
 
-        List<User> userList = userService.findAllUserCriteria(userSearchForm);
+        List<User> userList = new ArrayList<>();
 
         if("all".equals(exportScope)){
-
+            userList = userService.findAllUserCriteria(userSearchForm);
         }else if("selected".equals(exportScope)){
-
+            String[] selectedChecked = request.getParameterValues("selectedChecked");
+            for (String id : selectedChecked) {
+                userList.add(userService.findOne(Integer.parseInt(id)));
+            }
         }
 
         List<ExcelExportEntity> beanList = new ArrayList<ExcelExportEntity>();

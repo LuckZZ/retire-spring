@@ -213,6 +213,11 @@
                 // 添加元素
                 $hideForm.append(this);
             });
+            var uId = checkedIds();
+            for (i=0;i<uId.length;i++){
+                $hideForm.append("<input type='hidden' name='selectedChecked' value='"+ uId[i] +"'>");
+            }
+
             $form.submit();
             //清除添加的元素
             $hideForm.empty();
