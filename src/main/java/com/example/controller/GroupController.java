@@ -2,9 +2,11 @@ package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
 import com.example.domain.entity.Group;
+import com.example.domain.entity.User;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.GroupService;
+import com.example.service.UserService;
 import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,9 @@ public class GroupController extends BaseController{
 
     @Autowired
     private GroupService groupService;
+
+    @Autowired
+    private UserService userService;
 
     @ResponseBody
     @RequestMapping("/groups")
@@ -40,8 +45,10 @@ public class GroupController extends BaseController{
 
     @RequestMapping("/{id}")
     @LoggerManage(description = "分组详细")
-    public String detail(@PathVariable Integer id, Model model){
-        Group group = groupService.findOneSuper(id);
+    public String detail(@PathVariable Integer id, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Page<User> datas = userService.findAllByGroup_GroupId(id, page);
+        Group group = groupService.findOne(id);
+        model.addAttribute("datas",datas);
         model.addAttribute("group",group);
         return "admin/group_datail";
     }

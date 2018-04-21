@@ -40,20 +40,6 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
     }
 
     @Override
-    public Group findOneSuper(Integer groupId) {
-        Group group = groupDao.findOne(groupId);
-        long count = userDao.countByGroup_GroupId(groupId);
-        //            查找此组组长
-        List<Grouper> groupers = grouperDao.findAllByUser_Group_GroupId(groupId);
-        group.setCount(count);
-        group.setGroupers(groupers);
-        group.setGroupersName(groupersToName(groupers));
-        List<User> users = userDao.findAllByGroup(group);
-        group.setUsers(users);
-        return group;
-    }
-
-    @Override
     public boolean existsByGroupName(String groupName) {
         return groupDao.existsByGroupName(groupName);
     }

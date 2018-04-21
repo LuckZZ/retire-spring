@@ -36,10 +36,9 @@
                             </div>
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
                                 <div class="am-form-group tpl-table-list-select">
-                                    <select data-am-selected="{btnSize: 'sm'}">
-                                        <option value="option1">所有类别</option>
-                                        <option value="option2">IT业界</option>
-                                        <option value="option3">数码产品</option>
+                                    <select data-am-selected="{btnSize: 'sm'}"  id="head-select-key">
+                                        <option value="search-jobNum">工号</option>
+                                        <option value="search-name">姓名</option>
                                     </select>
                                 </div>
                             </div>
@@ -65,7 +64,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user:${group.users}">
+                                    <tr th:each="user:${datas}">
                                         <td><input type="checkbox" th:value="${user.userId}"/></td>
                                         <td th:text="${user.userId}">1</td>
                                         <td th:text="${user.jobNum}">123456</td>
@@ -91,19 +90,8 @@
                                 </table>
                             </div>
                             <!--分页-->
-                            <!--    <div class="am-u-lg-12 am-cf">
-                                    <div class="am-fr">
-                                        <ul class="am-pagination tpl-pagination">
-                                            <li class="am-disabled"><a href="#">«</a></li>
-                                            <li class="am-active"><a href="#">1</a></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li><a href="#">4</a></li>
-                                            <li><a href="#">5</a></li>
-                                            <li><a href="#">»</a></li>
-                                        </ul>
-                                    </div>
-                                </div>-->
+                            <div th:replace="fragments/page::page(${datas})"></div>
+
                         </div>
                     </div>
                 </div>
@@ -143,13 +131,15 @@
 <script>
     $(function () {
 
+        var userId;
+
         //删除
         $(".one-del").on('click',function () {
             //当前元素查找父级元素
             var $tr = $(this).closest('tr');
-            //获得组名
+            //获得工号
             var jobNum = $tr.find('td').eq(2).html();
-            //获得人数
+            //获得姓名
             var name = $tr.find('td').eq(3).html();
 
             var $oneDel= $('#oneDel-group-user-modal');
@@ -159,57 +149,40 @@
 
             $oneDel.find("#group-user-name").text(name);
 
-            var myId = $(this).data('id');
+            userId = $(this).data('id');
 
-            oneDelModal($oneDel,'/group/removeUser',myId);
+            $oneDel.modal();
 
+        });
+
+        //重写删除用户模态框的确认方法
+        $("#oneDel-group-user-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            idAjaxReload('/group/removeUser',userId);
         });
 
         //删除已选择
         $("#checked-del").on('click',function () {
-
-            var checkedId = checkedIds();
-
-            var $mulDel= $('#mulDel-group-user-modal');
-
-            mulDelModal($mulDel,'/group/removeUser',checkedId);
-
+            userId = checkedIds();
+            $('#mulDel-group-user-modal').modal();
         });
 
-        // one-upd-group
-        //    更改分组
-        $(".one-upd-group").on('click',function () {
-            var myId = $(this).data('id');
-            console.log("更改分组方法");
-            $("#result-modal").load('/user/changeGroupHtml',{value:myId});
-            //    打开模态框
-            $('#update-group-modal').modal({
-                onConfirm: function(options) {
-                    var updateGroupId = $("#update-group").val();
-                    $.ajax({
-                        url: "/user/changeGroup",
-                        type: "POST",
-                        data:{
-                            id:myId,
-                            groupId:updateGroupId
-                        },
-                        error: function ()
-                        {
-                            console.log("error function!");
-                            toastr.error('出现错误！', '错误');
-                        },
-                        success: function (data)
-                        {
-                            if (data.codeBool){
-                                window.location.reload();
-                            }else {
-                                toastr.error(data.message, '操作失败');
-                            }
-                        }
-                    });
-                }
-            });
+        //重写批量删除用户模态框的确认方法
+        $("#mulDel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+            idAjaxReload('/group/removeUser',userId);
+        });
 
+        //    更改分组 one-upd-group
+        $(".one-upd-group").on('click',function () {
+            userId = $(this).data('id');
+            $("#result-modal").load('/user/changeGroupHtml',{value:userId});
+            //    打开模态框
+            $('#update-group-modal').modal();
+        });
+
+        //重写更改分组模态框的确认方法
+        $("#update-group-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+            var updateGroupId = $("#update-group").val();
+            twoIdAjaxReload('/user/changeGroup', userId, updateGroupId);
         });
 
     });

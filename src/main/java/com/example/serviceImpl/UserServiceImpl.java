@@ -124,6 +124,13 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
         return userDao.findAll(userSpecification(userSearchForm));
     }
 
+    @Override
+    public Page<User> findAllByGroup_GroupId(Integer groupId, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        Page<User> datas = userDao.findAllByGroup_GroupId(groupId, pageable);
+        return datas;
+    }
+
     private Specification userSpecification(UserSearchForm userSearchForm){
         Specification<User> specification = new Specification<User>() {
             @Override

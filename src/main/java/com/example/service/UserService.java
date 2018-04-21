@@ -32,4 +32,6 @@ public interface UserService extends BaseCrudService<User,Integer>{
 
     List<User> findAllUserCriteria(UserSearchForm userSearchForm);
 
+    Page<User> findAllByGroup_GroupId(Integer groupId, Integer page);
+
 }
