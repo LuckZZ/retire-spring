@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.domain.entity.Activity;
 import com.example.domain.enums.ActivityStatus;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -9,9 +10,9 @@ public interface ActivityService extends BaseCrudService<Activity,Integer>{
 
     boolean existsByActivityName(String activityName);
 
-    List<Activity> findAllByActivityStatus(ActivityStatus activityStatus);
+    Page<Activity> findAllByActivityStatus(ActivityStatus activityStatus, Integer page);
 
-    List<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus);
+    Page<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus, Integer page);
 
     int activityPublish(Integer activityId);
 

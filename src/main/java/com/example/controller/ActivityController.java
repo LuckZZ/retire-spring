@@ -8,6 +8,7 @@ import com.example.domain.result.Response;
 import com.example.service.ActivityService;
 import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -56,17 +57,17 @@ public class ActivityController extends BaseController{
 
     @RequestMapping("/activityList")
     @LoggerManage(description = "活动列表")
-    public String activityList(Model model){
-        List<Activity> activities = activityService.findAllByActivityStatusNot(ActivityStatus.draft);
-        model.addAttribute("activities",activities);
+    public String activityList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Page<Activity> datas = activityService.findAllByActivityStatusNot(ActivityStatus.draft, page);
+        model.addAttribute("datas",datas);
         return "admin/activity_list";
     }
 
     @RequestMapping("/draftList")
     @LoggerManage(description = "草稿箱列表")
-    public String draft(Model model){
-        List<Activity> activities = activityService.findAllByActivityStatus(ActivityStatus.draft);
-        model.addAttribute("activities",activities);
+    public String draft(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Page<Activity> datas = activityService.findAllByActivityStatus(ActivityStatus.draft, page);
+        model.addAttribute("datas",datas);
         return "admin/draft_list";
     }
 

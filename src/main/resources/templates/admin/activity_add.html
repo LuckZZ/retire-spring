@@ -143,7 +143,7 @@
                         type: "post",
                         dataType: "json",
                         data: {
-                            jobNum: function () {
+                            activityName: function () {
                                 return $("#activityName").val();
                             }
                         }
@@ -196,30 +196,6 @@
             $("#activityContent .am-form-group:last").after($group);
         });
 
-        // 提交时验证表单，small元素包裹错误信息
-/*        $("#addAdminForm").validate({
-            rules:{
-                jobNum: {
-                    required: true,
-                    remote: {
-                        url: '/admin/exist',
-                        type: "post",
-                        dataType: "json",
-                        data: {
-                            jobNum: function () {
-                                return $("#jobNum").val();
-                            }
-                        }
-                    }
-                }
-            },
-            submitHandler:function(form){
-                var myform = $("#addAdminForm");
-                //ajax提交form
-                myFormAjax(myform,"/admin/save");
-
-            }
-        });*/
     });
 </script>
 

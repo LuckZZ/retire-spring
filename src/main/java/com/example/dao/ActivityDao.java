@@ -1,6 +1,8 @@
 package com.example.dao;
 
 import com.example.domain.enums.ActivityStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.domain.entity.Activity;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,14 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface ActivityDao extends JpaRepository<Activity,Integer> {
 
-    List<Activity> findAllByActivityStatus(ActivityStatus activityStatus);
+    Page<Activity> findAllByActivityStatus(ActivityStatus activityStatus, Pageable pageable);
 
-    List<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus);
+    Page<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus, Pageable pageable);
 
     boolean existsByActivityName(String activityName);
 

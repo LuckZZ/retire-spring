@@ -1,16 +1,18 @@
 package com.example.serviceImpl;
 
+import com.example.comm.Constant;
 import com.example.dao.ActivityDao;
 import com.example.dao.JoinDao;
 import com.example.dao.UserDao;
 import com.example.domain.entity.Activity;
-import com.example.domain.entity.Join;
-import com.example.domain.entity.User;
 import com.example.domain.enums.ActivityStatus;
 import com.example.domain.enums.Exist;
 import com.example.service.ActivityService;
 import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -48,28 +50,20 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
         return activityDao.existsByActivityName(activityName);
     }
 
-    /**
-     * 草稿活动列表
-     * @param activityStatus
-     * @return
-     */
     @Override
-    public List<Activity> findAllByActivityStatus(ActivityStatus activityStatus) {
-        List<Activity> activities = activityDao.findAllByActivityStatus(activityStatus);
+    public Page<Activity> findAllByActivityStatus(ActivityStatus activityStatus, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        Page<Activity> activities = activityDao.findAllByActivityStatus(activityStatus, pageable);
         for (Activity activity : activities) {
             activity = assignActivity(activity);
         }
         return activities;
     }
 
-    /**
-     * 非草稿活动列表
-     * @param activityStatus
-     * @return
-     */
     @Override
-    public List<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus) {
-        List<Activity> activities = activityDao.findAllByActivityStatusNot(activityStatus);
+    public Page<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        Page<Activity> activities = activityDao.findAllByActivityStatusNot(activityStatus, pageable);
         for (Activity activity : activities) {
             activity = assignActivity(activity);
         }
