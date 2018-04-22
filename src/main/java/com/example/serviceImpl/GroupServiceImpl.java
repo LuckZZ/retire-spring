@@ -73,6 +73,12 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
 
     }
 
+    @Transactional
+    @Override
+    public int updateGroupName(String groupName, Integer groupId) {
+        return groupDao.updateGroupName(groupName, groupId);
+    }
+
     /**
      * 查看是否有未分组，如果没有，新建未分组
      * @return

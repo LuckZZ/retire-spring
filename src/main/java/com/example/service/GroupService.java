@@ -2,8 +2,6 @@ package com.example.service;
 
 import com.example.domain.entity.Group;
 
-import java.util.List;
-
 public interface GroupService extends BaseCrudService<Group,Integer>{
 
     boolean existsByGroupName(String groupName);
@@ -11,4 +9,7 @@ public interface GroupService extends BaseCrudService<Group,Integer>{
     void delete(Integer[] groupIds);
 
     void removeUser(Integer[] userIds);
+
+    int updateGroupName(String groupName, Integer groupId);
+
 }

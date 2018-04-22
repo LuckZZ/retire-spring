@@ -73,14 +73,24 @@
                                             <td th:text="${group.groupersName}">测试组长</td>
                                             <td th:text="${group.count}">200人</td>
                                             <td>
-                                                <div class="tpl-table-black-operation">
-                                                    <a th:attr="data-id=${group.groupId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
-                                                        <i class="am-icon-trash"></i> 删除
-                                                    </a>
-                                                    <a th:attr="data-id=${group.groupId}" href="javascript:;" class="one-detail">
-                                                        <i class="am-icon-cog"></i> 详细
-                                                    </a>
+
+                                                <div class="am-dropdown" data-am-dropdown>
+                                                    <div class="tpl-table-black-operation">
+                                                        <a href="javascript:;" class="am-dropdown-toggle" data-am-dropdown-toggle>
+                                                            <i class="am-icon-pencil"></i> 编辑
+                                                        </a>
+                                                        <a th:attr="data-id=${group.groupId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
+                                                            <i class="am-icon-trash"></i> 删除
+                                                        </a>
+                                                        <a th:attr="data-id=${group.groupId}" href="javascript:;" class="one-detail">
+                                                            <i class="am-icon-cog"></i> 详细
+                                                        </a>
+                                                    </div>
+                                                    <ul class="am-dropdown-content">
+                                                        <li ><a th:attr="data-id=${group.groupId}" href="javascript:;" class="one-update" >修改组名</a></li>
+                                                    </ul>
                                                 </div>
+
                                             </td>
                                         </tr>
                                     </tbody>
@@ -107,11 +117,36 @@
                     <br/>
                 </div>
                 <form class="am-form tpl-form-border-form tpl-form-border-br" id="addGroupForm" action="#">
-                    <input name="grouperId" id="grouperId" type="hidden">
                     <div class="am-form-group">
                         <label for="groupName" class="am-u-sm-3 am-form-label">组名</label>
                         <div class="am-u-sm-9">
                             <input name="groupName" type="text" class="tpl-form-input" id="groupName" placeholder="输入组名">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="updateGroup-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">修改组名
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <br/>
+                </div>
+                <form class="am-form tpl-form-border-form tpl-form-border-br" id="updateGroupForm" action="#">
+                    <input name="groupId" id="groupId" type="hidden">
+                    <div class="am-form-group">
+                        <label for="groupName" class="am-u-sm-3 am-form-label">组名</label>
+                        <div class="am-u-sm-9">
+                            <input name="groupName" type="text" class="tpl-form-input" id="update-groupName" placeholder="输入组名">
                         </div>
                     </div>
                 </form>
@@ -162,8 +197,30 @@
             submitHandler:function(form){
                 var myform = $("#addGroupForm");
                 //ajax提交form
-                formAjaxNoReload(myform,"/group/save");
+                formAjaxReload(myform,"/group/save");
+            }
+        });
 
+        // 提交时验证表单，small元素包裹错误信息
+        $("#updateGroupForm").validate({
+            rules:{
+                groupName: {
+                    remote: {
+                        url: '/group/exist',
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            jobNum: function () {
+                                return $("#groupName").val();
+                            }
+                        }
+                    }
+                }
+            },
+            submitHandler:function(form){
+                var myform = $("#updateGroupForm");
+                //ajax提交form
+                formAjaxReload(myform,"/group/update");
             }
         });
 
@@ -187,7 +244,33 @@
                     }
                 }
             });
+        });
 
+        //设置修改组模态框关闭时，执行刷新
+        $('#updateGroup-modal').on('close.modal.amui', function(){
+            //刷新
+            window.location.reload();
+        });
+
+        //打开修改组模态框
+        $(".one-update").on('click',function() {
+            var $tr = $(this).closest('tr');
+            //获得组名
+            var groupName = $tr.find('td').eq(2).html();
+            $("#update-groupName").val(groupName);
+            $('#updateGroup-modal').find("#groupId").val($(this).data('id'));
+            $('#updateGroup-modal').modal({
+                relatedTarget: this,
+                closeOnConfirm: false,
+                onConfirm: function(options) {
+                    var v = $("#updateGroupForm").valid();
+                    // 验证通过，提交并关闭模态框
+                    if(v){
+                        $("#updateGroupForm").submit();
+                        this.close();
+                    }
+                }
+            });
         });
 
         //删除
@@ -217,7 +300,6 @@
             idAjaxReload('/group/delete',groupId);
         });
 
-
         //删除已选择
         $("#checked-del").on('click',function () {
             groupId = checkedIds();
@@ -228,7 +310,6 @@
         $("#mulDel-group-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
             idAjaxReload('/group/delete',groupId);
         });
-
 
         // one-detail详细
         $(".one-detail").on('click',function(){

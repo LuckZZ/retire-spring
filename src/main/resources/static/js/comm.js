@@ -114,6 +114,33 @@ function formAjaxNoReload(paramForm,paramUrl) {
 }
 
 /**
+ * ajax提交form
+ * @param paramForm 传递表单
+ * @param paramUrl
+ */
+function formAjaxReload(paramForm,paramUrl) {
+    $.ajax({
+        url: paramUrl,
+        type: "POST",
+        data: paramForm.serialize(),
+        dataType: "json",
+        error: function ()
+        {
+            console.log("formAjaxNoReload error function!");
+            toastr.error('出现错误！', '错误');
+        },
+        success: function (data)
+        {
+            if (data.codeBool){
+                location.reload();
+            }else {
+                toastr.error(data.message, '操作失败');
+            }
+        }
+    });
+}
+
+/**
  *
  * @param paramUrl
  * @param paramId 传递id

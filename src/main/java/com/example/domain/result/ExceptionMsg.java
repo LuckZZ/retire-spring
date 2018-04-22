@@ -56,6 +56,9 @@ public enum ExceptionMsg {
     GroupDelSuccess("删除组成功",true),
     GroupDelFailed("删除组失败",false),
 
+    GroupUpdSuccess("修改组名成功",true),
+    GroupUpdFailed("修改组名失败",false),
+
     GroupRemUserSuccess("移除组员成功",true),
     GroupRemUserFailed("移除组员失败",false),
 

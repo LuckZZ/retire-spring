@@ -77,6 +77,18 @@ public class GroupController extends BaseController{
         return result(ExceptionMsg.GroupAddSuccess);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @LoggerManage(description = "组名修改")
+    public Response update(@RequestParam(value = "groupId") String groupId, @RequestParam(value = "groupName") String groupName){
+        if (groupService.existsByGroupName(groupName)){
+            return  result(ExceptionMsg.GroupUsed);
+        }
+//        修改
+        groupService.updateGroupName(groupName, Integer.parseInt(groupId));
+        return result(ExceptionMsg.GroupUpdSuccess);
+    }
+
 
     @ResponseBody
     @RequestMapping(value = "/delete")
