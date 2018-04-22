@@ -1,14 +1,16 @@
 package com.example.serviceImpl;
 
+import com.example.comm.Constant;
 import com.example.dao.GroupDao;
 import com.example.dao.GrouperDao;
 import com.example.dao.UserDao;
 import com.example.domain.entity.Group;
 import com.example.domain.entity.Grouper;
-import com.example.domain.entity.User;
 import com.example.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -77,6 +79,21 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
     @Override
     public int updateGroupName(String groupName, Integer groupId) {
         return groupDao.updateGroupName(groupName, groupId);
+    }
+
+    @Override
+    public Page<Group> findAllByGroupName(String groupName, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        Page<Group> groups = groupDao.findAllByGroupName(groupName, pageable);
+        for (Group group : groups) {
+            long count = userDao.countByGroup_GroupId(group.getGroupId());
+//            查找此组组长
+            List<Grouper> groupers = grouperDao.findAllByUser_Group_GroupId(group.getGroupId());
+            group.setCount(count);
+            group.setGroupers(groupers);
+            group.setGroupersName(groupersToName(groupers));
+        }
+        return groups;
     }
 
     /**

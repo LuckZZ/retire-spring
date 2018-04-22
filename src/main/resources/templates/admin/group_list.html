@@ -46,9 +46,9 @@
                             </div>
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field ">
+                                    <input type="text" class="am-form-field"  id="head-select-input">
                                     <span class="am-input-group-btn">
-            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
+            <button id="head-select-btn" class="am-btn am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
           </span>
                                 </div>
                             </div>
@@ -179,6 +179,16 @@
         var groupId;
 
         var groupNameOld;
+
+        // 头部搜索
+        $("#head-select-btn").on('click',function(){
+            var input = $("#head-select-input").val().trim();
+            if (input != ''){
+                window.location.href="/group/groupList/"+input;
+            }else {
+                window.location.href="/group/groupList";
+            }
+        });
 
         // 提交时验证表单，small元素包裹错误信息
         $("#addGroupForm").validate({

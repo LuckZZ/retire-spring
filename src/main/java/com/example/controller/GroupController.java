@@ -43,6 +43,14 @@ public class GroupController extends BaseController{
         return "admin/group_list";
     }
 
+    @RequestMapping("/groupList/{value}")
+    @LoggerManage(description = "分组列表ByGroupName")
+    public String groupListByGroupName(Model model, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Page<Group> datas = groupService.findAllByGroupName(value, page);
+        model.addAttribute("datas",datas);
+        return "admin/group_list";
+    }
+
     @RequestMapping("/{id}")
     @LoggerManage(description = "分组详细")
     public String detail(@PathVariable Integer id, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
@@ -51,6 +59,28 @@ public class GroupController extends BaseController{
         model.addAttribute("datas",datas);
         model.addAttribute("group",group);
         return "admin/group_datail";
+    }
+
+    @RequestMapping("/{id}/{type}/{value}")
+    @LoggerManage(description = "分组详细BySearch")
+    public String detailByType(@PathVariable Integer id, @PathVariable Integer type, @PathVariable String value, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+
+        Group group = groupService.findOne(id);
+        model.addAttribute("group",group);
+
+        if (type == 1 && value != null){
+//        根据工号
+            Page<User> datas = userService.findAllByJobNum(value,page);
+            model.addAttribute("datas",datas);
+            return "admin/group_datail";
+        }else if (type == 2 && value != null){
+//        根据姓名
+            Page<User> datas = userService.findAllByName(value,page);
+            model.addAttribute("datas",datas);
+            return "admin/group_datail";
+        }
+//        重定向
+        return "redirect:/group/"+id;
     }
 
     @ResponseBody
