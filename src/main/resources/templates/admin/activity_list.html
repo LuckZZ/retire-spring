@@ -121,6 +121,8 @@
 <script>
     $(function() {
 
+        var activityId;
+
         //待报名界面
         $(".one-join-no").on('click',function () {
             var v = $(this).data('id');
@@ -131,8 +133,6 @@
             var v = $(this).data('id');
             window.location.href="/join/joinOkView/"+v;
         });
-
-
         //切换活动状态
         $(".one-attend").on('click',function () {
             var id = $(this).data('id');
@@ -149,8 +149,14 @@
 
             $oneDel.find("#del-activityName").text(name);
 
-            var myId = $(this).data('id');
-            oneDelModal($oneDel,'/activity/delete',myId);
+            activityId = $(this).data('id');
+
+            $oneDel.modal();
+        });
+
+        //重写删除草稿模态框的确认方法
+        $("#oneDel-activity-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            idAjaxReload('/activity/delete',activityId);
         });
 
     });

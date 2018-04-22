@@ -116,6 +116,9 @@
 
 <script>
     $(function() {
+
+        var activityId;
+
         //发布
         $(".one-publish").on('click',function () {
             //当前元素查找父级元素
@@ -126,8 +129,14 @@
 
             $onePublish.find("#publish-activityName").text(name);
 
-            var myId = $(this).data('id');
-            oneDelModal($onePublish,'/activity/publish',myId);
+            activityId = $(this).data('id');
+
+            $onePublish.modal();
+        });
+
+        //重写发布模态框的确认方法
+        $("#onePublish-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            idAjaxReload('/activity/publish',activityId);
         });
 
 
@@ -136,8 +145,6 @@
             var v = $(this).data('id');
             window.location.href="/activity/updateView/"+v;
         });
-
-
 
 
         //删除
@@ -150,52 +157,15 @@
 
             $oneDel.find("#del-activityName").text(name);
 
-            var myId = $(this).data('id');
-            oneDelModal($oneDel,'/activity/delete',myId);
+            activityId = $(this).data('id');
+
+            $oneDel.modal();
         });
 
-
-        /*
-
-                // 详细
-                $(".one-detail").on('click',function () {
-                    var v = $(this).data('id');
-                    window.location.href="/admin/datailView/"+v;
-                });
-
-                //删除
-                $(".one-del").on('click',function () {
-                    //当前元素查找父级元素
-                    var $tr = $(this).closest('tr');
-                    //获得工号
-                    var jobNum = $tr.find('td').eq(2).html();
-                    //获得姓名
-                    var name = $tr.find('td').eq(3).html();
-
-                    var $oneDel= $('#oneDel-modal');
-
-                    //设置工号、姓名
-                    $oneDel.find("#jobNum").text(jobNum);
-
-                    $oneDel.find("#name").text(name);
-
-                    var myId = $(this).data('id');
-
-                    oneDelModal($oneDel,'/admin/delete',myId);
-
-                });
-
-                //删除已选择
-                $("#checked-del").on('click',function () {
-
-                    var checkedId = checkedIds();
-
-                    var $mulDel= $('#mulDel-modal');
-
-                    mulDelModal($mulDel,'/admin/delete',checkedId);
-
-                });*/
-
+        //重写删除草稿模态框的确认方法
+        $("#oneDel-activity-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            idAjaxReload('/activity/delete',activityId);
+        });
 
     });
 </script>
