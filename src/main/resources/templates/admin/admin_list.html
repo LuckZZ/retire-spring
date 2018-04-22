@@ -241,7 +241,7 @@
         //重置密码,打开模态框
         $(".one-resetPwd").on('click',function(){
             var id = $(this).data('id');
-            //为表单groupId赋值
+            //为表单adminId赋值
             $("#adminId").val(id);
             $('#updatePwd-modal').modal({
                 relatedTarget: this,
@@ -255,6 +255,12 @@
                     }
                 }
             });
+        });
+
+        //设置重置密码模态框关闭时，执行重置表单
+        $('#updatePwd-modal').on('close.modal.amui', function(){
+            //重置表单
+            $("#updatePwdForm")[0].reset();
         });
 
         //密码验证

@@ -118,7 +118,7 @@
                 </div>
                 <form class="am-form tpl-form-border-form tpl-form-border-br" id="addGroupForm" action="#">
                     <div class="am-form-group">
-                        <label for="groupName" class="am-u-sm-3 am-form-label">组名</label>
+                        <label class="am-u-sm-3 am-form-label">组名</label>
                         <div class="am-u-sm-9">
                             <input name="groupName" type="text" class="tpl-form-input" id="groupName" placeholder="输入组名">
                         </div>
@@ -144,7 +144,7 @@
                 <form class="am-form tpl-form-border-form tpl-form-border-br" id="updateGroupForm" action="#">
                     <input name="groupId" id="groupId" type="hidden">
                     <div class="am-form-group">
-                        <label for="groupName" class="am-u-sm-3 am-form-label">组名</label>
+                        <label class="am-u-sm-3 am-form-label">组名</label>
                         <div class="am-u-sm-9">
                             <input name="groupName" type="text" class="tpl-form-input" id="update-groupName" placeholder="输入组名">
                         </div>
@@ -178,6 +178,8 @@
 
         var groupId;
 
+        var groupNameOld;
+
         // 提交时验证表单，small元素包裹错误信息
         $("#addGroupForm").validate({
             rules:{
@@ -187,7 +189,7 @@
                         type: "post",
                         dataType: "json",
                         data: {
-                            jobNum: function () {
+                            groupName: function () {
                                 return $("#groupName").val();
                             }
                         }
@@ -210,9 +212,19 @@
                         type: "post",
                         dataType: "json",
                         data: {
-                            jobNum: function () {
-                                return $("#groupName").val();
+                            groupName: function () {
+                                return $("#update-groupName").val();
                             }
+                        },
+                        dataFilter: function(data, type) {
+                            var groupName = $("#update-groupName").val()
+                            if(groupNameOld == groupName){
+                                return true;
+                            }
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
                         }
                     }
                 }
@@ -223,6 +235,8 @@
                 formAjaxReload(myform,"/group/update");
             }
         });
+
+        // update-groupName
 
         //设置新增组模态框关闭时，执行刷新
         $('#addGroup-modal').on('close.modal.amui', function(){
@@ -256,13 +270,21 @@
         $(".one-update").on('click',function() {
             var $tr = $(this).closest('tr');
             //获得组名
-            var groupName = $tr.find('td').eq(2).html();
-            $("#update-groupName").val(groupName);
+            groupNameOld = $tr.find('td').eq(2).html();
+            //赋值groupName
+            $("#update-groupName").val(groupNameOld);
+            //赋值groupId
             $('#updateGroup-modal').find("#groupId").val($(this).data('id'));
             $('#updateGroup-modal').modal({
                 relatedTarget: this,
                 closeOnConfirm: false,
                 onConfirm: function(options) {
+                    var inptGroupName =   $("#update-groupName").val();
+                    if (groupNameOld == inptGroupName){
+                        this.close();
+                        return;
+                    }
+
                     var v = $("#updateGroupForm").valid();
                     // 验证通过，提交并关闭模态框
                     if(v){
