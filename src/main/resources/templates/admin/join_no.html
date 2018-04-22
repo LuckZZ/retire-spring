@@ -62,19 +62,19 @@
                                         <th>姓名</th>
                                         <th>组别</th>
                                         <th>活动名称</th>
-                                        <th th:each="labelDef:${joinsDisplay.activity.labelDefs}" th:text="${labelDef}">labelDefs</th>
+                                        <th th:each="labelDef:${activity.labelDefs}" th:text="${labelDef}">labelDefs</th>
                                         <th>是否参加</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user:${joinsDisplay.users}">
+                                    <tr th:each="user:${datas}">
                                         <td th:text="${user.userId}">序号1</td>
                                         <td th:text="${user.jobNum}">工号123456</td>
                                         <td th:text="${user.name}">姓名张三</td>
                                         <td th:text="${user.group.groupName}">组别组一</td>
-                                        <td th:text="${joinsDisplay.activity.activityName}">测试活动</td>
-                                        <td th:each="defs:${joinsDisplay.activity.inputDefss}">
+                                        <td th:text="${activity.activityName}">测试活动</td>
+                                        <td th:each="defs:${activity.inputDefss}">
                                             <div class="tr-select">
                                                 <select data-am-selected="{btnSize: 'sm'}" name="inputDefs">
                                                     <option th:each="def:${defs}" th:value="${def}" th:text="${def}">自定义列 </option>
@@ -84,7 +84,7 @@
 
                                         <td>
                                             <input name="userId" th:value="${user.userId}" type="hidden"/>
-                                            <input name="activityId" th:value="${joinsDisplay.activity.activityId}" type="hidden"/>
+                                            <input name="activityId" th:value="${activity.activityId}" type="hidden"/>
 
                                             <select data-am-selected="{btnSize: 'sm'}" name="attend" class="attend">
                                                 <option value="yes" th:text="参加"></option>
@@ -104,19 +104,8 @@
                                 </table>
                             </div>
                             <!--分页-->
-                            <!--    <div class="am-u-lg-12 am-cf">
-                                    <div class="am-fr">
-                                        <ul class="am-pagination tpl-pagination">
-                                            <li class="am-disabled"><a href="#">«</a></li>
-                                            <li class="am-active"><a href="#">1</a></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li><a href="#">4</a></li>
-                                            <li><a href="#">5</a></li>
-                                            <li><a href="#">»</a></li>
-                                        </ul>
-                                    </div>
-                                </div>-->
+                            <div th:replace="fragments/page::page(${datas})"></div>
+
                         </div>
                     </div>
                 </div>

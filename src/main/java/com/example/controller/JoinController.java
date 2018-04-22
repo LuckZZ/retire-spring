@@ -1,24 +1,25 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
-import com.example.domain.bean.JoinsDisplay;
 import com.example.domain.entity.Activity;
 import com.example.domain.entity.Join;
-import com.example.domain.enums.ActivityStatus;
+import com.example.domain.entity.User;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.ActivityService;
 import com.example.service.JoinService;
+import com.example.service.UserService;
 import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RequestMapping("/join")
 @Controller
@@ -30,30 +31,31 @@ public class JoinController extends BaseController{
     @Autowired
     private ActivityService activityService;
 
+    @Autowired
+    private UserService userService;
+
     @RequestMapping(value = "/joinNoView/{activityId}")
     @LoggerManage(description = "待报名界面")
-    public String joinNoView(@PathVariable String activityId, Model model){
+    public String joinNoView(@PathVariable String activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Integer id = Integer.parseInt(activityId);
+        Activity activity = activityService.findOne(id);
+        Page<User> datas = userService.findAllNoJoin(id, page);
 
-        JoinsDisplay joinsDisplay = joinService.joinNo(Integer.parseInt(activityId));
-
-        model.addAttribute("joinsDisplay", joinsDisplay);
+        model.addAttribute("activity", activity);
+        model.addAttribute("datas", datas);
 
         return "admin/join_no";
     }
 
     @RequestMapping(value = "/joinOkView/{activityId}")
     @LoggerManage(description = "已报名界面")
-    public String joinOkView(@PathVariable String activityId, Model model){
-
+    public String joinOkView(@PathVariable String activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Integer id = Integer.parseInt(activityId);
-
         Activity activity = activityService.findOne(id);
-
-        List<Join> joins = joinService.findAllByActivity_ActivityId(id);
+        Page<Join> datas = joinService.findAllByActivity_ActivityId(id, page);
 
         model.addAttribute("activity", activity);
-
-        model.addAttribute("joins", joins);
+        model.addAttribute("datas", datas);
 
         return "admin/join_ok";
     }

@@ -17,6 +17,10 @@ public interface ActivityDao extends JpaRepository<Activity,Integer> {
 
     Page<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus, Pageable pageable);
 
+    Page<Activity> findAllByActivityStatusAndActivityName(ActivityStatus activityStatus, String activityName, Pageable pageable);
+
+    Page<Activity> findAllByActivityStatusNotAndActivityName(ActivityStatus activityStatus, String activityName, Pageable pageable);
+
     boolean existsByActivityName(String activityName);
 
     @Modifying(clearAutomatically=true)

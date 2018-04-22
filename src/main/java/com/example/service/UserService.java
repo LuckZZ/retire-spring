@@ -34,4 +34,5 @@ public interface UserService extends BaseCrudService<User,Integer>{
 
     Page<User> findAllByGroup_GroupId(Integer groupId, Integer page);
 
+    Page<User> findAllNoJoin(Integer activityId, Integer page);
 }

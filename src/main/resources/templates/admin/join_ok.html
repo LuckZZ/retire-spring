@@ -72,7 +72,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="join:${joins}">
+                                    <tr th:each="join:${datas}">
                                         <td><input type="checkbox" th:value="${join.joinId}"/></td>
                                         <td th:text="${join.joinId}">序号1</td>
                                         <td th:text="${join.user.jobNum}">工号123456</td>
@@ -93,19 +93,8 @@
                                 </table>
                             </div>
                             <!--分页-->
-                            <!--    <div class="am-u-lg-12 am-cf">
-                                    <div class="am-fr">
-                                        <ul class="am-pagination tpl-pagination">
-                                            <li class="am-disabled"><a href="#">«</a></li>
-                                            <li class="am-active"><a href="#">1</a></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li><a href="#">4</a></li>
-                                            <li><a href="#">5</a></li>
-                                            <li><a href="#">»</a></li>
-                                        </ul>
-                                    </div>
-                                </div>-->
+                            <div th:replace="fragments/page::page(${datas})"></div>
+
                         </div>
                     </div>
                 </div>

@@ -6,7 +6,6 @@ import com.example.domain.enums.ActivityStatus;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.ActivityService;
-import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Controller
 @RequestMapping("/activity")
@@ -64,12 +62,29 @@ public class ActivityController extends BaseController{
     }
 
     @RequestMapping("/draftList")
-    @LoggerManage(description = "草稿箱列表")
+    @LoggerManage(description = "草稿列表")
     public String draft(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Page<Activity> datas = activityService.findAllByActivityStatus(ActivityStatus.draft, page);
         model.addAttribute("datas",datas);
         return "admin/draft_list";
     }
+
+    @RequestMapping("/activityList/{value}")
+    @LoggerManage(description = "活动列表ByActivityName")
+    public String activityListByActivityName(Model model, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Page<Activity> datas = activityService.findAllByActivityStatusNotAndActivityName(ActivityStatus.draft, value, page);
+        model.addAttribute("datas",datas);
+        return "admin/activity_list";
+    }
+
+    @RequestMapping("/draftList/{value}")
+    @LoggerManage(description = "草稿列表ByGroupName")
+    public String draftByActivityName(Model model, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Page<Activity> datas = activityService.findAllByActivityStatusAndActivityName(ActivityStatus.draft, value, page);
+        model.addAttribute("datas",datas);
+        return "admin/draft_list";
+    }
+
 
     /**
      * 进入增加活动界面
@@ -103,6 +118,10 @@ public class ActivityController extends BaseController{
         String activityName = request.getParameter("activityName");
         String[] labelDef = request.getParameterValues("labelDef");
         String[] inputDef = request.getParameterValues("inputDef");
+
+        if(activityService.existsByActivityName(activityName)){
+            return  result(ExceptionMsg.ActivityUsed);
+        }
 
         Activity activity = new Activity(activityName,labelDef,inputDef);
 

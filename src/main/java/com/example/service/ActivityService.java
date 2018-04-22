@@ -14,6 +14,10 @@ public interface ActivityService extends BaseCrudService<Activity,Integer>{
 
     Page<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus, Integer page);
 
+    Page<Activity> findAllByActivityStatusAndActivityName(ActivityStatus activityStatus, String activityName, Integer page);
+
+    Page<Activity> findAllByActivityStatusNotAndActivityName(ActivityStatus activityStatus, String activityName, Integer page);
+
     int activityPublish(Integer activityId);
 
     boolean updateExceptId(Activity activity);

@@ -1,16 +1,19 @@
 package com.example.serviceImpl;
 
-import com.example.dao.ActivityDao;
+import com.example.comm.Constant;
 import com.example.dao.JoinDao;
 import com.example.dao.UserDao;
-import com.example.domain.bean.JoinsDisplay;
 import com.example.domain.entity.Activity;
 import com.example.domain.entity.Join;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Attend;
+import com.example.domain.enums.Exist;
 import com.example.service.ActivityService;
 import com.example.service.JoinService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -29,7 +32,7 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     @Autowired
     private ActivityService activityService;
 
-    @Override
+/*    @Override
     public JoinsDisplay joinNo(Integer activityId) {
 
         //      活动
@@ -57,7 +60,7 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
         JoinsDisplay joinDisplays = new JoinsDisplay(users, activity);
 
         return joinDisplays;
-    }
+    }*/
 
     @Override
     public Join save(Integer userId, Integer activityId, String[] inputDefs, String attend) {
@@ -77,8 +80,9 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     }
 
     @Override
-    public List<Join> findAllByActivity_ActivityId(Integer activityId) {
-        return joinDao.findAllByActivity_ActivityId(activityId);
+    public Page<Join> findAllByActivity_ActivityId(Integer activityId, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return joinDao.findAllByActivity_ActivityIdAndUser_Exist(activityId, Exist.yes,pageable);
     }
 
     @Transactional

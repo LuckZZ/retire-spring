@@ -131,6 +131,12 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
         return datas;
     }
 
+    @Override
+    public Page<User> findAllNoJoin(Integer activityId, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return userDao.findAllNoJoin(Exist.yes, activityId, pageable);
+    }
+
     private Specification userSpecification(UserSearchForm userSearchForm){
         Specification<User> specification = new Specification<User>() {
             @Override

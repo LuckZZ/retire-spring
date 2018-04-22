@@ -70,6 +70,26 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
         return activities;
     }
 
+    @Override
+    public Page<Activity> findAllByActivityStatusAndActivityName(ActivityStatus activityStatus, String activityName, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        Page<Activity> activities = activityDao.findAllByActivityStatusAndActivityName(activityStatus, activityName, pageable);
+        for (Activity activity : activities) {
+            activity = assignActivity(activity);
+        }
+        return activities;
+    }
+
+    @Override
+    public Page<Activity> findAllByActivityStatusNotAndActivityName(ActivityStatus activityStatus, String activityName, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        Page<Activity> activities = activityDao.findAllByActivityStatusNotAndActivityName(activityStatus, activityName, pageable);
+        for (Activity activity : activities) {
+            activity = assignActivity(activity);
+        }
+        return activities;
+    }
+
     @Transactional
     @Override
     public int activityPublish(Integer activityId) {
@@ -140,7 +160,7 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     private Activity assignActivity(Activity activity){
         String[] strings = activity.getInputDefs();
         String[][] strings1 = DataUtils.oneStrToTwoStr(strings);
-        long joinOkSize = joinDao.countByActivity_ActivityId(activity.getActivityId());
+        long joinOkSize = joinDao.countByActivity_ActivityIdAndUser_Exist(activity.getActivityId(), Exist.yes);
         long userCount = userDao.countByExist(Exist.yes);
 
         activity.setInputDefss(strings1);

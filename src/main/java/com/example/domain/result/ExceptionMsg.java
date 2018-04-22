@@ -65,6 +65,8 @@ public enum ExceptionMsg {
     ActivityAddSuccess("新增活动成功",true),
     ActivityAddFailed("新增活动失败",false),
 
+    ActivityUsed("活动名称已存在",false),
+
     ActivityPublishSuccess("发布活动成功",true),
     ActivityPublishFailed("发布活动失败",false),
 
