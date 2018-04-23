@@ -36,15 +36,34 @@ public class JoinController extends BaseController{
 
     @RequestMapping(value = "/joinNoView/{activityId}")
     @LoggerManage(description = "待报名界面")
-    public String joinNoView(@PathVariable String activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
-        Integer id = Integer.parseInt(activityId);
-        Activity activity = activityService.findOne(id);
-        Page<User> datas = userService.findAllNoJoin(id, page);
+    public String joinNoView(@PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Activity activity = activityService.findOne(activityId);
+        Page<User> datas = userService.findAllNoJoin(activityId, page);
 
         model.addAttribute("activity", activity);
         model.addAttribute("datas", datas);
 
         return "admin/join_no";
+    }
+
+    @RequestMapping("/joinNoView/{activityId}/{type}/{value}")
+    @LoggerManage(description = "待报名界面BySearch")
+    public String userListByType(Model model, @PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Activity activity = activityService.findOne(activityId);
+        model.addAttribute("activity", activity);
+        if (type == 1 && value != null){
+//        根据工号
+            Page<User> datas = userService.findAllNoJoinByJobNum(activityId, value, page);
+            model.addAttribute("datas",datas);
+            return "admin/join_no";
+        }else if (type == 2 && value != null){
+//        根据姓名
+            Page<User> datas = userService.findAllNoJoinByName(activityId, value, page);
+            model.addAttribute("datas",datas);
+            return "admin/join_no";
+        }
+//        重定向
+        return "redirect:/join/joinNoView/"+activityId;
     }
 
     @RequestMapping(value = "/joinOkView/{activityId}")

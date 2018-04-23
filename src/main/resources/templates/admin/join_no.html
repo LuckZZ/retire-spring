@@ -23,9 +23,10 @@
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
                         <div class="widget-head am-cf">
-                            <div class="widget-title  am-cf">活动报名</div>
+                            <div class="widget-title am-cf" th:text="'活动报名：'+${activity.activityName}">活动报名</div>
+                            <input type="hidden" id="activityId" th:field="${activity.activityId}">
                         </div>
-                        <div class="widget-body  am-fr">
+                        <div class="widget-body am-fr">
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
                                 <div class="am-form-group">
                                     <div class="am-btn-toolbar">
@@ -37,18 +38,17 @@
                             </div>
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
                                 <div class="am-form-group tpl-table-list-select">
-                                    <select data-am-selected="{btnSize: 'sm'}">
-                                        <option value="option1">类别</option>
-                                        <option value="option2">工号</option>
-                                        <option value="option3">姓名</option>
+                                    <select data-am-selected="{btnSize: 'sm'}"  id="head-select-key">
+                                        <option value="search-jobNum">工号</option>
+                                        <option value="search-name">姓名</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field ">
+                                    <input type="text" class="am-form-field"  id="head-select-input">
                                     <span class="am-input-group-btn">
-            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
+            <button id="head-select-btn" class="am-btn am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
           </span>
                                 </div>
                             </div>
@@ -84,7 +84,6 @@
 
                                         <td>
                                             <input name="userId" th:value="${user.userId}" type="hidden"/>
-                                            <input name="activityId" th:value="${activity.activityId}" type="hidden"/>
 
                                             <select data-am-selected="{btnSize: 'sm'}" name="attend" class="attend">
                                                 <option value="yes" th:text="参加"></option>
@@ -126,6 +125,21 @@
 <script>
     $(function() {
 
+        // 头部搜索
+        $("#head-select-btn").on('click',function(){
+            var activityId = $("#activityId").val();
+            var key = $("#head-select-key").val();
+            var input = $("#head-select-input").val().trim();
+            if (key == 'search-jobNum' && input != ''){
+                window.location.href="/join/joinNoView/"+activityId+"/1/"+input;
+            }else if(key == 'search-name' && input != ''){
+                window.location.href="/join/joinNoView/"+activityId+"/2/"+input;
+            }
+            if(input == ''){
+                window.location.href="/join/joinNoView/"+activityId;
+            }
+        });
+
         //是否参加change事件
         $(".attend").on('change',function(){
             var $tr = $(this).closest('tr');
@@ -136,6 +150,10 @@
                 $div.show();
             }
         });
+
+        var userId;
+        var inputDefs;
+        var attendVal;
 
         //提交事件
         $(".one-submit").on('click',function () {
@@ -161,49 +179,46 @@
             $oneSubmit.find("#submit-name").text(name);
             $oneSubmit.find("#submit-attend").text(attend);
 
-            var userId = $(this).data('id');
+            userId = $(this).data('id');
 
-            var activityId = $tr.find('input[name="activityId"]').val();
-
-            var inputDefs = new Array();
+            inputDefs = new Array();
 
             $tr.find('select[name="inputDefs"]').each(function () {
                 inputDefs.push($(this).val());
             });
 
-            var attendVal = $tr.find('.attend option:selected').val();
+            attendVal = $tr.find('.attend option:selected').val();
 
-            $oneSubmit.modal({
-                onConfirm: function(options) {
-                    $.ajaxSettings.traditional=true;
-                    $.ajax({
-                        async: false,
-                        type: 'POST',
-                        dataType: 'json',
-                        data:{
-                            userId:userId,
-                            activityId:activityId,
-                            inputDefs:inputDefs,
-                            attend:attendVal
-                        },
-                        url: '/join/joinActivity',
-                        error : function(XMLHttpRequest, textStatus, errorThrown) {
-                            toastr.error('出现错误！', '错误');
-                        },
-                        success: function(data){
-                            if (data.codeBool){
-                                 location.reload();
-                            }else {
-                                toastr.error(data.message, '操作失败');
-                            }
-                        }
-                    });
+            $oneSubmit.modal();
+        });
+
+        $("#oneSubmit-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+
+            var activityId = $("#activityId").val();
+
+            $.ajaxSettings.traditional=true;
+            $.ajax({
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                data:{
+                    userId:userId,
+                    activityId:activityId,
+                    inputDefs:inputDefs,
+                    attend:attendVal
+                },
+                url: '/join/joinActivity',
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    toastr.error('出现错误！', '错误');
+                },
+                success: function(data){
+                    if (data.codeBool){
+                        location.reload();
+                    }else {
+                        toastr.error(data.message, '操作失败');
+                    }
                 }
             });
-
-            //移除暂存的实例
-            removeModalData($oneSubmit);
-
         });
 
     });

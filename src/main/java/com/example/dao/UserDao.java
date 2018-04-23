@@ -56,4 +56,10 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
 
     @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId)")
     Page<User> findAllNoJoin(@Param("exist")Exist exist, @Param("activityId")Integer activityId, Pageable pageable);
+
+    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
+    Page<User> findAllNoJoinByJobNum(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum, Pageable pageable);
+
+    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.name=:name")
+    Page<User> findAllNoJoinByName(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("name")String name, Pageable pageable);
 }
