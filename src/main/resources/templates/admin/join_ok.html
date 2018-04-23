@@ -38,18 +38,17 @@
                             </div>
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
                                 <div class="am-form-group tpl-table-list-select">
-                                    <select data-am-selected="{btnSize: 'sm'}">
-                                        <option value="option1">类别</option>
-                                        <option value="option2">工号</option>
-                                        <option value="option3">姓名</option>
+                                    <select data-am-selected="{btnSize: 'sm'}"  id="head-select-key">
+                                        <option value="search-jobNum">工号</option>
+                                        <option value="search-name">姓名</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field ">
+                                    <input type="text" class="am-form-field"  id="head-select-input">
                                     <span class="am-input-group-btn">
-            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
+            <button id="head-select-btn" class="am-btn am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
           </span>
                                 </div>
                             </div>
@@ -115,6 +114,23 @@
 <script>
     $(function() {
 
+        // 头部搜索
+        $("#head-select-btn").on('click',function(){
+            var activityId = $("#activityId").val();
+            var key = $("#head-select-key").val();
+            var input = $("#head-select-input").val().trim();
+            if (key == 'search-jobNum' && input != ''){
+                window.location.href="/join/joinOkView/"+activityId+"/1/"+input;
+            }else if(key == 'search-name' && input != ''){
+                window.location.href="/join/joinOkView/"+activityId+"/2/"+input;
+            }
+            if(input == ''){
+                window.location.href="/join/joinOkView/"+activityId;
+            }
+        });
+
+        var joinId;
+
         //删除
         $(".one-del").on('click',function () {
             //当前元素查找父级元素
@@ -131,25 +147,29 @@
 
             $oneDel.find("#name").text(name);
 
-            var myId = $(this).data('id');
+            joinId = $(this).data('id');
 
+            $oneDel.modal();
+        });
+
+        //重写删除报名模态框的确认方法
+        $("#oneDel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
             var activityId = $("#activityId").val();
-
-            oneDelModal($oneDel,'/join/delete/'+activityId,myId);
-
+            idAjaxReload('/join/delete/'+activityId,joinId);
         });
 
         //删除已选择
         $("#checked-del").on('click',function () {
 
-            var checkedId = checkedIds();
+            joinId = checkedIds();
 
-            var $mulDel= $('#mulDel-modal');
+            var $mulDel= $('#mulDel-modal').modal();
+        });
 
+        //重写批量删除报名模态框的确认方法
+        $("#mulDel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
             var activityId = $("#activityId").val();
-
-            mulDelModal($mulDel,'/join/delete/'+activityId,checkedId);
-
+            idAjaxReload('/join/delete/'+activityId,joinId);
         });
 
     });

@@ -17,8 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao> implements JoinService{
@@ -83,6 +81,18 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     public Page<Join> findAllByActivity_ActivityId(Integer activityId, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return joinDao.findAllByActivity_ActivityIdAndUser_Exist(activityId, Exist.yes,pageable);
+    }
+
+    @Override
+    public Page<Join> findAllByActivity_ActivityIdAndUser_JobNum(Integer activityId, String jobNum, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNum(activityId, Exist.yes, jobNum, pageable);
+    }
+
+    @Override
+    public Page<Join> findAllByActivity_ActivityIdAndUser_Name(Integer activityId, String name, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_Name(activityId, Exist.yes, name, pageable);
     }
 
     @Transactional

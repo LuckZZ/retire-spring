@@ -9,6 +9,10 @@ public interface JoinService extends BaseCrudService<Join,Integer>{
 
     Page<Join> findAllByActivity_ActivityId(Integer activityId, Integer page);
 
+    Page<Join> findAllByActivity_ActivityIdAndUser_JobNum(Integer activityId, String jobNum, Integer page);
+
+    Page<Join> findAllByActivity_ActivityIdAndUser_Name(Integer activityId, String name, Integer page);
+
     void delete(Integer[] joinIds);
 
 }

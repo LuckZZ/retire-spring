@@ -48,7 +48,7 @@ public class JoinController extends BaseController{
 
     @RequestMapping("/joinNoView/{activityId}/{type}/{value}")
     @LoggerManage(description = "待报名界面BySearch")
-    public String userListByType(Model model, @PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    public String joinNoViewByType(Model model, @PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
         model.addAttribute("activity", activity);
         if (type == 1 && value != null){
@@ -68,15 +68,34 @@ public class JoinController extends BaseController{
 
     @RequestMapping(value = "/joinOkView/{activityId}")
     @LoggerManage(description = "已报名界面")
-    public String joinOkView(@PathVariable String activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
-        Integer id = Integer.parseInt(activityId);
-        Activity activity = activityService.findOne(id);
-        Page<Join> datas = joinService.findAllByActivity_ActivityId(id, page);
+    public String joinOkView(@PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Activity activity = activityService.findOne(activityId);
+        Page<Join> datas = joinService.findAllByActivity_ActivityId(activityId, page);
 
         model.addAttribute("activity", activity);
         model.addAttribute("datas", datas);
 
         return "admin/join_ok";
+    }
+
+    @RequestMapping(value = "/joinOkView/{activityId}/{type}/{value}")
+    @LoggerManage(description = "已报名界面BySearch")
+    public String joinOkViewByType(@PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Activity activity = activityService.findOne(activityId);
+        model.addAttribute("activity", activity);
+        if (type == 1 && value != null){
+//        根据工号
+            Page<Join> datas = joinService.findAllByActivity_ActivityIdAndUser_JobNum(activityId, value, page);
+            model.addAttribute("datas",datas);
+            return "admin/join_ok";
+        }else if (type == 2 && value != null){
+//        根据姓名
+            Page<Join> datas = joinService.findAllByActivity_ActivityIdAndUser_Name(activityId, value, page);
+            model.addAttribute("datas",datas);
+            return "admin/join_ok";
+        }
+//        重定向
+        return "redirect:/join/joinOkView/"+activityId;
     }
 
     @ResponseBody
