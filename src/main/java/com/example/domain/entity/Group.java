@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "tb_group")
-public class Group implements Serializable{
+public class Group extends BaseEntity implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "group_id")

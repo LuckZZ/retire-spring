@@ -3,13 +3,14 @@ package com.example.domain.entity;
 import com.example.domain.enums.CanLogin;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * 组长表
  */
 @Entity
 @Table(name = "tb_grouper")
-public class Grouper {
+public class Grouper extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "grouper_id")

@@ -1,25 +1,20 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
-import com.example.domain.entity.Activity;
-import com.example.domain.entity.Join;
-import com.example.domain.entity.User;
+import com.example.domain.bean.UserSearchForm;
+import com.example.domain.entity.*;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
-import com.example.service.ActivityService;
-import com.example.service.JoinService;
-import com.example.service.UserService;
+import com.example.service.*;
 import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RequestMapping("/join")
 @Controller
@@ -34,6 +29,21 @@ public class JoinController extends BaseController{
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private GroupService groupService;
+
+    @Autowired
+    private NationService nationService;
+
+    @Autowired
+    private PoliticsService politicsService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
+    private DutyService dutyService;
+
     @RequestMapping(value = "/joinNoView/{activityId}")
     @LoggerManage(description = "待报名界面")
     public String joinNoView(@PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
@@ -42,6 +52,25 @@ public class JoinController extends BaseController{
 
         model.addAttribute("activity", activity);
         model.addAttribute("datas", datas);
+
+        assignModel(model);
+
+        return "admin/join_no";
+    }
+
+    @RequestMapping("/joinNoView/superSearch/{activityId}")
+    @LoggerManage(description = "待报名界面高级搜索列表")
+    public String superSearch(@PathVariable Integer activityId, Model model, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Activity activity = activityService.findOne(activityId);
+        Page<User> datas = userService.findAllUserCriteria(page, userSearchForm);
+        model.addAttribute("datas",datas);
+
+        model.addAttribute("activity", activity);
+
+        assignModel(model);
+
+//        搜索表单的值，再传入页面
+        model.addAttribute("userSearchForm",userSearchForm);
 
         return "admin/join_no";
     }
@@ -141,5 +170,39 @@ public class JoinController extends BaseController{
         }catch (Exception e){
             return result(ExceptionMsg.JoinDelFailed);
         }
+    }
+
+    private Model assignModel(Model model){
+        //        所有的组
+        List<Group> groups = groupService.findAll();
+
+//        所有的民族
+        List<Nation> nations = nationService.findAll();
+
+        //        所有的政治面貌
+        List<Politics> politicss = politicsService.findAll();
+
+        //        所有的部门
+        List<Department> departments = departmentService.findAll();
+
+        //        所有的职务
+        List<Duty> duties = dutyService.findAll();
+
+//        用于用户高级搜索
+        UserSearchForm userSearchForm = new UserSearchForm();
+
+        model.addAttribute("groups",groups);
+
+        model.addAttribute("nations",nations);
+
+        model.addAttribute("politicss",politicss);
+
+        model.addAttribute("departments",departments);
+
+        model.addAttribute("duties",duties);
+
+        model.addAttribute("userSearchForm",userSearchForm);
+
+        return model;
     }
 }

@@ -11,8 +11,6 @@ import com.example.domain.entity.User;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.UserService;
-import com.example.utils.DataUtils;
-import com.example.utils.ExcelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -57,8 +55,123 @@ public class ExcelController extends BaseController{
             }
         }
 
-        List<ExcelExportEntity> beanList = new ArrayList<ExcelExportEntity>();
+        List<ExcelExportEntity> beanList = assignBeanList(item);
 
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        for (User u : userList){
+            Map<String, Object> row= addRow(u, item);
+            list.add(row);
+        }
+
+        export(map,"用户信息","用户信息",beanList,list,request,response);
+
+        return result(ExceptionMsg.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping("/exportNoJoinUser")
+    @LoggerManage(description = "导出未报名用户表")
+    public Response exportNoJoinUser(ModelMap map, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, HttpServletRequest request, HttpServletResponse response){
+
+        String exportScope = request.getParameter("exportScope");
+
+        String[] item = request.getParameterValues("item");
+
+        List<User> userList = new ArrayList<>();
+
+        if("all".equals(exportScope)){
+            userList = userService.findAllUserCriteria(userSearchForm);
+        }else if("selected".equals(exportScope)){
+            String[] selectedChecked = request.getParameterValues("selectedChecked");
+            for (String id : selectedChecked) {
+                userList.add(userService.findOne(Integer.parseInt(id)));
+            }
+        }
+
+        List<ExcelExportEntity> beanList = assignBeanList(item);
+
+        beanList.add(new ExcelExportEntity("状态", "status"));
+
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        for (User u : userList){
+            Map<String, Object> row= addRow(u, item);
+            row.put("status","未报名");
+            list.add(row);
+        }
+
+        export(map,"未报名用户","未报名用户信息",beanList,list,request,response);
+
+        return result(ExceptionMsg.SUCCESS);
+    }
+
+//    值
+    private Map<String, Object> addRow(User u, String[] item){
+        Map<String, Object> mapData= new HashMap<>();
+        for (String i : item){
+            switch (i){
+                case "jobNum":
+                    mapData.put(i,u.getJobNum());
+                    break;
+                case "name":
+                    mapData.put(i,u.getName());
+                    break;
+                case "group":
+                    mapData.put(i,u.getGroup().getGroupName());
+                    break;
+                case "rank":
+                    mapData.put(i,u.getRank().getName());
+                    break;
+                case "gender":
+                    mapData.put(i,u.getGender().getName());
+                    break;
+                case "nation":
+                    mapData.put(i,u.getNation().getNationName());
+                    break;
+                case "tel":
+                    mapData.put("tel1", u.getTel1());
+                    mapData.put("tel2", u.getTel2());
+                    mapData.put("tel3", u.getTel3());
+                    break;
+                case "mate":
+                    mapData.put(i,u.getMate());
+                    break;
+                case "address":
+                    mapData.put(i,u.getAddress());
+                    break;
+                case "department":
+                    mapData.put(i,u.getDepartment().getDepartmentName());
+                    break;
+                case "duty":
+                    mapData.put(i,u.getDuty().getDutyName());
+                    break;
+                case "politics":
+                    mapData.put(i,u.getPolitics().getPoliticsName());
+                    break;
+                case "birth":
+                    mapData.put(i,u.getBirth());
+                    break;
+                case "workTime":
+                    mapData.put(i,u.getWorkTime());
+                    break;
+                case "retireTime":
+                    mapData.put(i,u.getRetireTime());
+                    break;
+                case "passTime":
+                    mapData.put(i,u.getPassTime());
+                    break;
+                case "other":
+                    mapData.put(i,u.getOther());
+                    break;
+            }
+        }
+        return mapData;
+    }
+
+//    表头
+    private List<ExcelExportEntity> assignBeanList(String[] item){
+        List<ExcelExportEntity> beanList = new ArrayList<ExcelExportEntity>();
         for (String i : item){
             switch (i){
                 case "jobNum":
@@ -116,73 +229,16 @@ public class ExcelController extends BaseController{
                     break;
             }
         }
-
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-        for (User u : userList){
-            Map<String, Object> mapData= new HashMap<>();
-            for (String i : item){
-                switch (i){
-                    case "jobNum":
-                        mapData.put(i,u.getJobNum());
-                        break;
-                    case "name":
-                        mapData.put(i,u.getName());
-                        break;
-                    case "group":
-                        mapData.put(i,u.getGroup().getGroupName());
-                        break;
-                    case "rank":
-                        mapData.put(i,u.getRank().getName());
-                        break;
-                    case "gender":
-                        mapData.put(i,u.getGender().getName());
-                        break;
-                    case "nation":
-                        mapData.put(i,u.getNation().getNationName());
-                        break;
-                    case "tel":
-                        mapData.put("tel1", u.getTel1());
-                        mapData.put("tel2", u.getTel2());
-                        mapData.put("tel3", u.getTel3());
-                        break;
-                    case "mate":
-                        mapData.put(i,u.getMate());
-                        break;
-                    case "address":
-                        mapData.put(i,u.getAddress());
-                        break;
-                    case "department":
-                        mapData.put(i,u.getDepartment().getDepartmentName());
-                        break;
-                    case "duty":
-                        mapData.put(i,u.getDuty().getDutyName());
-                        break;
-                    case "politics":
-                        mapData.put(i,u.getPolitics().getPoliticsName());
-                        break;
-                    case "birth":
-                        mapData.put(i,u.getBirth());
-                        break;
-                    case "workTime":
-                        mapData.put(i,u.getWorkTime());
-                        break;
-                    case "retireTime":
-                        mapData.put(i,u.getRetireTime());
-                        break;
-                    case "passTime":
-                        mapData.put(i,u.getPassTime());
-                        break;
-                    case "other":
-                        mapData.put(i,u.getOther());
-                        break;
-                }
-            }
-            list.add(mapData);
-        }
-
-        ExcelUtils.export(map,"测试文件","用户信息",beanList,list,request,response);
-
-        return result(ExceptionMsg.SUCCESS);
+        return beanList;
     }
+
+    private void export(ModelMap map, String fileName, String title, List<ExcelExportEntity> beanList, List<Map<String, Object>> list, HttpServletRequest request, HttpServletResponse response){
+        ExportParams params = new ExportParams(title,title, ExcelType.XSSF);
+        map.put(MapExcelConstants.MAP_LIST, list);
+        map.put(MapExcelConstants.ENTITY_LIST, beanList);
+        map.put(MapExcelConstants.PARAMS, params);
+        map.put(MapExcelConstants.FILE_NAME, fileName);//文件名称
+        PoiBaseView.render(map, request, response, MapExcelConstants.EASYPOI_MAP_EXCEL_VIEW);
+    }
+
 }

@@ -210,7 +210,7 @@
         $("#uer-excel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
             var $form =  $('#export-user-form');
             var $hideForm = $('#hide-form');
-            $searchForm = $userSearchFormClone.clone();
+            var $searchForm = $userSearchFormClone.clone();
             $searchForm.find("select").each(function () {
                 // 添加元素
                 $hideForm.append(this);
@@ -219,7 +219,7 @@
             for (i=0;i<uId.length;i++){
                 $hideForm.append("<input type='hidden' name='selectedChecked' value='"+ uId[i] +"'>");
             }
-
+            $form.attr('action','/excel/exportUser');
             $form.submit();
             //清除添加的元素
             $hideForm.empty();
