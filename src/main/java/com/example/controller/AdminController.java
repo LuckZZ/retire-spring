@@ -1,8 +1,8 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
+import com.example.domain.bean.UserCommSearch;
 import com.example.domain.entity.Admin;
-import com.example.domain.entity.User;
 import com.example.domain.enums.CanLogin;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RequestMapping("/admin")
 @Controller
@@ -27,6 +26,7 @@ public class AdminController extends BaseController{
     @RequestMapping("/adminList")
     @LoggerManage(description = "管理员列表")
     public String adminList(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page){
+        model.addAttribute("userCommSearch", new UserCommSearch(1, ""));
         Page<Admin> datas = adminService.findAllNoCriteria(page);
         model.addAttribute("datas",datas);
         return "admin/admin_list";
@@ -35,13 +35,14 @@ public class AdminController extends BaseController{
     /**
      *
      * @param model
-     * @param type 0：根据工号查询；1：根据姓名查询
+     * @param type 1：根据工号查询；2：根据姓名查询
      * @param value
      * @return
      */
     @RequestMapping("/adminList/{type}/{value}")
     @LoggerManage(description = "管理员列表BySearch")
     public String adminListByType(Model model, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        model.addAttribute("userCommSearch", new UserCommSearch(type, value));
         if (type == 1 && value != null){
 //        根据工号
             Page<Admin> datas = adminService.findAllByJobNum(value,page);

@@ -1,8 +1,10 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
+import com.example.domain.bean.UserCommSearch;
 import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.*;
+import com.example.domain.enums.SearchType;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.*;
@@ -42,6 +44,8 @@ public class UserController extends BaseController{
    @RequestMapping("/userList")
    @LoggerManage(description = "组员列表")
     public String userList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+//       传递搜索类型
+       model.addAttribute("searchType", SearchType.all);
        Page<User> datas = userService.findAllUserCriteria(page,new UserSearchForm());
        model.addAttribute("datas",datas);
 
@@ -53,7 +57,8 @@ public class UserController extends BaseController{
     @RequestMapping("/userList/superSearch")
     @LoggerManage(description = "组员高级搜索列表")
     public String superSearch(Model model, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, @RequestParam(value = "page", defaultValue = "0") Integer page){
-
+//       传递搜索类型
+       model.addAttribute("searchType", SearchType.searchSuper);
         Page<User> datas = userService.findAllUserCriteria(page, userSearchForm);
         model.addAttribute("datas",datas);
 
@@ -68,14 +73,17 @@ public class UserController extends BaseController{
     /**
      *
      * @param model
-     * @param type 0：根据工号查询；1：根据姓名查询
+     * @param type 1：根据工号查询；2：根据姓名查询
      * @param value
      * @return
      */
     @RequestMapping("/userList/{type}/{value}")
     @LoggerManage(description = "用户列表BySearch")
     public String userListByType(Model model, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        //       传递搜索类型
+        model.addAttribute("searchType", SearchType.search);
         assignModel(model);
+        model.addAttribute("userCommSearch", new UserCommSearch(type, value));
         if (type == 1 && value != null){
 //        根据工号
             Page<User> datas = userService.findAllByJobNum(value,page);
@@ -296,6 +304,8 @@ public class UserController extends BaseController{
         model.addAttribute("duties",duties);
 
         model.addAttribute("userSearchForm",userSearchForm);
+
+        model.addAttribute("userCommSearch", new UserCommSearch(1, ""));
 
         return model;
     }
