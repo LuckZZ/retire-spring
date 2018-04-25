@@ -1,19 +1,16 @@
 package com.example.domain.bean;
 
 /**
- * type:
- * 1：按工号查询
- * 2：按姓名查询
  * Create by : Zhangxuemeng
  */
-public class UserCommSearch {
+public class CommSearch {
     private int type;
     private String value;
 
-    public UserCommSearch() {
+    public CommSearch() {
     }
 
-    public UserCommSearch(int type, String value) {
+    public CommSearch(int type, String value) {
         this.type = type;
         this.value = value;
     }

@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
-import com.example.domain.bean.UserCommSearch;
+import com.example.domain.bean.CommSearch;
 import com.example.domain.entity.Grouper;
 import com.example.domain.entity.User;
 import com.example.domain.result.ExceptionMsg;
@@ -33,7 +33,7 @@ public class GrouperController extends BaseController{
     @RequestMapping("/grouperList")
     @LoggerManage(description = "组长列表")
     public String grouperList(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page){
-        model.addAttribute("userCommSearch", new UserCommSearch(1, ""));
+        model.addAttribute("userCommSearch", new CommSearch(1, ""));
         Page<Grouper> datas = grouperService.findAllNoCriteria(page);
         model.addAttribute("datas",datas);
         return "admin/grouper_list";
@@ -49,7 +49,7 @@ public class GrouperController extends BaseController{
     @RequestMapping("/grouperList/{type}/{value}")
     @LoggerManage(description = "组长列表BySearch")
     public String grouperListByType(Model model, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
-        model.addAttribute("userCommSearch", new UserCommSearch(type, value));
+        model.addAttribute("userCommSearch", new CommSearch(type, value));
         if (type == 1 && value != null){
 //        根据工号
             Page<Grouper> datas = grouperService.findAllByUser_JobNum(value,page);

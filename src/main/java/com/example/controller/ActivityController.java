@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
+import com.example.domain.bean.CommSearch;
 import com.example.domain.entity.Activity;
 import com.example.domain.enums.ActivityStatus;
 import com.example.domain.result.ExceptionMsg;
@@ -56,6 +57,7 @@ public class ActivityController extends BaseController{
     @RequestMapping("/activityList")
     @LoggerManage(description = "活动列表")
     public String activityList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        model.addAttribute("commSearch", new CommSearch(1, ""));
         Page<Activity> datas = activityService.findAllByActivityStatusNot(ActivityStatus.draft, page);
         model.addAttribute("datas",datas);
         return "admin/activity_list";
@@ -64,6 +66,7 @@ public class ActivityController extends BaseController{
     @RequestMapping("/draftList")
     @LoggerManage(description = "草稿列表")
     public String draft(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        model.addAttribute("commSearch", new CommSearch(1, ""));
         Page<Activity> datas = activityService.findAllByActivityStatus(ActivityStatus.draft, page);
         model.addAttribute("datas",datas);
         return "admin/draft_list";
@@ -72,6 +75,7 @@ public class ActivityController extends BaseController{
     @RequestMapping("/activityList/{value}")
     @LoggerManage(description = "活动列表ByActivityName")
     public String activityListByActivityName(Model model, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        model.addAttribute("commSearch", new CommSearch(1, value));
         Page<Activity> datas = activityService.findAllByActivityStatusNotAndActivityName(ActivityStatus.draft, value, page);
         model.addAttribute("datas",datas);
         return "admin/activity_list";
@@ -80,6 +84,7 @@ public class ActivityController extends BaseController{
     @RequestMapping("/draftList/{value}")
     @LoggerManage(description = "草稿列表ByGroupName")
     public String draftByActivityName(Model model, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        model.addAttribute("commSearch", new CommSearch(1, value));
         Page<Activity> datas = activityService.findAllByActivityStatusAndActivityName(ActivityStatus.draft, value, page);
         model.addAttribute("datas",datas);
         return "admin/draft_list";

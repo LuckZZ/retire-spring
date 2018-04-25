@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
-import com.example.domain.bean.UserCommSearch;
+import com.example.domain.bean.CommSearch;
 import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.*;
 import com.example.domain.enums.SearchType;
@@ -83,7 +83,7 @@ public class UserController extends BaseController{
         //       传递搜索类型
         model.addAttribute("searchType", SearchType.search);
         assignModel(model);
-        model.addAttribute("userCommSearch", new UserCommSearch(type, value));
+        model.addAttribute("userCommSearch", new CommSearch(type, value));
         if (type == 1 && value != null){
 //        根据工号
             Page<User> datas = userService.findAllByJobNum(value,page);
@@ -305,7 +305,7 @@ public class UserController extends BaseController{
 
         model.addAttribute("userSearchForm",userSearchForm);
 
-        model.addAttribute("userCommSearch", new UserCommSearch(1, ""));
+        model.addAttribute("userCommSearch", new CommSearch(1, ""));
 
         return model;
     }

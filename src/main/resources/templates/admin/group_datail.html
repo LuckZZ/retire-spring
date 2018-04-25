@@ -35,22 +35,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
-                                <div class="am-form-group tpl-table-list-select">
-                                    <select data-am-selected="{btnSize: 'sm'}"  id="head-select-key">
-                                        <option value="search-jobNum">工号</option>
-                                        <option value="search-name">姓名</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
-                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field"  id="head-select-input">
-                                    <span class="am-input-group-btn">
-            <button id="head-select-btn" class="am-btn am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
-          </span>
-                                </div>
-                            </div>
+
+                            <div th:replace="fragments/user_search::comm_content"></div>
 
                             <div class="am-u-sm-12">
                                 <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
@@ -139,10 +125,8 @@
             var groupId = $("#groupId").val();
             var key = $("#head-select-key").val();
             var input = $("#head-select-input").val().trim();
-            if (key == 'search-jobNum' && input != ''){
-                window.location.href="/group/"+groupId+"/1/"+input;
-            }else if(key == 'search-name' && input != ''){
-                window.location.href="/group/"+groupId+"/2/"+input;
+            if (input != ''){
+                window.location.href="/group/"+groupId+"/"+key+"/"+input;
             }
             if(input == ''){
                 window.location.href="/group/"+groupId;

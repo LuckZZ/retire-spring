@@ -44,22 +44,27 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     @Query(value = "update tb_user set group_id=?1 where user_id=?2", nativeQuery = true)
     int updateGroupByUseId(Integer groupId, Integer userId);
 
-    List<User> findAllByUserIdNotIn(List<Integer> userIds);
-
     long countByExist(Exist exist);
-
-    Page<User> findAllByJobNum(String jobNum, Pageable pageable);
-
-    Page<User> findAllByName(String name, Pageable pageable);
 
     Page<User> findAllByGroup_GroupId(Integer groupId, Pageable pageable);
 
-    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId)")
-    Page<User> findAllNoJoin(@Param("exist")Exist exist, @Param("activityId")Integer activityId, Pageable pageable);
+    /*根据工号查询用户*/
+    Page<User> findAllByJobNum(String jobNum, Pageable pageable);
 
+    /*根据姓名查询用户*/
+    Page<User> findAllByName(String name, Pageable pageable);
+
+    /*根据工号查询未报名用户*/
     @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
     Page<User> findAllNoJoinByJobNum(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum, Pageable pageable);
 
+    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
+    List<User> findAllNoJoinByJobNum(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
+
+    /*根据用户名查询未报名用户*/
     @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.name=:name")
     Page<User> findAllNoJoinByName(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("name")String name, Pageable pageable);
+
+    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
+    List<User> findAllNoJoinByName(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
 }

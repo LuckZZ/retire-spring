@@ -14,33 +14,42 @@ public interface UserService extends BaseCrudService<User,Integer>{
 
     boolean updateExceptId(User user);
 
-    List<User> findAllByJobNum(String jobNum);
-
-    List<User> findAllByName(String name);
-
     int updateGroupByUseId(Integer groupId, Integer userId);
-
-    Page<User> findAllByJobNum(String jobNum, Integer page);
-
-    Page<User> findAllByName(String name, Integer page);
 
     boolean updateExistYes(Integer userId);
 
     boolean updateExistNO(Integer userId, String passTime);
 
+    Page<User> findAllByGroup_GroupId(Integer groupId, Integer page);
+
+    /*根据工号查询用户*/
+    Page<User> findAllByJobNum(String jobNum, Integer page);
+
+    List<User> findAllByJobNum(String jobNum);
+
+    /*根据用户名查询用户*/
+    Page<User> findAllByName(String name, Integer page);
+
+    List<User> findAllByName(String name);
+
+    /*根据userSearchForm查询用户*/
     Page<User> findAllUserCriteria(Integer page, UserSearchForm userSearchForm);
 
     List<User> findAllUserCriteria(UserSearchForm userSearchForm);
 
-    Page<User> findAllByGroup_GroupId(Integer groupId, Integer page);
+    /*查询未报名用户*/
+    Page<User> findAllNoJoinCriteria(Integer activityId, UserSearchForm userSearchForm, Integer page);
 
-    Page<User> findAllNoJoin(Integer activityId, Integer page);
+    List<User> findAllNoJoinCriteria(Integer activityId, UserSearchForm userSearchForm);
 
-    List<User> findAllUserNoJoinCriteria(Integer activityId, UserSearchForm userSearchForm);
-
+    /*根据工号查询未报名用户*/
     Page<User> findAllNoJoinByJobNum(Integer activityId, String jobNum, Integer page);
 
+    List<User> findAllNoJoinByJobNum(Integer activityId, String jobNum);
+
+    /*根据用户名查询未报名用户*/
     Page<User> findAllNoJoinByName(Integer activityId, String name, Integer page);
 
-    Page<User> findAllNoJoinCriteria(Integer page, UserSearchForm userSearchForm, Integer activityId);
+    List<User> findAllNoJoinByName(Integer activityId, String name);
+
 }

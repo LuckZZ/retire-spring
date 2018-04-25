@@ -134,13 +134,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     }
 
     @Override
-    public Page<User> findAllNoJoin(Integer activityId, Integer page) {
-        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return userDao.findAllNoJoin(Exist.yes, activityId, pageable);
-    }
-
-    @Override
-    public List<User> findAllUserNoJoinCriteria(Integer activityId, UserSearchForm userSearchForm) {
+    public List<User> findAllNoJoinCriteria(Integer activityId, UserSearchForm userSearchForm) {
         return userDao.findAll(noJionUserSpecification(userSearchForm, getJoinUserIds(activityId)));
     }
 
@@ -151,16 +145,26 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     }
 
     @Override
+    public List<User> findAllNoJoinByJobNum(Integer activityId, String jobNum) {
+        return userDao.findAllNoJoinByJobNum(Exist.yes, activityId, jobNum);
+    }
+
+    @Override
     public Page<User> findAllNoJoinByName(Integer activityId, String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return userDao.findAllNoJoinByName(Exist.yes, activityId, name, pageable);
+    }
+
+    @Override
+    public List<User> findAllNoJoinByName(Integer activityId, String name) {
+        return userDao.findAllNoJoinByName(Exist.yes, activityId, name);
     }
 
     @Autowired
     private JoinDao joinDao;
 
     @Override
-    public Page<User> findAllNoJoinCriteria(Integer page, UserSearchForm userSearchForm, Integer activityId) {
+    public Page<User> findAllNoJoinCriteria(Integer activityId, UserSearchForm userSearchForm, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return userDao.findAll(noJionUserSpecification(userSearchForm, getJoinUserIds(activityId)), pageable);
     }

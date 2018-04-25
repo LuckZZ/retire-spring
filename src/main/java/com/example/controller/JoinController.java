@@ -1,8 +1,10 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
+import com.example.domain.bean.CommSearch;
 import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.*;
+import com.example.domain.enums.SearchType;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.*;
@@ -48,10 +50,13 @@ public class JoinController extends BaseController{
     @LoggerManage(description = "待报名界面")
     public String joinNoView(@PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
-        Page<User> datas = userService.findAllNoJoin(activityId, page);
+
+        Page<User> datas = userService.findAllNoJoinCriteria(activityId, new UserSearchForm(), page);
 
         model.addAttribute("activity", activity);
         model.addAttribute("datas", datas);
+
+        model.addAttribute("searchType", SearchType.all);
 
         assignModel(model);
 
@@ -62,10 +67,12 @@ public class JoinController extends BaseController{
     @LoggerManage(description = "待报名界面高级搜索列表")
     public String superSearch(@PathVariable Integer activityId, Model model, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
-        Page<User> datas = userService.findAllNoJoinCriteria(page, userSearchForm, activityId);
+        Page<User> datas = userService.findAllNoJoinCriteria(activityId, userSearchForm, page);
         model.addAttribute("datas",datas);
 
         model.addAttribute("activity", activity);
+
+        model.addAttribute("searchType", SearchType.searchSuper);
 
         assignModel(model);
 
@@ -80,6 +87,10 @@ public class JoinController extends BaseController{
     public String joinNoViewByType(Model model, @PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
         model.addAttribute("activity", activity);
+        assignModel(model);
+        model.addAttribute("userCommSearch", new CommSearch(type, value));
+        model.addAttribute("searchType", SearchType.search);
+
         if (type == 1 && value != null){
 //        根据工号
             Page<User> datas = userService.findAllNoJoinByJobNum(activityId, value, page);
@@ -202,6 +213,8 @@ public class JoinController extends BaseController{
         model.addAttribute("duties",duties);
 
         model.addAttribute("userSearchForm",userSearchForm);
+
+        model.addAttribute("userCommSearch", new CommSearch(1, ""));
 
         return model;
     }

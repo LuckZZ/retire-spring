@@ -109,6 +109,47 @@ public class ExcelController extends BaseController{
     }
 
     @ResponseBody
+    @RequestMapping("/exportNoJoinUserBy/{activityId}/{type}/{value}")
+    @LoggerManage(description = "导出未报名用户表")
+    public Response exportNoJoinUserBy(@PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, ModelMap map, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, HttpServletRequest request, HttpServletResponse response){
+
+        String exportScope = request.getParameter("exportScope");
+
+        String[] item = request.getParameterValues("item");
+
+        List<User> userList = new ArrayList<>();
+
+        if("all".equals(exportScope)){
+            if (type == 1){
+                userList = userService.findAllNoJoinByJobNum(activityId, value);
+            }else if(type == 2){
+                userList = userService.findAllNoJoinByName(activityId, value);
+            }
+        }else if("selected".equals(exportScope)){
+            String[] selectedChecked = request.getParameterValues("selectedChecked");
+            for (String id : selectedChecked) {
+                userList.add(userService.findOne(Integer.parseInt(id)));
+            }
+        }
+
+        List<ExcelExportEntity> beanList = assignBeanList(item);
+
+        beanList.add(new ExcelExportEntity("状态", "status"));
+
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        for (User u : userList){
+            Map<String, Object> row= addRow(u, item);
+            row.put("status","未报名");
+            list.add(row);
+        }
+
+        export(map,"未报名用户","未报名用户信息",beanList,list,request,response);
+
+        return result(ExceptionMsg.SUCCESS);
+    }
+
+    @ResponseBody
     @RequestMapping("/exportNoJoinUser/{activityId}")
     @LoggerManage(description = "导出未报名用户表")
     public Response exportNoJoinUser(@PathVariable Integer activityId, ModelMap map, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, HttpServletRequest request, HttpServletResponse response){
@@ -120,7 +161,7 @@ public class ExcelController extends BaseController{
         List<User> userList = new ArrayList<>();
 
         if("all".equals(exportScope)){
-            userList = userService.findAllUserNoJoinCriteria(activityId,userSearchForm);
+            userList = userService.findAllNoJoinCriteria(activityId,userSearchForm);
         }else if("selected".equals(exportScope)){
             String[] selectedChecked = request.getParameterValues("selectedChecked");
             for (String id : selectedChecked) {

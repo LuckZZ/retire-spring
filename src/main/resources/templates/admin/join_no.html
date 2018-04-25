@@ -36,22 +36,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
-                                <div class="am-form-group tpl-table-list-select">
-                                    <select data-am-selected="{btnSize: 'sm'}"  id="head-select-key">
-                                        <option value="search-jobNum">工号</option>
-                                        <option value="search-name">姓名</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
-                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field"  id="head-select-input">
-                                    <span class="am-input-group-btn">
-            <button id="head-select-btn" class="am-btn am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
-          </span>
-                                </div>
-                            </div>
+
+                            <div th:replace="fragments/user_search::comm_content"></div>
 
                             <div class="am-u-sm-12">
                                 <div class="am-fr">
@@ -63,6 +49,8 @@
                             <div class="am-u-sm-12" id="super-search-content" style="display:none;">
                                 <div th:replace="fragments/join_search::content(${activity.activityId})"></div>
                             </div>
+
+                            <input type="hidden" th:value="${searchType.toString()}" id="searchType"/>
 
                             <div class="am-u-sm-12">
                                 <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black" >
@@ -143,6 +131,9 @@
         //先复制一份form表单，为高级搜索后，点击分页并提交上次表单使用
         var $userSearchFormClone = $('#user-search-form').clone();
 
+        var keyClone = $("#head-select-key").clone();
+        var inputClone = $("#head-select-input").clone();
+
         // 导出数据
         $("#excel-user").on('click',function(){
             //    打开模态框
@@ -152,17 +143,23 @@
         $("#uer-excel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
             var $form =  $('#export-user-form');
             var $hideForm = $('#hide-form');
-            var $searchForm = $userSearchFormClone.clone();
+            var searchType = $("#searchType").val();
             var activityId = $("#activityId").val();
-            $searchForm.find("select").each(function () {
-                // 添加元素
-                $hideForm.append(this);
-            });
             var uId = checkedIds();
             for (i=0;i<uId.length;i++){
                 $hideForm.append("<input type='hidden' name='selectedChecked' value='"+ uId[i] +"'>");
             }
-            $form.attr('action','/excel/exportNoJoinUser/'+activityId);
+            var inp = inputClone.val().trim();
+            if(searchType == 'search' && inp != ''){
+                $form.attr('action','/excel/exportNoJoinUser/'+activityId+"/"+keyClone.val()+"/"+inp);
+            }else {
+                var $searchForm = $userSearchFormClone.clone();
+                $searchForm.find("select").each(function () {
+                    // 添加元素
+                    $hideForm.append(this);
+                });
+                $form.attr('action','/excel/exportNoJoinUser/'+activityId);
+            }
             $form.submit();
             //清除添加的元素
             $hideForm.empty();
@@ -181,10 +178,8 @@
             var activityId = $("#activityId").val();
             var key = $("#head-select-key").val();
             var input = $("#head-select-input").val().trim();
-            if (key == 'search-jobNum' && input != ''){
-                window.location.href="/join/joinNoView/"+activityId+"/1/"+input;
-            }else if(key == 'search-name' && input != ''){
-                window.location.href="/join/joinNoView/"+activityId+"/2/"+input;
+            if (input != ''){
+                window.location.href="/join/joinNoView/"+activityId+"/"+key+"/"+input;
             }
             if(input == ''){
                 window.location.href="/join/joinNoView/"+activityId;

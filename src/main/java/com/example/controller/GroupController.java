@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
+import com.example.domain.bean.CommSearch;
 import com.example.domain.entity.Group;
 import com.example.domain.entity.User;
 import com.example.domain.result.ExceptionMsg;
@@ -38,6 +39,7 @@ public class GroupController extends BaseController{
     @RequestMapping("/groupList")
     @LoggerManage(description = "分组列表")
     public String groupList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        model.addAttribute("userCommSearch", new CommSearch(1, ""));
         Page<Group> datas = groupService.findAllNoCriteria(page);
         model.addAttribute("datas",datas);
         return "admin/group_list";
@@ -46,6 +48,7 @@ public class GroupController extends BaseController{
     @RequestMapping("/groupList/{value}")
     @LoggerManage(description = "分组列表ByGroupName")
     public String groupListByGroupName(Model model, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        model.addAttribute("userCommSearch", new CommSearch(1, value));
         Page<Group> datas = groupService.findAllByGroupName(value, page);
         model.addAttribute("datas",datas);
         return "admin/group_list";
@@ -54,6 +57,7 @@ public class GroupController extends BaseController{
     @RequestMapping("/{id}")
     @LoggerManage(description = "分组详细")
     public String detail(@PathVariable Integer id, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        model.addAttribute("userCommSearch", new CommSearch(1, ""));
         Page<User> datas = userService.findAllByGroup_GroupId(id, page);
         Group group = groupService.findOne(id);
         model.addAttribute("datas",datas);
@@ -64,6 +68,8 @@ public class GroupController extends BaseController{
     @RequestMapping("/{id}/{type}/{value}")
     @LoggerManage(description = "分组详细BySearch")
     public String detailByType(@PathVariable Integer id, @PathVariable Integer type, @PathVariable String value, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+
+        model.addAttribute("userCommSearch", new CommSearch(type, value));
 
         Group group = groupService.findOne(id);
         model.addAttribute("group",group);
