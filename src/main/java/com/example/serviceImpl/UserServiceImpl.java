@@ -140,6 +140,11 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     }
 
     @Override
+    public List<User> findAllUserNoJoinCriteria(Integer activityId, UserSearchForm userSearchForm) {
+        return userDao.findAll(noJionUserSpecification(userSearchForm, getJoinUserIds(activityId)));
+    }
+
+    @Override
     public Page<User> findAllNoJoinByJobNum(Integer activityId, String jobNum, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return userDao.findAllNoJoinByJobNum(Exist.yes, activityId, jobNum, pageable);
@@ -157,15 +162,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Override
     public Page<User> findAllNoJoinCriteria(Integer page, UserSearchForm userSearchForm, Integer activityId) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-
-        List<Join> joins = joinDao.findAllByActivity_ActivityIdAndUser_Exist(activityId, Exist.yes);
-
-        List<Integer> joinUserIds = new ArrayList<>();
-        for (Join join : joins) {
-            joinUserIds.add(join.getUser().getUserId());
-        }
-
-        return userDao.findAll(noJionUserSpecification(userSearchForm, joinUserIds), pageable);
+        return userDao.findAll(noJionUserSpecification(userSearchForm, getJoinUserIds(activityId)), pageable);
     }
 
     private Specification userSpecification(UserSearchForm userSearchForm){
@@ -238,4 +235,13 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
         return specification;
     }
 
+    private List<Integer> getJoinUserIds(Integer activityId){
+        List<Join> joins = joinDao.findAllByActivity_ActivityIdAndUser_Exist(activityId, Exist.yes);
+
+        List<Integer> joinUserIds = new ArrayList<>();
+        for (Join join : joins) {
+            joinUserIds.add(join.getUser().getUserId());
+        }
+        return joinUserIds;
+    }
 }

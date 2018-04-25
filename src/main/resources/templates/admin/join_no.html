@@ -153,6 +153,7 @@
             var $form =  $('#export-user-form');
             var $hideForm = $('#hide-form');
             var $searchForm = $userSearchFormClone.clone();
+            var activityId = $("#activityId").val();
             $searchForm.find("select").each(function () {
                 // 添加元素
                 $hideForm.append(this);
@@ -161,7 +162,7 @@
             for (i=0;i<uId.length;i++){
                 $hideForm.append("<input type='hidden' name='selectedChecked' value='"+ uId[i] +"'>");
             }
-            $form.attr('action','/excel/exportNoJoinUser');
+            $form.attr('action','/excel/exportNoJoinUser/'+activityId);
             $form.submit();
             //清除添加的元素
             $hideForm.empty();

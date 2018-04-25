@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -70,9 +71,9 @@ public class ExcelController extends BaseController{
     }
 
     @ResponseBody
-    @RequestMapping("/exportNoJoinUser")
+    @RequestMapping("/exportNoJoinUser/{activityId}")
     @LoggerManage(description = "导出未报名用户表")
-    public Response exportNoJoinUser(ModelMap map, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, HttpServletRequest request, HttpServletResponse response){
+    public Response exportNoJoinUser(@PathVariable Integer activityId, ModelMap map, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, HttpServletRequest request, HttpServletResponse response){
 
         String exportScope = request.getParameter("exportScope");
 
@@ -81,7 +82,7 @@ public class ExcelController extends BaseController{
         List<User> userList = new ArrayList<>();
 
         if("all".equals(exportScope)){
-            userList = userService.findAllUserCriteria(userSearchForm);
+            userList = userService.findAllUserNoJoinCriteria(activityId,userSearchForm);
         }else if("selected".equals(exportScope)){
             String[] selectedChecked = request.getParameterValues("selectedChecked");
             for (String id : selectedChecked) {
