@@ -1,7 +1,9 @@
 package com.example.serviceImpl;
 import com.example.comm.Constant;
+import com.example.dao.JoinDao;
 import com.example.dao.UserDao;
 import com.example.domain.bean.UserSearchForm;
+import com.example.domain.entity.Join;
 import com.example.domain.entity.Politics;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Exist;
@@ -149,6 +151,23 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
         return userDao.findAllNoJoinByName(Exist.yes, activityId, name, pageable);
     }
 
+    @Autowired
+    private JoinDao joinDao;
+
+    @Override
+    public Page<User> findAllNoJoinCriteria(Integer page, UserSearchForm userSearchForm, Integer activityId) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+
+        List<Join> joins = joinDao.findAllByActivity_ActivityIdAndUser_Exist(activityId, Exist.yes);
+
+        List<Integer> joinUserIds = new ArrayList<>();
+        for (Join join : joins) {
+            joinUserIds.add(join.getUser().getUserId());
+        }
+
+        return userDao.findAll(noJionUserSpecification(userSearchForm, joinUserIds), pageable);
+    }
+
     private Specification userSpecification(UserSearchForm userSearchForm){
         Specification<User> specification = new Specification<User>() {
             @Override
@@ -174,6 +193,43 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
                 }
                 if (!"-1".equals(userSearchForm.getPolitics())){
                     list.add(cb.equal(root.join("politics").get("politicsId").as(Politics.class), Integer.parseInt(userSearchForm.getPolitics())));
+                }
+                Predicate[] p = new Predicate[list.size()];
+                return cb.and(list.toArray(p));
+            }
+        };
+        return specification;
+    }
+
+    private Specification noJionUserSpecification(UserSearchForm userSearchForm, List<Integer> joinUserIds){
+
+        Specification<User> specification = new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> list = new ArrayList<>();
+                if (!"-1".equals(userSearchForm.getGroup())){
+                    list.add(cb.equal(root.join("group").get("groupId").as(Integer.class), Integer.parseInt(userSearchForm.getGroup())));
+                }
+                if (!"-1".equals(userSearchForm.getGender())){
+                    list.add(cb.equal(root.get("gender").as(Gender.class), Gender.valueOf(userSearchForm.getGender())));
+                }
+                if (!"-1".equals(userSearchForm.getRank())){
+                    list.add(cb.equal(root.get("rank").as(Rank.class), Rank.valueOf(userSearchForm.getRank())));
+                }
+                if (!"-1".equals(userSearchForm.getDuty())){
+                    list.add(cb.equal(root.join("duty").get("dutyId").as(Integer.class), Integer.parseInt(userSearchForm.getDuty())));
+                }
+                if (!"-1".equals(userSearchForm.getDepartment())){
+                    list.add(cb.equal(root.join("department").get("departmentId").as(Integer.class), Integer.parseInt(userSearchForm.getDepartment())));
+                }
+                if (!"-1".equals(userSearchForm.getExist())){
+                    list.add(cb.equal(root.get("exist").as(Exist.class), Exist.valueOf(userSearchForm.getExist())));
+                }
+                if (!"-1".equals(userSearchForm.getPolitics())){
+                    list.add(cb.equal(root.join("politics").get("politicsId").as(Politics.class), Integer.parseInt(userSearchForm.getPolitics())));
+                }
+                if (joinUserIds!=null && joinUserIds.size()!=0){
+                    list.add(cb.not(root.get("userId").in(joinUserIds)));
                 }
                 Predicate[] p = new Predicate[list.size()];
                 return cb.and(list.toArray(p));

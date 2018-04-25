@@ -62,7 +62,7 @@ public class JoinController extends BaseController{
     @LoggerManage(description = "待报名界面高级搜索列表")
     public String superSearch(@PathVariable Integer activityId, Model model, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
-        Page<User> datas = userService.findAllUserCriteria(page, userSearchForm);
+        Page<User> datas = userService.findAllNoJoinCriteria(page, userSearchForm, activityId);
         model.addAttribute("datas",datas);
 
         model.addAttribute("activity", activity);

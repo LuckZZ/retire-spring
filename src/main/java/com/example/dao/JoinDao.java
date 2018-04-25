@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface JoinDao extends JpaRepository<Join,Integer> {
 
-    List<Join> findAllByActivity_ActivityId(Integer activityId);
+    List<Join> findAllByActivity_ActivityIdAndUser_Exist(Integer activityId, Exist exist);
 
     Page<Join> findAllByActivity_ActivityIdAndUser_Exist(Integer activityId, Exist exist, Pageable pageable);
 

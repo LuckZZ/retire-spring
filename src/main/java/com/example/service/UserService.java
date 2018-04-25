@@ -39,4 +39,6 @@ public interface UserService extends BaseCrudService<User,Integer>{
     Page<User> findAllNoJoinByJobNum(Integer activityId, String jobNum, Integer page);
 
     Page<User> findAllNoJoinByName(Integer activityId, String name, Integer page);
+
+    Page<User> findAllNoJoinCriteria(Integer page, UserSearchForm userSearchForm, Integer activityId);
 }
