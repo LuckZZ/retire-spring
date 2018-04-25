@@ -16,7 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/join")
 @Controller
@@ -65,7 +67,7 @@ public class JoinController extends BaseController{
 
     @RequestMapping("/joinNoView/superSearch/{activityId}")
     @LoggerManage(description = "待报名界面高级搜索列表")
-    public String superSearch(@PathVariable Integer activityId, Model model, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    public String joinNoViewSuperSearch(@PathVariable Integer activityId, Model model, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
         Page<User> datas = userService.findAllNoJoinCriteria(activityId, userSearchForm, page);
         model.addAttribute("datas",datas);
@@ -111,9 +113,32 @@ public class JoinController extends BaseController{
     public String joinOkView(@PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
         Page<Join> datas = joinService.findAllByActivity_ActivityId(activityId, page);
-
+        model.addAttribute("searchType", SearchType.all);
         model.addAttribute("activity", activity);
         model.addAttribute("datas", datas);
+
+        Map<String, String[]> defMap = getDefMap(activity);
+
+        model.addAttribute("defMap", defMap);
+
+        assignModel(model);
+
+        return "admin/join_ok";
+    }
+
+    @RequestMapping(value = "/joinOkView/superSearch/{activityId}")
+    @LoggerManage(description = "已报名高级搜索界面")
+    public String joinOkViewSuperSearch(@PathVariable Integer activityId, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Activity activity = activityService.findOne(activityId);
+        Page<Join> datas = joinService.findAllByActivity_ActivityId(activityId, page);
+        model.addAttribute("searchType", SearchType.searchSuper);
+        model.addAttribute("activity", activity);
+        model.addAttribute("datas", datas);
+
+        Map<String, String[]> defMap = getDefMap(activity);
+        model.addAttribute("defMap", defMap);
+
+        assignModel(model);
 
         return "admin/join_ok";
     }
@@ -123,6 +148,11 @@ public class JoinController extends BaseController{
     public String joinOkViewByType(@PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
         model.addAttribute("activity", activity);
+        assignModel(model);
+        model.addAttribute("userCommSearch", new CommSearch(type, value));
+        model.addAttribute("searchType", SearchType.search);
+        Map<String, String[]> defMap = getDefMap(activity);
+        model.addAttribute("defMap", defMap);
         if (type == 1 && value != null){
 //        根据工号
             Page<Join> datas = joinService.findAllByActivity_ActivityIdAndUser_JobNum(activityId, value, page);
@@ -166,16 +196,12 @@ public class JoinController extends BaseController{
     @RequestMapping(value = "/delete/{activityId}")
     @LoggerManage(description = "删除报名")
     public Response delete(@PathVariable String activityId, HttpServletRequest request){
-
         String[] joinIds = request.getParameterValues("id");
         Integer[] ids = DataUtils.turn(joinIds);
-
         try {
-
             if (!activityService.canJoin(Integer.parseInt(activityId))){
                 return result(ExceptionMsg.JoinDelForCloseFailed);
             }
-
             joinService.delete(ids);
             return result(ExceptionMsg.JoinDelSuccess);
         }catch (Exception e){
@@ -218,4 +244,23 @@ public class JoinController extends BaseController{
 
         return model;
     }
+
+    /**
+     * 把activity自定义的列和值放入Map中
+     * @param activity
+     * @return
+     */
+    private Map<String, String[]> getDefMap(Activity activity){
+        String[] labs = activity.getLabelDefs();
+        if (labs == null || labs.length == 0){
+            return null;
+        }
+        String[][] inpss = activity.getInputDefss();
+        Map<String, String[]> defMap = new HashMap<>();
+        for (int i = 0; i < labs.length; i++){
+            defMap.put(labs[i], inpss[i]);
+        }
+        return defMap;
+    }
+
 }
