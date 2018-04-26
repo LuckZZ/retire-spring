@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface ActivityService extends BaseCrudService<Activity,Integer>{
 
+    Activity save(String activityName, String[] labels, String[] inputs);
+
     boolean existsByActivityName(String activityName);
 
     Page<Activity> findAllByActivityStatus(ActivityStatus activityStatus, Integer page);

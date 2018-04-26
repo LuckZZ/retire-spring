@@ -23,8 +23,8 @@ public class ActivityServiceTest {
         String[][] inputDefss = new String[][]{{"One111","One222"},{"Two111","Two222"}};
         Activity activity = new Activity();
         activity.setActivityName("活动一");
-        activity.setLabelDefs(labelDefs);
-        activity.setInputDefss(inputDefss);
+//        activity.setLabelDefs(labelDefs);
+//        activity.setInputDefss(inputDefss);
         activity.setActivityStatus(ActivityStatus.draft);
         activityDao.save(activity);
     }

@@ -227,7 +227,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
                     list.add(cb.equal(root.get("exist").as(Exist.class), Exist.valueOf(userSearchForm.getExist())));
                 }
                 if (!"-1".equals(userSearchForm.getPolitics())){
-                    list.add(cb.equal(root.join("politics").get("politicsId").as(Politics.class), Integer.parseInt(userSearchForm.getPolitics())));
+                    list.add(cb.equal(root.join("politics").get("politicsId").as(Integer.class), Integer.parseInt(userSearchForm.getPolitics())));
                 }
                 if (joinUserIds!=null && joinUserIds.size()!=0){
                     list.add(cb.not(root.get("userId").in(joinUserIds)));

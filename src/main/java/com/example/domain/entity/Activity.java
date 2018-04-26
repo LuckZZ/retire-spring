@@ -7,10 +7,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Activtiy实体类有属性：
- * activity_id、activityName、labelDefs、inputDefs、activityStatus
- */
 @Entity
 @Table(name = "tb_activity")
 public class Activity extends BaseEntity implements Serializable {
@@ -23,20 +19,9 @@ public class Activity extends BaseEntity implements Serializable {
     @Column(nullable = false)
     private String activityName;    //活动名称非空
 
-//    自定义行
-    @Column
-    private String[] labelDefs;
-
-    @Column
-    private String[] inputDefs;
-
     //    活动状态
     @Column
     private ActivityStatus activityStatus;
-
-//    不生成列
-    @Transient
-    private String[][] inputDefss;
 
     //    不生成列
     @Transient
@@ -45,13 +30,17 @@ public class Activity extends BaseEntity implements Serializable {
     @Transient
     private long userCount;
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "activity_def_id")
+    private List<ActivityDef> activityDefs = new ArrayList<ActivityDef>();
+
     public Activity() {
     }
 
-    public Activity(String activityName, String[] labelDefs, String[] inputDefs) {
+    public Activity(String activityName, List<ActivityDef> activityDefs, ActivityStatus activityStatus) {
         this.activityName = activityName;
-        this.labelDefs = labelDefs;
-        this.inputDefs = inputDefs;
+        this.activityDefs = activityDefs;
+        this.activityStatus = activityStatus;
     }
 
     //set、get方法
@@ -70,31 +59,6 @@ public class Activity extends BaseEntity implements Serializable {
 
     public void setActivityName(String activityName) {
         this.activityName = activityName;
-    }
-
-
-    public String[] getLabelDefs() {
-        return labelDefs;
-    }
-
-    public void setLabelDefs(String[] labelDefs) {
-        this.labelDefs = labelDefs;
-    }
-
-    public String[] getInputDefs() {
-        return inputDefs;
-    }
-
-    public void setInputDefs(String[] inputDefs) {
-        this.inputDefs = inputDefs;
-    }
-
-    public String[][] getInputDefss() {
-        return inputDefss;
-    }
-
-    public void setInputDefss(String[][] inputDefss) {
-        this.inputDefss = inputDefss;
     }
 
     public ActivityStatus getActivityStatus() {
@@ -119,5 +83,13 @@ public class Activity extends BaseEntity implements Serializable {
 
     public void setUserCount(long userCount) {
         this.userCount = userCount;
+    }
+
+    public List<ActivityDef> getActivityDefs() {
+        return activityDefs;
+    }
+
+    public void setActivityDefs(List<ActivityDef> activityDefs) {
+        this.activityDefs = activityDefs;
     }
 }

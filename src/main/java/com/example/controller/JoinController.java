@@ -117,9 +117,9 @@ public class JoinController extends BaseController{
         model.addAttribute("activity", activity);
         model.addAttribute("datas", datas);
 
-        Map<String, String[]> defMap = getDefMap(activity);
+//        Map<String, String[]> defMap = getDefMap(activity);
 
-        model.addAttribute("defMap", defMap);
+//        model.addAttribute("defMap", defMap);
 
         assignModel(model);
 
@@ -128,15 +128,20 @@ public class JoinController extends BaseController{
 
     @RequestMapping(value = "/joinOkView/superSearch/{activityId}")
     @LoggerManage(description = "已报名高级搜索界面")
-    public String joinOkViewSuperSearch(@PathVariable Integer activityId, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    public String joinOkViewSuperSearch( HttpServletRequest request, @PathVariable Integer activityId, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        String[] inputDefs = request.getParameterValues("inputDefs");
+        String attend = request.getParameter("attend");
+
         Activity activity = activityService.findOne(activityId);
-        Page<Join> datas = joinService.findAllByActivity_ActivityId(activityId, page);
+
+        Page<Join> datas = joinService.findAllUserCriteria(activityId, inputDefs, attend, userSearchForm, page);
+
         model.addAttribute("searchType", SearchType.searchSuper);
         model.addAttribute("activity", activity);
         model.addAttribute("datas", datas);
 
-        Map<String, String[]> defMap = getDefMap(activity);
-        model.addAttribute("defMap", defMap);
+//        Map<String, String[]> defMap = getDefMap(activity);
+//        model.addAttribute("defMap", defMap);
 
         assignModel(model);
 
@@ -151,8 +156,8 @@ public class JoinController extends BaseController{
         assignModel(model);
         model.addAttribute("userCommSearch", new CommSearch(type, value));
         model.addAttribute("searchType", SearchType.search);
-        Map<String, String[]> defMap = getDefMap(activity);
-        model.addAttribute("defMap", defMap);
+//        Map<String, String[]> defMap = getDefMap(activity);
+//        model.addAttribute("defMap", defMap);
         if (type == 1 && value != null){
 //        根据工号
             Page<Join> datas = joinService.findAllByActivity_ActivityIdAndUser_JobNum(activityId, value, page);
@@ -250,7 +255,7 @@ public class JoinController extends BaseController{
      * @param activity
      * @return
      */
-    private Map<String, String[]> getDefMap(Activity activity){
+/*    private Map<String, String[]> getDefMap(Activity activity){
         String[] labs = activity.getLabelDefs();
         if (labs == null || labs.length == 0){
             return null;
@@ -261,6 +266,6 @@ public class JoinController extends BaseController{
             defMap.put(labs[i], inpss[i]);
         }
         return defMap;
-    }
+    }*/
 
 }

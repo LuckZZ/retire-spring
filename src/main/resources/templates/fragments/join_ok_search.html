@@ -66,10 +66,21 @@
             </div>
         </div>
 
+        <div class="am-form-group am-form-group-sm am-u-sm-4">
+            <label for="politics" class="am-u-sm-3 am-form-label">是否参加</label>
+            <div class="am-u-sm-9">
+                <select data-am-selected="{btnSize: 'sm'}" name="attend" class="attend">
+                    <option value="-1" th:text="所有"></option>
+                    <option value="yes" th:text="参加"></option>
+                    <option value="no" th:text="不参加"></option>
+                </select>
+            </div>
+        </div>
+
         <div class="am-form-group am-form-group-sm am-u-sm-4" th:each="def:${defMap}">
             <label class="am-u-sm-3 am-form-label" name="labelDef" th:value="${def.key}" th:text="${def.key}">自定义列</label>
             <div class="am-u-sm-9">
-                <select name="politics" data-am-selected="{btnSize: 'sm'}">
+                <select name="inputDefs" data-am-selected="{btnSize: 'sm'}">
                     <option value="-1">所有</option>
                     <option name="inputDef" th:value="${inp}" th:each="inp:${def.value}" th:text="${inp}">所有</option>
                 </select>
