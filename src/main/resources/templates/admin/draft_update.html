@@ -35,11 +35,11 @@
 
                                         <!--这两个不显示出来，用于存储从后台传来的数据。js容易获取-->
                                         <select id="labs" style="display:none;" disabled >
-                                            <option th:each="lab:${activity.labelDefs}" th:value="${lab}"></option>
+                                            <option th:each="activityDef:${activity.activityDefs}" th:value="${activityDef.label}"></option>
                                         </select>
 
                                         <select id="inps" style="display:none;" disabled >
-                                            <option th:each="inp:${activity.inputDefs}" th:value="${inp}"></option>
+                                            <option th:each="activityDef:${activity.activityDefs}" th:value="${activityDef.input}"></option>
                                         </select>
 
                                         <input name="activityId" th:field="*{activityId}" type="hidden" id="activityId"/>

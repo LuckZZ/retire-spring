@@ -3,7 +3,6 @@ package com.example.controller;
 import com.example.comm.aop.LoggerManage;
 import com.example.domain.bean.CommSearch;
 import com.example.domain.entity.Activity;
-import com.example.domain.entity.ActivityDef;
 import com.example.domain.enums.ActivityStatus;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
@@ -142,12 +141,7 @@ public class ActivityController extends BaseController{
         String activityName = request.getParameter("activityName");
         String[] labelDef = request.getParameterValues("labelDef");
         String[] inputDef = request.getParameterValues("inputDef");
-
-//        Activity activity = new Activity(activityName,labelDef,inputDef);
-//        activity.setActivityId(Integer.parseInt(activityId));
-
-//        activityService.updateExceptId(activity);
-
+        activityService.updateById(Integer.parseInt(activityId), activityName, labelDef, inputDef);
         return result(ExceptionMsg.ActivityUpdSuccess);
     }
 

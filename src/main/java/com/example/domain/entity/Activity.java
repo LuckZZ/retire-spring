@@ -4,8 +4,7 @@ import com.example.domain.enums.ActivityStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_activity")
@@ -31,17 +30,18 @@ public class Activity extends BaseEntity implements Serializable {
     private long userCount;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "activity_def_id")
-    private List<ActivityDef> activityDefs = new ArrayList<ActivityDef>();
+    @JoinColumn(name = "activity_id")
+    private Set<ActivityDef> activityDefs = new LinkedHashSet<>();
 
     public Activity() {
     }
 
-    public Activity(String activityName, List<ActivityDef> activityDefs, ActivityStatus activityStatus) {
+    public Activity(String activityName, Set<ActivityDef> activityDefs, ActivityStatus activityStatus) {
         this.activityName = activityName;
-        this.activityDefs = activityDefs;
         this.activityStatus = activityStatus;
+        this.activityDefs = activityDefs;
     }
+
 
     //set、get方法
 
@@ -85,11 +85,12 @@ public class Activity extends BaseEntity implements Serializable {
         this.userCount = userCount;
     }
 
-    public List<ActivityDef> getActivityDefs() {
+    public Set<ActivityDef> getActivityDefs() {
         return activityDefs;
     }
 
-    public void setActivityDefs(List<ActivityDef> activityDefs) {
+    public void setActivityDefs(Set<ActivityDef> activityDefs) {
         this.activityDefs = activityDefs;
     }
+
 }

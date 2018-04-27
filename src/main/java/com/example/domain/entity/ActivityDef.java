@@ -1,7 +1,11 @@
 package com.example.domain.entity;
 
+import com.example.utils.DataUtils;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Create by : Zhangxuemeng
@@ -19,6 +23,10 @@ public class ActivityDef extends BaseEntity implements Serializable {
 
     @Column(nullable = false)
     private String input;
+
+//    把input分割，转化为inputs
+    @Transient
+    private List<String> inputs = new ArrayList<>();
 
     public ActivityDef() {
     }
@@ -52,4 +60,13 @@ public class ActivityDef extends BaseEntity implements Serializable {
         this.input = input;
     }
 
+    public List<String> getInputs() {
+//        转化
+        inputs = DataUtils.strToList(input);
+        return inputs;
+    }
+
+    public void setInputs(List<String> inputs) {
+        this.inputs = inputs;
+    }
 }

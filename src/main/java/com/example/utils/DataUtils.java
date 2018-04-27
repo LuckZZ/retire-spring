@@ -19,13 +19,16 @@ public class DataUtils {
     }
 
     /**
-     * 把包含“，”或“,”的字符串切割成list
+     * 把活动自定义输入框的内容分割
      * @param str
      * @return
      */
-    public static List<String> turnToList(String str){
-        String[] s = str.split("，|\\,");
-        List<String> list = Arrays.asList(s);
+    public static List<String> strToList(String str){
+        if (str == null){
+            return null;
+        }
+        String[] strArray = str.split(";|；");
+        List<String> list = Arrays.asList(strArray);
         return list;
     }
 
@@ -49,29 +52,6 @@ public class DataUtils {
             result.append(string);
         }
         return result.toString();
-    }
-
-    /**
-     * String[]转换String[][]
-     * 用“;(英文分号)”或“；(中文分号)”分割分割字符串
-     * @param strs
-     * @return
-     */
-    public static String[][] oneStrToTwoStr(String[] strs){
-        if (strs == null){
-            return null;
-        }
-//        行
-        String[][] strss = new String[strs.length][];
-        for (int i = 0; i < strs.length; i++) {
-            String[] strArray = strs[i].split(";|；");
-//         列
-            strss[i] = new String[strArray.length];
-            for (int j = 0; j < strArray.length; j++) {
-                strss[i][j] = strArray[j];
-            }
-        }
-        return strss;
     }
 
 }

@@ -16,9 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RequestMapping("/join")
 @Controller
@@ -116,10 +114,6 @@ public class JoinController extends BaseController{
         model.addAttribute("searchType", SearchType.all);
         model.addAttribute("activity", activity);
         model.addAttribute("datas", datas);
-
-//        Map<String, String[]> defMap = getDefMap(activity);
-
-//        model.addAttribute("defMap", defMap);
 
         assignModel(model);
 
@@ -249,23 +243,5 @@ public class JoinController extends BaseController{
 
         return model;
     }
-
-    /**
-     * 把activity自定义的列和值放入Map中
-     * @param activity
-     * @return
-     */
-/*    private Map<String, String[]> getDefMap(Activity activity){
-        String[] labs = activity.getLabelDefs();
-        if (labs == null || labs.length == 0){
-            return null;
-        }
-        String[][] inpss = activity.getInputDefss();
-        Map<String, String[]> defMap = new HashMap<>();
-        for (int i = 0; i < labs.length; i++){
-            defMap.put(labs[i], inpss[i]);
-        }
-        return defMap;
-    }*/
 
 }

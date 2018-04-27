@@ -1,17 +1,12 @@
 package com.example.domain.entity;
 
 import com.example.domain.enums.Attend;
-import org.hibernate.annotations.IndexColumn;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-/**
- * JoinActivity实体类有属性:
- * join_activity_id、user_id、activity_id、place_name、expand
- */
 @Entity
 @Table(name = "tb_join")
 public class Join extends BaseEntity implements Serializable {
@@ -34,18 +29,19 @@ public class Join extends BaseEntity implements Serializable {
     private Attend attend;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "join_def_id")
-    private List<JoinDef> joinDefs = new ArrayList<>();
+    @JoinColumn(name = "join_id")
+    private Set<JoinDef> joinDefs = new LinkedHashSet<>();
 
     public Join() {
     }
 
-    public Join(User user, Activity activity, Attend attend, List<JoinDef> joinDefs) {
+    public Join(User user, Activity activity, Set<JoinDef> joinDefs, Attend attend) {
         this.user = user;
         this.activity = activity;
         this.attend = attend;
         this.joinDefs = joinDefs;
     }
+
 
     //set、get方法
 
@@ -81,11 +77,11 @@ public class Join extends BaseEntity implements Serializable {
         this.attend = attend;
     }
 
-    public List<JoinDef> getJoinDefs() {
+    public Set<JoinDef> getJoinDefs() {
         return joinDefs;
     }
 
-    public void setJoinDefs(List<JoinDef> joinDefs) {
+    public void setJoinDefs(Set<JoinDef> joinDefs) {
         this.joinDefs = joinDefs;
     }
 }

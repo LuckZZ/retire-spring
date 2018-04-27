@@ -57,7 +57,7 @@
                                     <tr>
                                         <th>序号</th>
                                         <th>活动名称</th>
-                                        <th th:each="labelDef:${activity.labelDefs}" th:text="${labelDef}">labelDefs</th>
+                                        <th th:each="activityDef:${activity.activityDefs}" th:text="${activityDef.label}">labelDefs</th>
                                         <th>状态</th>
                                         <th>操作</th>
                                     </tr>
@@ -66,9 +66,9 @@
                                     <tr>
                                         <td th:text="${activity.activityId}">1</td>
                                         <td th:text="${activity.activityName}">活动一</td>
-                                        <td th:each="defs:${activity.inputDefss}">
+                                        <td th:each="activityDef:${activity.activityDefs}">
                                             <select data-am-selected="{btnSize: 'sm'}">
-                                                <option th:each="def:${defs}" th:value="${def}" th:text="${def}">自定义列 </option>
+                                                <option th:each="inp:${activityDef.inputs}" th:value="${inp}" th:text="${inp}">自定义列 </option>
                                             </select>
                                         </td>
                                         <td th:text="${activity.activityStatus.name}">草稿活动</td>

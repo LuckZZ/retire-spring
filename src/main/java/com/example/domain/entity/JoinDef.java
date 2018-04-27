@@ -20,6 +20,10 @@ public class JoinDef extends BaseEntity implements Serializable {
     @Column
     private String input;
 
+    @ManyToOne
+    @JoinColumn(name="join_id")
+    private Join join;
+
     public JoinDef() {
     }
 
@@ -50,5 +54,13 @@ public class JoinDef extends BaseEntity implements Serializable {
 
     public void setInput(String input) {
         this.input = input;
+    }
+
+    public Join getJoin() {
+        return join;
+    }
+
+    public void setJoin(Join join) {
+        this.join = join;
     }
 }

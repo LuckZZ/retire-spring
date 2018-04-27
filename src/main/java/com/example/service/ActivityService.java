@@ -22,7 +22,7 @@ public interface ActivityService extends BaseCrudService<Activity,Integer>{
 
     int activityPublish(Integer activityId);
 
-    boolean updateExceptId(Activity activity);
+    boolean updateById(Integer activityId, String activityName, String[] labels, String[] inputs);
 
     boolean canJoin(Integer activityId);
 

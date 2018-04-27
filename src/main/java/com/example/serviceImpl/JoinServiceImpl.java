@@ -4,9 +4,8 @@ import com.example.comm.Constant;
 import com.example.dao.JoinDao;
 import com.example.dao.UserDao;
 import com.example.domain.bean.UserSearchForm;
-import com.example.domain.entity.Activity;
+import com.example.domain.entity.*;
 import com.example.domain.entity.Join;
-import com.example.domain.entity.User;
 import com.example.domain.enums.Attend;
 import com.example.domain.enums.Exist;
 import com.example.domain.enums.Gender;
@@ -22,8 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao> implements JoinService{
@@ -41,20 +39,27 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     public Join save(Integer userId, Integer activityId, String[] inputDefs, String attend) {
         User user = userDao.findOne(userId);
         Activity activity = activityService.findOne(activityId);
-
+        Set<ActivityDef> activityDefs = activity.getActivityDefs();
+        Iterator<ActivityDef> it = activityDefs.iterator();
 //        如果不参加
-/*        if (!isAttend(attend)){
-            String[] labs = new String[activity.getLabelDefs().length];
-            for (int i = 0; i < labs.length; i++) {
-                labs[i] = "无";
+        if (!isAttend(attend)){
+            Set<JoinDef> joinDefs = new LinkedHashSet<>();
+            for (int i = 0; i < inputDefs.length; i++) {
+                ActivityDef activityDef = it.next();
+                joinDefs.add(new JoinDef(activityDef.getLabel(),"无"));
             }
-            Join join = new Join(user,activity,labs,Attend.no);
+            Join join = new Join(user, activity, joinDefs, Attend.no);
             return joinDao.save(join);
         }
 //        如果参加
-        Join join = new Join(user,activity,inputDefs,Attend.yes);
-        return joinDao.save(join);*/
-        return null;
+        Set<JoinDef> joinDefs = new LinkedHashSet<>();
+        for (int i = 0; i < inputDefs.length; i++) {
+            ActivityDef activityDef = it.next();
+            joinDefs.add(new JoinDef(activityDef.getLabel(),inputDefs[i]));
+        }
+
+        Join join = new Join(user, activity, joinDefs,Attend.yes);
+        return joinDao.save(join);
     }
 
     @Transactional
