@@ -29,19 +29,18 @@ public class Activity extends BaseEntity implements Serializable {
     @Transient
     private long userCount;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "activity_id")
-    private Set<ActivityDef> activityDefs = new LinkedHashSet<>();
+    private List<ActivityDef> activityDefs = new ArrayList<>();
 
     public Activity() {
     }
 
-    public Activity(String activityName, Set<ActivityDef> activityDefs, ActivityStatus activityStatus) {
+    public Activity(String activityName, List<ActivityDef> activityDefs, ActivityStatus activityStatus) {
         this.activityName = activityName;
         this.activityStatus = activityStatus;
         this.activityDefs = activityDefs;
     }
-
 
     //set、get方法
 
@@ -85,12 +84,11 @@ public class Activity extends BaseEntity implements Serializable {
         this.userCount = userCount;
     }
 
-    public Set<ActivityDef> getActivityDefs() {
+    public List<ActivityDef> getActivityDefs() {
         return activityDefs;
     }
 
-    public void setActivityDefs(Set<ActivityDef> activityDefs) {
+    public void setActivityDefs(List<ActivityDef> activityDefs) {
         this.activityDefs = activityDefs;
     }
-
 }

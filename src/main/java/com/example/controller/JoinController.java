@@ -134,10 +134,13 @@ public class JoinController extends BaseController{
         model.addAttribute("activity", activity);
         model.addAttribute("datas", datas);
 
-//        Map<String, String[]> defMap = getDefMap(activity);
-//        model.addAttribute("defMap", defMap);
-
         assignModel(model);
+
+        //        搜索表单的值，再传入页面
+        model.addAttribute("userSearchForm",userSearchForm);
+
+//        model.addAttribute("inputDefs",inputDefs);
+//        model.addAttribute("attend",attend);
 
         return "admin/join_ok";
     }
@@ -150,8 +153,6 @@ public class JoinController extends BaseController{
         assignModel(model);
         model.addAttribute("userCommSearch", new CommSearch(type, value));
         model.addAttribute("searchType", SearchType.search);
-//        Map<String, String[]> defMap = getDefMap(activity);
-//        model.addAttribute("defMap", defMap);
         if (type == 1 && value != null){
 //        根据工号
             Page<Join> datas = joinService.findAllByActivity_ActivityIdAndUser_JobNum(activityId, value, page);

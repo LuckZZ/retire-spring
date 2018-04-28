@@ -19,7 +19,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Query;
 import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -35,27 +40,30 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     @Autowired
     private ActivityService activityService;
 
+    @PersistenceUnit
+    private EntityManagerFactory emf;
+
     @Override
     public Join save(Integer userId, Integer activityId, String[] inputDefs, String attend) {
         User user = userDao.findOne(userId);
         Activity activity = activityService.findOne(activityId);
-        Set<ActivityDef> activityDefs = activity.getActivityDefs();
+        List<ActivityDef> activityDefs = activity.getActivityDefs();
         Iterator<ActivityDef> it = activityDefs.iterator();
 //        如果不参加
         if (!isAttend(attend)){
-            Set<JoinDef> joinDefs = new LinkedHashSet<>();
+            List<JoinDef> joinDefs = new ArrayList<>();
             for (int i = 0; i < inputDefs.length; i++) {
                 ActivityDef activityDef = it.next();
-                joinDefs.add(new JoinDef(activityDef.getLabel(),"无"));
+                joinDefs.add(new JoinDef(activityDef,"无"));
             }
             Join join = new Join(user, activity, joinDefs, Attend.no);
             return joinDao.save(join);
         }
 //        如果参加
-        Set<JoinDef> joinDefs = new LinkedHashSet<>();
+        List<JoinDef> joinDefs = new ArrayList<>();
         for (int i = 0; i < inputDefs.length; i++) {
             ActivityDef activityDef = it.next();
-            joinDefs.add(new JoinDef(activityDef.getLabel(),inputDefs[i]));
+            joinDefs.add(new JoinDef(activityDef, inputDefs[i]));
         }
 
         Join join = new Join(user, activity, joinDefs,Attend.yes);
@@ -91,10 +99,48 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     @Override
     public Page<Join> findAllUserCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return joinDao.findAll(joinSpecification(activityId, inputDefs, attend, userSearchForm), pageable);
+        List<Integer> joinIdByDef = selectJoinId(activityId, inputDefs);
+        for (Integer i : joinIdByDef) {
+            System.out.println("joinByDef    join_id:"+i);
+        }
+        return joinDao.findAll(joinSpecification(activityId, attend, userSearchForm, joinIdByDef), pageable);
     }
 
-    private Specification<Join> joinSpecification(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm){
+    /**
+     * 根据条件筛选出joinId
+     * SELECT join_id FROM tb_join_def WHERE (activity_def_id=2 AND input='时间一') OR (activity_def_id=3 AND input='地点一') GROUP BY join_id HAVING COUNT(*) = 2
+     * @param activityId
+     * @param inputDefs
+     * @return
+     */
+    private List<Integer> selectJoinId(Integer activityId, String[] inputDefs){
+        Activity activity = activityService.findOne(activityId);
+        List<ActivityDef> activityDefs = activity.getActivityDefs();
+        EntityManager em = emf.createEntityManager();
+//        定义sql
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT join_id FROM tb_join_def WHERE ");
+        for (int i = 0; i < inputDefs.length; i ++){
+//                  条件
+            if (!"-1".equals(inputDefs[i])){
+                sql.append(" (activity_def_id="+activityDefs.get(i).getId()+" AND input='"+inputDefs[i]+"') ");
+            }else {
+                sql.append(" (activity_def_id="+activityDefs.get(i).getId()+" AND input LIKE '%%') ");
+            }
+//                    如果不是到最后一个
+            if (i != (inputDefs.length-1)){
+                sql.append(" OR ");
+            }
+        }
+        sql.append(" GROUP BY join_id HAVING COUNT(*) = "+inputDefs.length+" ");
+//        创建原生sql查询query示例
+        Query query = em.createNativeQuery(sql.toString());
+        List<Integer> objectList = query.getResultList();
+        em.close();
+        return objectList;
+    }
+
+   private Specification<Join> joinSpecification(Integer activityId, String attend, UserSearchForm userSearchForm, List<Integer> joinIdByDef){
 
         Specification<Join> specification = new Specification<Join>() {
             @Override
@@ -129,17 +175,13 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
                     if (isAttend(attend)){
 //                        参加
                         list.add(cb.equal(root.get("attend").as(Attend.class), Attend.yes));
-           /*             String[] str = {"地点一"};
-                        for (int i = 0; i < inputDefs.length; i++) {
-                            list.add(cb.equal(root.join("activity").get("inputDefs").as(String[].class), str));
-                        }*/
-
-                        ListJoin<Join, String> join = root.join(root.getModel().getList("string",String.class));
-
+                        list.add(root.get("joinId").in(joinIdByDef));
                     }else if (!isAttend(attend)){
 //                    不参加
                         list.add(cb.equal(root.get("attend").as(Attend.class), Attend.no));
                     }
+                }else {
+                    list.add(root.get("joinId").in(joinIdByDef));
                 }
                 Predicate[] p = new Predicate[list.size()];
                 return cb.and(list.toArray(p));

@@ -151,7 +151,7 @@
             }
             var inp = inputClone.val().trim();
             if(searchType == 'search' && inp != ''){
-                $form.attr('action','/excel/exportNoJoinUser/'+activityId+"/"+keyClone.val()+"/"+inp);
+                $form.attr('action','/excel/exportNoJoinUserBy/'+activityId+"/"+keyClone.val()+"/"+inp);
             }else {
                 var $searchForm = $userSearchFormClone.clone();
                 $searchForm.find("select").each(function () {

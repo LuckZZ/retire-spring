@@ -17,8 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,ActivityDao> implements ActivityService{
@@ -36,7 +36,7 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
 
     @Override
     public Activity save(String activityName, String[] labels, String[] inputs) {
-       Set<ActivityDef> activityDefs = new LinkedHashSet<>();
+        List<ActivityDef> activityDefs = new ArrayList<>();
          for (int i = 0; i < labels.length; i ++){
              activityDefs.add(new ActivityDef(labels[i], inputs[i]));
          }
@@ -100,7 +100,7 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     public boolean updateById(Integer activityId, String activityName, String[] labels, String[] inputs) {
 //        删除activityDef表数据
         activityDefDao.deleteAllByActivityId(activityId);
-        Set<ActivityDef> activityDefs = new LinkedHashSet<>();
+        List<ActivityDef> activityDefs = new ArrayList<>();
         for (int i = 0; i < labels.length; i ++){
             activityDefs.add(new ActivityDef(labels[i], inputs[i]));
         }

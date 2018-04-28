@@ -4,7 +4,9 @@ import com.example.domain.enums.Attend;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,20 +30,19 @@ public class Join extends BaseEntity implements Serializable {
     @Column
     private Attend attend;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER ,cascade = CascadeType.ALL)
     @JoinColumn(name = "join_id")
-    private Set<JoinDef> joinDefs = new LinkedHashSet<>();
+    private List<JoinDef> joinDefs = new ArrayList<>();
 
     public Join() {
     }
 
-    public Join(User user, Activity activity, Set<JoinDef> joinDefs, Attend attend) {
+    public Join(User user, Activity activity, List<JoinDef> joinDefs, Attend attend) {
         this.user = user;
         this.activity = activity;
         this.attend = attend;
         this.joinDefs = joinDefs;
     }
-
 
     //set、get方法
 
@@ -77,11 +78,11 @@ public class Join extends BaseEntity implements Serializable {
         this.attend = attend;
     }
 
-    public Set<JoinDef> getJoinDefs() {
+    public List<JoinDef> getJoinDefs() {
         return joinDefs;
     }
 
-    public void setJoinDefs(Set<JoinDef> joinDefs) {
+    public void setJoinDefs(List<JoinDef> joinDefs) {
         this.joinDefs = joinDefs;
     }
 }

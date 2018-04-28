@@ -22,7 +22,7 @@ public class ActivityServiceTest {
 
     @Test
     public void save(){
-        Set<ActivityDef> activityDefs = new LinkedHashSet<>();
+        List<ActivityDef> activityDefs = new ArrayList<>();
         activityDefs.add(new ActivityDef("a","b"));
         activityDefs.add(new ActivityDef("c","d"));
         activityDefs.add(new ActivityDef("e","f"));
@@ -34,7 +34,7 @@ public class ActivityServiceTest {
     @Test
     public void findAll(){
         Activity activity = activityDao.findOne(6);
-        Set<ActivityDef> activityDefs = activity.getActivityDefs();
+        List<ActivityDef> activityDefs = activity.getActivityDefs();
         for (ActivityDef activityDef : activityDefs){
             System.out.println("lab:"+activityDef.getLabel()+" input:"+activityDef.getInput());
         }

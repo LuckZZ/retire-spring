@@ -6,11 +6,15 @@ import com.example.dao.UserDao;
 import com.example.domain.entity.Admin;
 import com.example.domain.entity.User;
 import com.example.domain.enums.CanLogin;
+import com.example.utils.Criteria;
+import com.example.utils.Restrictions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = RetireSpringApplication.class,webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -60,5 +64,17 @@ public class UserServiceTest {
         userDao.updateGroup(17,20);
     }
 
+
+    @Test
+    public void contextLoads() {
+        Criteria<User> criteria = new Criteria<>();
+        criteria.add(Restrictions.eq("name", "11", true));
+        List<User> userList = userDao.findAll(criteria);
+        System.out.println("开始");
+        for (User user : userList) {
+            System.out.println(user.getName());
+        }
+        System.out.println("结束");
+    }
 
 }

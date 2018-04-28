@@ -14,21 +14,18 @@ public class JoinDef extends BaseEntity implements Serializable {
     @Column(name = "id")
     private  Integer id;        //主键、自增
 
-    @Column
-    private String label;
+    @OneToOne
+    @JoinColumn(name = "activity_def_id")
+    private ActivityDef activityDef;
 
     @Column
     private String input;
 
-    @ManyToOne
-    @JoinColumn(name="join_id")
-    private Join join;
-
     public JoinDef() {
     }
 
-    public JoinDef(String label, String input) {
-        this.label = label;
+    public JoinDef(ActivityDef activityDef, String input) {
+        this.activityDef = activityDef;
         this.input = input;
     }
 
@@ -40,12 +37,12 @@ public class JoinDef extends BaseEntity implements Serializable {
         this.id = id;
     }
 
-    public String getLabel() {
-        return label;
+    public ActivityDef getActivityDef() {
+        return activityDef;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setActivityDef(ActivityDef activityDef) {
+        this.activityDef = activityDef;
     }
 
     public String getInput() {
@@ -56,11 +53,4 @@ public class JoinDef extends BaseEntity implements Serializable {
         this.input = input;
     }
 
-    public Join getJoin() {
-        return join;
-    }
-
-    public void setJoin(Join join) {
-        this.join = join;
-    }
 }
