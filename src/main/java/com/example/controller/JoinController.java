@@ -115,7 +115,7 @@ public class JoinController extends BaseController{
         String attend = request.getParameter("attend");
 
         Activity activity = activityService.findOne(activityId);
-        Page<Join> datas = joinService.findAllUserCriteria(activityId, inputDefs, attend, joinUserSearch, page);
+        Page<Join> datas = joinService.findAllCriteria(activityId, inputDefs, attend, joinUserSearch, page);
 
         assignModel(model, activity);
 
@@ -167,6 +167,10 @@ public class JoinController extends BaseController{
 
             if (!activityService.canJoin(activityId)){
                 return result(ExceptionMsg.JoinForCloseFailed);
+            }
+
+            if (joinService.existsByActivityIdAndUserId(activityId, userId)){
+                return result(ExceptionMsg.JoinAlreadyFailed);
             }
 
             joinService.save(userId,activityId,inputDefs,attend);

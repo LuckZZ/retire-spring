@@ -23,6 +23,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -158,6 +159,12 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Override
     public List<User> findAllNoJoinByName(Integer activityId, String name) {
         return userDao.findAllNoJoinByName(Exist.yes, activityId, name);
+    }
+
+    @Override
+    public List<User> findAllByUserIds(Integer[] userIds) {
+        Iterable<Integer> it = Arrays.asList(userIds);
+        return userDao.findAll(it);
     }
 
     @Autowired

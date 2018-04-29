@@ -44,6 +44,11 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     private EntityManagerFactory emf;
 
     @Override
+    public boolean existsByActivityIdAndUserId(Integer activityId, Integer userId) {
+        return joinDao.existsByActivity_ActivityIdAndUser_UserId(activityId, userId);
+    }
+
+    @Override
     public Join save(Integer userId, Integer activityId, String[] inputDefs, String attend) {
         User user = userDao.findOne(userId);
         Activity activity = activityService.findOne(activityId);
@@ -91,16 +96,38 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     }
 
     @Override
+    public List<Join> findAllByActivity_ActivityIdAndUser_JobNum(Integer activityId, String jobNum) {
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNum(activityId, Exist.yes, jobNum);
+    }
+
+    @Override
     public Page<Join> findAllByActivity_ActivityIdAndUser_Name(Integer activityId, String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_Name(activityId, Exist.yes, name, pageable);
     }
 
     @Override
-    public Page<Join> findAllUserCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm, Integer page) {
+    public List<Join> findAllByActivity_ActivityIdAndUser_Name(Integer activityId, String name) {
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_Name(activityId, Exist.yes, name);
+    }
+
+    @Override
+    public Page<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         List<Integer> joinIdByDef = selectJoinId(activityId, inputDefs);
         return joinDao.findAll(joinSpecification(activityId, attend, userSearchForm, joinIdByDef), pageable);
+    }
+
+    @Override
+    public List<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm) {
+        List<Integer> joinIdByDef = selectJoinId(activityId, inputDefs);
+        return joinDao.findAll(joinSpecification(activityId, attend, userSearchForm, joinIdByDef));
+    }
+
+    @Override
+    public List<Join> findAllByJoinIds(Integer[] joinIds) {
+        Iterable<Integer> it = Arrays.asList(joinIds);
+        return joinDao.findAll(it);
     }
 
     /**

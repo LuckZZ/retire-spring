@@ -88,7 +88,9 @@ public enum ExceptionMsg {
     JoinDelFailed("活动删除失败",false),
 
     JoinForCloseFailed("活动已关闭不能报名",false),
-    JoinDelForCloseFailed("活动已关闭不能删除",false);
+    JoinDelForCloseFailed("活动已关闭不能删除",false),
+
+    JoinAlreadyFailed("此用户已报名",false);
 
     private String message;
     private boolean codeBool;

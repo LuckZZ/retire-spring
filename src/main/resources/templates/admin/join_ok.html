@@ -105,6 +105,8 @@
 <!--alert-->
 <div th:replace="fragments/alert::alert_user_delete"></div>
 
+<div th:replace="fragments/alert::alert_excel"></div>
+
 <div th:replace="fragments/footer::js"></div>
 </body>
 
@@ -136,14 +138,14 @@
             }
             var inp = inputClone.val().trim();
             if(searchType == 'search' && inp != ''){
-                $form.attr('action','/excel/exportNoJoinUserBy/'+activityId+"/"+keyClone.val()+"/"+inp);
+                $form.attr('action','/excel/exportJoinUserBy/'+activityId+"/"+keyClone.val()+"/"+inp);
             }else {
                 var $searchForm = $userSearchFormClone.clone();
                 $searchForm.find("select").each(function () {
                     // 添加元素
                     $hideForm.append(this);
                 });
-                $form.attr('action','/excel/exportNoJoinUser/'+activityId);
+                $form.attr('action','/excel/exportJoinUser/'+activityId);
             }
             $form.submit();
             //清除添加的元素

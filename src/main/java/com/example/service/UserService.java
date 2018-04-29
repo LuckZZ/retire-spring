@@ -52,4 +52,7 @@ public interface UserService extends BaseCrudService<User,Integer>{
 
     List<User> findAllNoJoinByName(Integer activityId, String name);
 
+    /*根据userIds查询用户*/
+    List<User> findAllByUserIds(Integer[] userIds);
+
 }

@@ -6,11 +6,18 @@ import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.view.PoiBaseView;
 import com.example.comm.aop.LoggerManage;
+import com.example.dao.ActivityDao;
 import com.example.domain.bean.UserSearchForm;
+import com.example.domain.entity.Activity;
+import com.example.domain.entity.ActivityDef;
+import com.example.domain.entity.Join;
 import com.example.domain.entity.User;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
+import com.example.service.ActivityService;
+import com.example.service.JoinService;
 import com.example.service.UserService;
+import com.example.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,10 +28,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Create by : Zhangxuemeng
@@ -35,6 +40,12 @@ public class ExcelController extends BaseController{
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JoinService joinService;
+
+    @Autowired
+    private ActivityService activityService;
 
     @ResponseBody
     @RequestMapping("/exportUser")
@@ -51,9 +62,7 @@ public class ExcelController extends BaseController{
             userList = userService.findAllUserCriteria(userSearchForm);
         }else if("selected".equals(exportScope)){
             String[] selectedChecked = request.getParameterValues("selectedChecked");
-            for (String id : selectedChecked) {
-                userList.add(userService.findOne(Integer.parseInt(id)));
-            }
+            userList = userService.findAllByUserIds(DataUtils.turn(selectedChecked));
         }
 
         List<ExcelExportEntity> beanList = assignBeanList(item);
@@ -89,9 +98,7 @@ public class ExcelController extends BaseController{
             }
         }else if("selected".equals(exportScope)){
             String[] selectedChecked = request.getParameterValues("selectedChecked");
-            for (String id : selectedChecked) {
-                userList.add(userService.findOne(Integer.parseInt(id)));
-            }
+            userList = userService.findAllByUserIds(DataUtils.turn(selectedChecked));
         }
 
         List<ExcelExportEntity> beanList = assignBeanList(item);
@@ -104,47 +111,6 @@ public class ExcelController extends BaseController{
         }
 
         export(map,"用户信息","用户信息",beanList,list,request,response);
-
-        return result(ExceptionMsg.SUCCESS);
-    }
-
-    @ResponseBody
-    @RequestMapping("/exportNoJoinUserBy/{activityId}/{type}/{value}")
-    @LoggerManage(description = "导出未报名用户表")
-    public Response exportNoJoinUserBy(@PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, ModelMap map, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, HttpServletRequest request, HttpServletResponse response){
-
-        String exportScope = request.getParameter("exportScope");
-
-        String[] item = request.getParameterValues("item");
-
-        List<User> userList = new ArrayList<>();
-
-        if("all".equals(exportScope)){
-            if (type == 1){
-                userList = userService.findAllNoJoinByJobNum(activityId, value);
-            }else if(type == 2){
-                userList = userService.findAllNoJoinByName(activityId, value);
-            }
-        }else if("selected".equals(exportScope)){
-            String[] selectedChecked = request.getParameterValues("selectedChecked");
-            for (String id : selectedChecked) {
-                userList.add(userService.findOne(Integer.parseInt(id)));
-            }
-        }
-
-        List<ExcelExportEntity> beanList = assignBeanList(item);
-
-        beanList.add(new ExcelExportEntity("状态", "status"));
-
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-        for (User u : userList){
-            Map<String, Object> row= addRow(u, item);
-            row.put("status","未报名");
-            list.add(row);
-        }
-
-        export(map,"未报名用户","未报名用户信息",beanList,list,request,response);
 
         return result(ExceptionMsg.SUCCESS);
     }
@@ -164,9 +130,7 @@ public class ExcelController extends BaseController{
             userList = userService.findAllNoJoinCriteria(activityId,userSearchForm);
         }else if("selected".equals(exportScope)){
             String[] selectedChecked = request.getParameterValues("selectedChecked");
-            for (String id : selectedChecked) {
-                userList.add(userService.findOne(Integer.parseInt(id)));
-            }
+            userList = userService.findAllByUserIds(DataUtils.turn(selectedChecked));
         }
 
         List<ExcelExportEntity> beanList = assignBeanList(item);
@@ -182,6 +146,146 @@ public class ExcelController extends BaseController{
         }
 
         export(map,"未报名用户","未报名用户信息",beanList,list,request,response);
+
+        return result(ExceptionMsg.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping("/exportNoJoinUserBy/{activityId}/{type}/{value}")
+    @LoggerManage(description = "导出未报名用户表")
+    public Response exportNoJoinUserBy(@PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, ModelMap map, HttpServletRequest request, HttpServletResponse response){
+
+        String exportScope = request.getParameter("exportScope");
+
+        String[] item = request.getParameterValues("item");
+
+        List<User> userList = new ArrayList<>();
+
+        if("all".equals(exportScope)){
+            if (type == 1){
+                userList = userService.findAllNoJoinByJobNum(activityId, value);
+            }else if(type == 2){
+                userList = userService.findAllNoJoinByName(activityId, value);
+            }
+        }else if("selected".equals(exportScope)){
+            String[] selectedChecked = request.getParameterValues("selectedChecked");
+            userList = userService.findAllByUserIds(DataUtils.turn(selectedChecked));
+        }
+
+        List<ExcelExportEntity> beanList = assignBeanList(item);
+
+        beanList.add(new ExcelExportEntity("状态", "status"));
+
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        for (User u : userList){
+            Map<String, Object> row= addRow(u, item);
+            row.put("status","未报名");
+            list.add(row);
+        }
+
+        export(map,"未报名用户","未报名用户信息",beanList,list,request,response);
+
+        return result(ExceptionMsg.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping("/exportJoinUser/{activityId}")
+    @LoggerManage(description = "导出报名用户表")
+    public Response exportJoinUser(@PathVariable Integer activityId, ModelMap map, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, HttpServletRequest request, HttpServletResponse response){
+
+        String exportScope = request.getParameter("exportScope");
+        String[] item = request.getParameterValues("item");
+
+        String[] inputDefs = request.getParameterValues("inputDefs");
+        String attend = request.getParameter("attend");
+
+        List<Join> joinList = new ArrayList<>();
+
+        if("all".equals(exportScope)){
+            joinList = joinService.findAllCriteria(activityId, inputDefs, attend, userSearchForm);
+        }else if("selected".equals(exportScope)){
+            String[] selectedChecked = request.getParameterValues("selectedChecked");
+            Integer[] joinIds = DataUtils.turn(selectedChecked);
+            joinList = joinService.findAllByJoinIds(joinIds);
+        }
+
+        List<ExcelExportEntity> beanList = assignBeanList(item);
+
+        Activity activity = activityService.findOne(activityId);
+        List<ActivityDef> activityDefs = activity.getActivityDefs();
+
+        for (int i =0; i < activityDefs.size(); i++) {
+            beanList.add(new ExcelExportEntity(activityDefs.get(i).getLabel(), "label"+i));
+        }
+
+        beanList.add(new ExcelExportEntity("是否参加", "attend"));
+        beanList.add(new ExcelExportEntity("状态", "status"));
+
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        for (Join join : joinList){
+            Map<String, Object> row= addRow(join.getUser(), item);
+            for (int i =0; i < activityDefs.size(); i++) {
+                row.put("label"+i,join.getJoinDefs().get(i).getInput());
+            }
+            row.put("attend",join.getAttend().getName());
+            row.put("status","报名成功");
+            list.add(row);
+        }
+
+        export(map,"已报名用户","已报名用户信息",beanList,list,request,response);
+
+        return result(ExceptionMsg.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping("/exportJoinUserBy/{activityId}/{type}/{value}")
+    @LoggerManage(description = "导出已报名用户表")
+    public Response exportJoinUserBy(@PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, ModelMap map, HttpServletRequest request, HttpServletResponse response){
+
+        String exportScope = request.getParameter("exportScope");
+        String[] item = request.getParameterValues("item");
+
+        List<Join> joinList = new ArrayList<>();
+
+        if("all".equals(exportScope)){
+            if (type == 1){
+                joinList = joinService.findAllByActivity_ActivityIdAndUser_JobNum(activityId, value);
+            }else if(type == 2){
+                joinList = joinService.findAllByActivity_ActivityIdAndUser_Name(activityId, value);
+            }
+        }else if("selected".equals(exportScope)){
+            String[] selectedChecked = request.getParameterValues("selectedChecked");
+            Integer[] joinIds = DataUtils.turn(selectedChecked);
+            joinList = joinService.findAllByJoinIds(joinIds);
+        }
+
+        List<ExcelExportEntity> beanList = assignBeanList(item);
+
+        Activity activity = activityService.findOne(activityId);
+        List<ActivityDef> activityDefs = activity.getActivityDefs();
+
+        for (int i =0; i < activityDefs.size(); i++) {
+            beanList.add(new ExcelExportEntity(activityDefs.get(i).getLabel(), "label"+i));
+        }
+
+        beanList.add(new ExcelExportEntity("是否参加", "attend"));
+        beanList.add(new ExcelExportEntity("状态", "status"));
+
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        for (Join join : joinList){
+            Map<String, Object> row= addRow(join.getUser(), item);
+            for (int i =0; i < activityDefs.size(); i++) {
+                row.put("label"+i,join.getJoinDefs().get(i).getInput());
+            }
+            row.put("attend",join.getAttend().getName());
+            row.put("status","报名成功");
+            list.add(row);
+        }
+
+        export(map,"已报名用户","已报名用户信息",beanList,list,request,response);
 
         return result(ExceptionMsg.SUCCESS);
     }
