@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="content(activityId)">
-    <form class="am-form tpl-form-border-form tpl-form-border-br" id="user-search-form" method="post" th:action="@{/join/joinOkView/superSearch/{activityId}(activityId=${activityId})}" th:object="${userSearchForm}">
+    <form class="am-form tpl-form-border-form tpl-form-border-br" id="user-search-form" method="post" th:action="@{/join/joinOkView/superSearch/{activityId}(activityId=${activityId})}" th:object="${joinUserSearch}">
         <div class="am-form-group am-form-group-sm am-u-sm-4">
             <label for="group" class="am-u-sm-3 am-form-label">组别</label>
             <div class="am-u-sm-9">
@@ -61,17 +61,17 @@
             <div class="am-u-sm-9">
                 <select name="politics" id="politics" data-am-selected="{btnSize: 'sm'}" th:field="*{politics}">
                     <option value="-1">所有</option>
-                    <option th:each="politics:${politicss}" th:value="${politics.politicsId}" th:text="${politics.politicsName}">政治面貌/option>
+                    <option th:each="politics:${politicss}" th:value="${politics.politicsId}" th:text="${politics.politicsName}">政治面貌</option>
                 </select>
             </div>
         </div>
 
-        <div class="am-form-group am-form-group-sm am-u-sm-4" th:each="activityDef:${activity.activityDefs}">
-            <label class="am-u-sm-3 am-form-label" name="labelDef" th:value="${activityDef.label}" th:text="${activityDef.label}">自定义列</label>
+        <div class="am-form-group am-form-group-sm am-u-sm-4" th:each="activityDefSearch:${joinUserSearch.activityDefSearches}">
+            <label class="am-u-sm-3 am-form-label" name="labelDef" th:value="${activityDefSearch.label}" th:text="${activityDefSearch.label}">自定义列</label>
             <div class="am-u-sm-9">
                 <select name="inputDefs" data-am-selected="{btnSize: 'sm'}">
-                    <option value="-1">所有</option>
-                    <option name="inputDef" th:value="${inp}" th:each="inp:${activityDef.inputs}" th:text="${inp}">所有</option>
+                    <option value="-1"  th:selected="(${activityDefSearch.oneInput} eq '-1')?'true':'false'">所有</option>
+                    <option name="inputDef"  th:selected="(${activityDefSearch.oneInput} eq ${inp})?'true':'false'" th:value="${inp}" th:each="inp:${activityDefSearch.inputs}" th:text="${inp}">所有</option>
                 </select>
             </div>
         </div>
@@ -79,7 +79,7 @@
         <div class="am-form-group am-form-group-sm am-u-sm-4">
             <label for="politics" class="am-u-sm-3 am-form-label">是否参加</label>
             <div class="am-u-sm-9">
-                <select data-am-selected="{btnSize: 'sm'}" name="attend" class="attend">
+                <select data-am-selected="{btnSize: 'sm'}" th:field="*{attend}" name="attend" class="attend">
                     <option value="-1" th:text="所有"></option>
                     <option value="yes" th:text="参加"></option>
                     <option value="no" th:text="不参加"></option>

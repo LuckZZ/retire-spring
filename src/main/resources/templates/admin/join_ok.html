@@ -164,20 +164,6 @@
             var key = $("#head-select-key").val();
             var input = $("#head-select-input").val().trim();
             if (input != ''){
-                window.location.href="/join/joinNoView/"+activityId+"/"+key+"/"+input;
-            }
-            if(input == ''){
-                window.location.href="/join/joinNoView/"+activityId;
-            }
-        });
-
-
-        // 头部搜索
-        $("#head-select-btn").on('click',function(){
-            var activityId = $("#activityId").val();
-            var key = $("#head-select-key").val();
-            var input = $("#head-select-input").val().trim();
-            if (input != ''){
                 window.location.href="/join/joinOkView/"+activityId+"/"+key+"/"+input;
             }
             if(input == ''){

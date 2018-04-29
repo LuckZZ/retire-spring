@@ -1,8 +1,9 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
+import com.example.domain.bean.ActivityDefSearch;
 import com.example.domain.bean.CommSearch;
-import com.example.domain.bean.UserSearchForm;
+import com.example.domain.bean.JoinUserSearch;
 import com.example.domain.entity.*;
 import com.example.domain.enums.SearchType;
 import com.example.domain.result.ExceptionMsg;
@@ -50,34 +51,25 @@ public class JoinController extends BaseController{
     @LoggerManage(description = "待报名界面")
     public String joinNoView(@PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
+        Page<User> datas = userService.findAllNoJoinCriteria(activityId, new JoinUserSearch(), page);
 
-        Page<User> datas = userService.findAllNoJoinCriteria(activityId, new UserSearchForm(), page);
-
-        model.addAttribute("activity", activity);
+        assignModel(model, activity);
         model.addAttribute("datas", datas);
-
-        model.addAttribute("searchType", SearchType.all);
-
-        assignModel(model);
 
         return "admin/join_no";
     }
 
     @RequestMapping("/joinNoView/superSearch/{activityId}")
     @LoggerManage(description = "待报名界面高级搜索列表")
-    public String joinNoViewSuperSearch(@PathVariable Integer activityId, Model model, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    public String joinNoViewSuperSearch(@PathVariable Integer activityId, Model model, @ModelAttribute(value = "joinUserSearch") JoinUserSearch joinUserSearch, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
-        Page<User> datas = userService.findAllNoJoinCriteria(activityId, userSearchForm, page);
+        Page<User> datas = userService.findAllNoJoinCriteria(activityId, joinUserSearch, page);
+
+        assignModel(model, activity);
         model.addAttribute("datas",datas);
 
-        model.addAttribute("activity", activity);
-
-        model.addAttribute("searchType", SearchType.searchSuper);
-
-        assignModel(model);
-
 //        搜索表单的值，再传入页面
-        model.addAttribute("userSearchForm",userSearchForm);
+        model.addAttribute("joinUserSearch",joinUserSearch);
 
         return "admin/join_no";
     }
@@ -86,8 +78,7 @@ public class JoinController extends BaseController{
     @LoggerManage(description = "待报名界面BySearch")
     public String joinNoViewByType(Model model, @PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
-        model.addAttribute("activity", activity);
-        assignModel(model);
+        assignModel(model, activity);
         model.addAttribute("userCommSearch", new CommSearch(type, value));
         model.addAttribute("searchType", SearchType.search);
 
@@ -111,36 +102,32 @@ public class JoinController extends BaseController{
     public String joinOkView(@PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
         Page<Join> datas = joinService.findAllByActivity_ActivityId(activityId, page);
-        model.addAttribute("searchType", SearchType.all);
-        model.addAttribute("activity", activity);
+        assignModel(model, activity);
         model.addAttribute("datas", datas);
-
-        assignModel(model);
 
         return "admin/join_ok";
     }
 
     @RequestMapping(value = "/joinOkView/superSearch/{activityId}")
     @LoggerManage(description = "已报名高级搜索界面")
-    public String joinOkViewSuperSearch( HttpServletRequest request, @PathVariable Integer activityId, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    public String joinOkViewSuperSearch( HttpServletRequest request, @PathVariable Integer activityId, @ModelAttribute(value = "joinUserSearch") JoinUserSearch joinUserSearch, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
         String[] inputDefs = request.getParameterValues("inputDefs");
         String attend = request.getParameter("attend");
 
         Activity activity = activityService.findOne(activityId);
+        Page<Join> datas = joinService.findAllUserCriteria(activityId, inputDefs, attend, joinUserSearch, page);
 
-        Page<Join> datas = joinService.findAllUserCriteria(activityId, inputDefs, attend, userSearchForm, page);
+        assignModel(model, activity);
 
-        model.addAttribute("searchType", SearchType.searchSuper);
-        model.addAttribute("activity", activity);
         model.addAttribute("datas", datas);
 
-        assignModel(model);
-
         //        搜索表单的值，再传入页面
-        model.addAttribute("userSearchForm",userSearchForm);
-
-//        model.addAttribute("inputDefs",inputDefs);
-//        model.addAttribute("attend",attend);
+        joinUserSearch.assignActivityDefSearches(activity.getActivityDefs());
+        List<ActivityDefSearch> activityDefSearches = joinUserSearch.getActivityDefSearches();
+        for (int i = 0; i < inputDefs.length; i++){
+            activityDefSearches.get(i).setOneInput(inputDefs[i]);
+        }
+        model.addAttribute("joinUserSearch",joinUserSearch);
 
         return "admin/join_ok";
     }
@@ -149,8 +136,7 @@ public class JoinController extends BaseController{
     @LoggerManage(description = "已报名界面BySearch")
     public String joinOkViewByType(@PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
         Activity activity = activityService.findOne(activityId);
-        model.addAttribute("activity", activity);
-        assignModel(model);
+        assignModel(model, activity);
         model.addAttribute("userCommSearch", new CommSearch(type, value));
         model.addAttribute("searchType", SearchType.search);
         if (type == 1 && value != null){
@@ -209,7 +195,7 @@ public class JoinController extends BaseController{
         }
     }
 
-    private Model assignModel(Model model){
+    private Model assignModel(Model model, Activity activity){
         //        所有的组
         List<Group> groups = groupService.findAll();
 
@@ -226,7 +212,10 @@ public class JoinController extends BaseController{
         List<Duty> duties = dutyService.findAll();
 
 //        用于用户高级搜索
-        UserSearchForm userSearchForm = new UserSearchForm();
+        JoinUserSearch joinUserSearch = new JoinUserSearch(activity.getActivityDefs());
+
+//       活动
+        model.addAttribute("activity", activity);
 
         model.addAttribute("groups",groups);
 
@@ -238,9 +227,11 @@ public class JoinController extends BaseController{
 
         model.addAttribute("duties",duties);
 
-        model.addAttribute("userSearchForm",userSearchForm);
-
         model.addAttribute("userCommSearch", new CommSearch(1, ""));
+
+        model.addAttribute("joinUserSearch",joinUserSearch);
+
+        model.addAttribute("searchType", SearchType.allOrSuper);
 
         return model;
     }

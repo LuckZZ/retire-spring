@@ -3,11 +3,7 @@ package com.example.service;
 import com.example.RetireSpringApplication;
 import com.example.dao.GrouperDao;
 import com.example.dao.UserDao;
-import com.example.domain.entity.Admin;
 import com.example.domain.entity.User;
-import com.example.domain.enums.CanLogin;
-import com.example.utils.Criteria;
-import com.example.utils.Restrictions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,19 +58,6 @@ public class UserServiceTest {
     @Test
     public void updateGroup(){
         userDao.updateGroup(17,20);
-    }
-
-
-    @Test
-    public void contextLoads() {
-        Criteria<User> criteria = new Criteria<>();
-        criteria.add(Restrictions.eq("name", "11", true));
-        List<User> userList = userDao.findAll(criteria);
-        System.out.println("开始");
-        for (User user : userList) {
-            System.out.println(user.getName());
-        }
-        System.out.println("结束");
     }
 
 }

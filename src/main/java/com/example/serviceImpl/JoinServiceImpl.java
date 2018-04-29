@@ -100,9 +100,6 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     public Page<Join> findAllUserCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         List<Integer> joinIdByDef = selectJoinId(activityId, inputDefs);
-        for (Integer i : joinIdByDef) {
-            System.out.println("joinByDef    join_id:"+i);
-        }
         return joinDao.findAll(joinSpecification(activityId, attend, userSearchForm, joinIdByDef), pageable);
     }
 
@@ -201,4 +198,5 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
         }
         return true;
     }
+
 }
