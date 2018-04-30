@@ -16,3 +16,20 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+/*头部图片*/
+.theme-white .top-pic {
+    height: 130px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    background: #fff;
+}
+.theme-black .top-pic {
+    height: 130px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.top-pic img{
+    height: 130px;
+}

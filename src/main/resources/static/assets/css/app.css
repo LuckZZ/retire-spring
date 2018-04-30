@@ -267,10 +267,10 @@ ul.tpl-dropdown-content .tpl-dropdown-menu-messages-item .menu-messages-content 
   transition: all 0.4s ease-in-out;
   width: 240px;
   min-height: 100%;
-  padding-top: 57px;
+  /*padding-top: 57px;*/
   position: absolute;
   z-index: 1104;
-  top: 0;
+  /*top: 0;*/
   left: 0px;
 }
 .left-sidebar.xs-active {
@@ -1825,7 +1825,7 @@ ul.tpl-dropdown-content .tpl-dropdown-menu-messages-item .menu-messages-content 
   color: #fff;
 }
 .theme-black .left-sidebar {
-  padding-top: 56px;
+  /*padding-top: 56px;*/
   background: #282d2f;
 }
 .theme-black .widget-color-green {
