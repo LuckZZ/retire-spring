@@ -90,7 +90,11 @@ public enum ExceptionMsg {
     JoinForCloseFailed("活动已关闭不能报名",false),
     JoinDelForCloseFailed("活动已关闭不能删除",false),
 
-    JoinAlreadyFailed("此用户已报名",false);
+    JoinAlreadyFailed("此用户已报名",false),
+
+    LoginJobNumNotUerFailed("工号不存在",false),
+    LoginPasswordFailed("密码错误",false),
+    LoginSuccess("登陆成功",true);
 
     private String message;
     private boolean codeBool;

@@ -33,3 +33,13 @@ input[type=number]::-webkit-outer-spin-button {
 .top-pic img{
     height: 130px;
 }
+/*登陆图片*/
+.login-pic{
+    height: 180px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.login-pic img{
+    height: 180px;
+}

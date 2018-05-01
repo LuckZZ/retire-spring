@@ -4,7 +4,7 @@
     <!--头部logo、搜索框、欢迎语、退出-->
     <header th:fragment="header_section(username)">
         <div class="top-pic">
-            <img th:src="@{/img/head.gif}" alt=""/>
+            <img th:src="@{/img/head.gif}" alt="" oncontextmenu="return false" onselectstart="return false" ondragstart="return false"/>
         </div>
         <!-- logo -->
         <div class="am-fl tpl-header-logo">
@@ -138,7 +138,7 @@
 
                     <!-- 退出 -->
                     <li class="am-text-sm">
-                        <a href="javascript:;">
+                        <a href="/logout">
                             <span class="am-icon-sign-out"></span> 退出
                         </a>
                     </li>
