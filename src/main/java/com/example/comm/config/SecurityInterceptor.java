@@ -8,7 +8,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,35 +28,33 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter{
             return false;
         }
         Role loginRole = login.getRole();
-//         获取出方法上的Access注解
-        HandlerMethod handlerMethod = (HandlerMethod)handler;
-        Method method = handlerMethod.getMethod();
-        Access access = method.getAnnotation(Access.class);
-        if (access == null) {
-            // 如果注解为null, 登陆角色为admin时通过
-            if (loginRole == Role.admin){
-                return true;
-            }
-            responseNoAccess(request, response);
-            return false;
+        Set<Role> roleSet = getRoleSet((HandlerMethod) handler);
+        if (roleSet == null){
+//            方法和类都无注解，通过
+            return true;
         }
-
-        if (access.roles().length > 0) {
-            // 如果权限配置不为空, 则角色配置
-            Role[] roles = access.roles();
-            Set<Role> roleSet = new HashSet<>();
-            for (Role r : roles) {
-                // 将角色加入一个set集合中
-                roleSet.add(r);
-            }
+        if (roleSet.size() > 0){
+//            有权限
             if (roleSet.contains(loginRole)){
-                // 校验通过返回true, 否则拦截请求
+                // 校验通过返回true, 通过
                 return true;
             }
-            responseNoAccess(request, response);
+//            无权限
+            String XRequested =request.getHeader("X-Requested-With");
+            if("XMLHttpRequest".equals(XRequested)){
+//                ajax请求
+                System.out.println("aaa");
+                response.getWriter().write("IsAjax");
+                String url = "/noAccessAjax";
+                response.sendRedirect(url);
+            }else {
+//            非ajax请求
+                System.out.println("bbb");
+                String url = "/noAccess";
+                response.sendRedirect(url);
+            }
             return  false;
         }
-
 //            跳转登陆
         String url = "/login";
         response.sendRedirect(url);
@@ -65,23 +62,36 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter{
     }
 
     /**
-     * 非ajax请求：定位到无权限页面
-     * ajax请求：返回无权限Response
-     * @param request
-     * @param response
-     * @throws IOException
+     * 得到方法及类的注解
+     * @param handler
+     * @return
      */
-    private void responseNoAccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String XRequested =request.getHeader("X-Requested-With");
-        if("XMLHttpRequest".equals(XRequested)){
-//                ajax请求
-            response.getWriter().write("IsAjax");
-            String url = "/noAccessAjax";
-            response.sendRedirect(url);
-        }else {
-//            非ajax请求
-            String url = "/noAccess";
-            response.sendRedirect(url);
+    private Set<Role> getRoleSet(HandlerMethod handler){
+        Set<Role> roleSet = new HashSet<>();
+        Class clazz = handler.getBeanType();
+        Method method = handler.getMethod();
+        Access accessClazz = (Access) clazz.getAnnotation(Access.class);
+        Access accessMethod = method.getAnnotation(Access.class);
+        if (accessClazz==null && accessMethod==null){
+            return null;
         }
+        if (accessClazz != null){
+            if (accessClazz.roles().length > 0){
+                Role[] roles = accessClazz.roles();
+                for (Role r : roles) {
+                    roleSet.add(r);
+                }
+            }
+        }
+        if(accessMethod != null){
+            if (accessMethod.roles().length > 0){
+                Role[] roles = accessMethod.roles();
+                for (Role r : roles) {
+                    roleSet.add(r);
+                }
+            }
+        }
+        return roleSet;
     }
+
 }

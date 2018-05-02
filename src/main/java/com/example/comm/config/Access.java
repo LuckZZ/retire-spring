@@ -5,9 +5,10 @@ import com.example.domain.enums.Role;
 import java.lang.annotation.*;
 
 /**
+ * 此注解用在类上和方法上
  * Create by : Zhangxuemeng
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Access {

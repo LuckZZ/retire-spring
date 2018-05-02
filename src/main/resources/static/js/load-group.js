@@ -17,8 +17,12 @@ function loadGroup() {
             console.log(errorThrown);
         },
         success: function(data){
-            gGroups=data.data;
-            initGroups(gGroups);
+            if (data.codeBool){
+                gGroups=data.data;
+                initGroups(gGroups);
+            }else {
+                // toastr.error(data.message, '操作失败');
+            }
         }
     });
 }

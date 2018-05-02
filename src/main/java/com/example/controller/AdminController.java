@@ -1,9 +1,11 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
+import com.example.comm.config.Access;
 import com.example.domain.bean.CommSearch;
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
+import com.example.domain.enums.Role;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.AdminService;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RequestMapping("/admin")
 @Controller
+@Access(roles = Role.admin)
 public class AdminController extends BaseController{
     @Autowired
     private AdminService adminService;
