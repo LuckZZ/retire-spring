@@ -34,4 +34,10 @@ public interface GrouperDao extends JpaRepository<Grouper, Integer> {
 
     List<Grouper> findAllByUser_Group_GroupId(Integer groupId);
 
+    /*组长表工号是否存在*/
+    boolean existsByUser_JobNum(String jobNum);
+
+    /*根据工号和密码查询*/
+    List<Grouper> findAllByUser_JobNumAndPassword(String jobNum, String password);
+
 }

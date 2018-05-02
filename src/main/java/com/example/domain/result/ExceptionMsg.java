@@ -92,8 +92,9 @@ public enum ExceptionMsg {
 
     JoinAlreadyFailed("此用户已报名",false),
 
-    LoginJobNumNotUerFailed("工号不存在",false),
+    LoginJobNumNotUerFailed("登陆账号不存在",false),
     LoginPasswordFailed("密码错误",false),
+    LoginCantFailed("该用户无登陆权限",false),
     LoginSuccess("登陆成功",true);
 
     private String message;

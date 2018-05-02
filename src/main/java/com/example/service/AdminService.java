@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface AdminService extends BaseCrudService<Admin,Integer>{
 
+    List<Admin> findAllByJobNumAndPassword(String jobNum, String password);
+
     boolean existsByJobNum(String jobNum);
 
     int updateNameAndCanLogin(String name, CanLogin canLogin, Integer adminId);

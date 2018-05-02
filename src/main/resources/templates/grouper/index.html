@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/head::head_section('首页')">
+</head>
+
+<body data-type="widgets">
+    <!--theme.js放到这，快速获得缓存的主题-->
+    <script th:src="@{/assets/js/theme.js}"></script>
+    <div class="am-g tpl-g">
+    <!-- 头部 -->
+    <div th:replace="fragments/header::header_section(Admin)"></div>
+    <!-- 风格切换 -->
+    <div th:replace="fragments/theme::theme_section"></div>
+    <!-- 侧边导航栏 -->
+    <div th:replace="fragments/left_grouper::left_section('home')"></div>
+
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper">
+
+        <div class="row-content am-cf">
+            <div class="row">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div class="widget am-cf">
+                      <!--  This is index!-->
+
+                        <div align="center">
+
+                            <div id="box">
+                                <input type="checkbox" value="1">西瓜
+                                <input type="checkbox" value="2">芒果
+                                <input type="checkbox" value="3">橙
+                                <input type="checkbox" value="4">山竹
+                                <input type="checkbox" value="5">草莓
+                                <input type="checkbox" value="6">火龙果
+                            </div>
+
+                            <br>
+
+                            <input type="checkbox" id="allChecked">全选
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <!--alert-->
+    <div th:replace="fragments/alert::alert_section"></div>
+
+    <div th:replace="fragments/footer::js"></div>
+</body>
+
+<script>
+    $(function () {
+
+
+        $('#allChecked').change(function(){
+            $('#box').children(':checkbox').prop('checked',$(this).is(':checked')?true:false);
+        });
+
+
+    });
+</script>
+
+</html>

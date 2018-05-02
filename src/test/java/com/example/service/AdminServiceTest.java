@@ -30,6 +30,6 @@ public class AdminServiceTest {
 
     @Test
     public void testFindByLoginType(){
-        //adminService.findByLoginType(LoginType.Zuzhang);
+        //adminService.findByLoginType(Role.Zuzhang);
     }
 }

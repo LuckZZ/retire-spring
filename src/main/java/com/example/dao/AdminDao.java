@@ -10,10 +10,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AdminDao extends JpaRepository<Admin, Integer> {
 
     boolean existsByJobNum(String jobNum);
+
+    List<Admin> findAllByJobNumAndPassword(String jobNum, String password);
 
     @Modifying(clearAutomatically=true)
     @Query("update Admin set name=:name,canLogin=:canLogin  where adminId=:adminId")

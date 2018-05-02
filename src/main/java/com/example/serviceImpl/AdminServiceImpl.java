@@ -12,12 +12,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao> implements AdminService{
 
     @Autowired
     private AdminDao adminDao;
+
+    @Override
+    public List<Admin> findAllByJobNumAndPassword(String jobNum, String password) {
+        return adminDao.findAllByJobNumAndPassword(jobNum, password);
+    }
 
     public  boolean existsByJobNum(String jobNum){
         return adminDao.existsByJobNum(jobNum);

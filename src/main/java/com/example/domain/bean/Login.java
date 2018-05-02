@@ -1,13 +1,14 @@
 package com.example.domain.bean;
 
+import com.example.domain.enums.Role;
+
 /**
  * Create by : Zhangxuemeng
  */
 public class Login {
     private String jobNum;
     private String name;
-    private String password;
-    private String loginType;
+    private Role role;
 
     public String getJobNum() {
         return jobNum;
@@ -25,19 +26,11 @@ public class Login {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
+    public Role getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getLoginType() {
-        return loginType;
-    }
-
-    public void setLoginType(String loginType) {
-        this.loginType = loginType;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

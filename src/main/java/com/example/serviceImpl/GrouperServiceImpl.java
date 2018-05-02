@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,GrouperDao> implements GrouperService{
@@ -100,6 +101,16 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
     public Page<Grouper> findAllByUser_Name(String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return grouperDao.findAllByUser_Name(name, pageable);
+    }
+
+    @Override
+    public boolean existsByJobNum(String jobNum) {
+        return grouperDao.existsByUser_JobNum(jobNum);
+    }
+
+    @Override
+    public List<Grouper> findAllByJobNumAndPassword(String jobNum, String password) {
+        return grouperDao.findAllByUser_JobNumAndPassword(jobNum, password);
     }
 
 }
