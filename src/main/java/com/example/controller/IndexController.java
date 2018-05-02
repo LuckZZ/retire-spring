@@ -124,9 +124,25 @@ public class IndexController extends BaseController{
         return "redirect:/login";
     }
 
+    /**
+     * 无权限页面
+     * 范围：url请求
+     * @return
+     */
     @RequestMapping("/noAccess")
     public String noAccess(){
         return "noAccess";
+    }
+
+    /**
+     * 无权限提示
+     * 范围：ajax提交后，提示框显示
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/noAccessAjax")
+    public Response noAccessAjax(){
+        return result(ExceptionMsg.RoleNoAccess);
     }
 
     @ResponseBody

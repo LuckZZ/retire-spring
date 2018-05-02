@@ -95,7 +95,9 @@ public enum ExceptionMsg {
     LoginJobNumNotUerFailed("登陆账号不存在",false),
     LoginPasswordFailed("密码错误",false),
     LoginCantFailed("该用户无登陆权限",false),
-    LoginSuccess("登陆成功",true);
+    LoginSuccess("登陆成功",true),
+
+    RoleNoAccess("此用户无权限",false);
 
     private String message;
     private boolean codeBool;

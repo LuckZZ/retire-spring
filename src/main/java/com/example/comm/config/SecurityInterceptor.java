@@ -8,6 +8,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,31 +28,33 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter{
             response.sendRedirect(url);
             return false;
         }
+        Role loginRole = login.getRole();
 //         获取出方法上的Access注解
         HandlerMethod handlerMethod = (HandlerMethod)handler;
         Method method = handlerMethod.getMethod();
         Access access = method.getAnnotation(Access.class);
         if (access == null) {
-            // 如果注解为null, 说明不需要拦截, 直接放过
-            return true;
+            // 如果注解为null, 登陆角色为admin时通过
+            if (loginRole == Role.admin){
+                return true;
+            }
+            responseNoAccess(request, response);
+            return false;
         }
 
         if (access.roles().length > 0) {
             // 如果权限配置不为空, 则角色配置
             Role[] roles = access.roles();
             Set<Role> roleSet = new HashSet<>();
-            for (Role role : roles) {
+            for (Role r : roles) {
                 // 将角色加入一个set集合中
-                roleSet.add(role);
+                roleSet.add(r);
             }
-            Role role = login.getRole();
-            if (roleSet.contains(role)){
+            if (roleSet.contains(loginRole)){
                 // 校验通过返回true, 否则拦截请求
                 return true;
             }
-//            没有权限
-            String url = "/noAccess";
-            response.sendRedirect(url);
+            responseNoAccess(request, response);
             return  false;
         }
 
@@ -59,5 +62,26 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter{
         String url = "/login";
         response.sendRedirect(url);
         return  false;
+    }
+
+    /**
+     * 非ajax请求：定位到无权限页面
+     * ajax请求：返回无权限Response
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    private void responseNoAccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String XRequested =request.getHeader("X-Requested-With");
+        if("XMLHttpRequest".equals(XRequested)){
+//                ajax请求
+            response.getWriter().write("IsAjax");
+            String url = "/noAccessAjax";
+            response.sendRedirect(url);
+        }else {
+//            非ajax请求
+            String url = "/noAccess";
+            response.sendRedirect(url);
+        }
     }
 }
