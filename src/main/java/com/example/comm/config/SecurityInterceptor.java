@@ -43,13 +43,11 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter{
             String XRequested =request.getHeader("X-Requested-With");
             if("XMLHttpRequest".equals(XRequested)){
 //                ajax请求
-                System.out.println("aaa");
                 response.getWriter().write("IsAjax");
                 String url = "/noAccessAjax";
                 response.sendRedirect(url);
             }else {
 //            非ajax请求
-                System.out.println("bbb");
                 String url = "/noAccess";
                 response.sendRedirect(url);
             }

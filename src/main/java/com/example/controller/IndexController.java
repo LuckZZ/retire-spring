@@ -83,10 +83,7 @@ public class IndexController extends BaseController{
             if (canLogin == null || canLogin == CanLogin.no){
                 return result(ExceptionMsg.LoginCantFailed);
             }
-            Login login = new Login();
-            login.setJobNum(jobNum);
-            login.setName(admins.get(0).getName());
-            login.setRole(Role.admin);
+            Login login = new Login(admins.get(0).getAdminId(), jobNum, admins.get(0).getName(), Role.admin);
             session.setAttribute(WebSecurityConfig.SESSION_KEY, login);
             return result("admin/index",ExceptionMsg.LoginSuccess);
         }else if("1".equals(loginType)){
@@ -105,10 +102,7 @@ public class IndexController extends BaseController{
             if (canLogin == null || canLogin == CanLogin.no){
                 return result(ExceptionMsg.LoginCantFailed);
             }
-            Login login = new Login();
-            login.setJobNum(jobNum);
-            login.setName(groupers.get(0).getUser().getName());
-            login.setRole(Role.grouper);
+            Login login = new Login(groupers.get(0).getGrouperId(), jobNum, groupers.get(0).getUser().getName(), Role.grouper,groupers.get(0).getUser().getGroup());
             session.setAttribute(WebSecurityConfig.SESSION_KEY, login);
             return result("grouper/index",ExceptionMsg.LoginSuccess);
 

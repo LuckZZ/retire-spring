@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--js放到尾处，整个文档加载完后加载-->
+<div th:fragment="js">
+    <script th:src="@{/assets/js/amazeui.min.js}"></script>
+    <script th:src="@{/assets/js/app.js}"></script>
+    <script th:src="@{/js/toastr.min.js}"></script>
+    <script th:src="@{/js/comm.js}"></script>
+</div>
+</body>
+</html>

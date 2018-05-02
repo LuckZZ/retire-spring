@@ -1,9 +1,11 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
+import com.example.comm.config.Access;
 import com.example.domain.bean.CommSearch;
 import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.*;
+import com.example.domain.enums.Role;
 import com.example.domain.enums.SearchType;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
@@ -21,6 +23,7 @@ import java.util.List;
 
 @RequestMapping("/user")
 @Controller
+@Access(roles = Role.admin)
 public class UserController extends BaseController{
 
     @Autowired
