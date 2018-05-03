@@ -46,6 +46,13 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
 
     long countByExist(Exist exist);
 
+    /*根据组号、工号查询用户*/
+    Page<User> findAllByGroup_GroupIdAndJobNum(Integer groupId, String jobNum, Pageable pageable);
+
+    /*根据组号、姓名查询用户*/
+    Page<User> findAllByGroup_GroupIdAndName(Integer groupId, String name, Pageable pageable);
+
+    /*根据组号查询用户*/
     Page<User> findAllByGroup_GroupId(Integer groupId, Pageable pageable);
 
     /*根据工号查询用户*/

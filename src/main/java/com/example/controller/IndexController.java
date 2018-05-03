@@ -124,6 +124,7 @@ public class IndexController extends BaseController{
      * @return
      */
     @RequestMapping("/noAccess")
+    @LoggerManage(description = "无权限页面")
     public String noAccess(){
         return "noAccess";
     }
@@ -135,6 +136,7 @@ public class IndexController extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/noAccessAjax")
+    @LoggerManage(description = "无权限提示")
     public Response noAccessAjax(){
         return result(ExceptionMsg.RoleNoAccess);
     }

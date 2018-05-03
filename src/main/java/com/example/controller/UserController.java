@@ -2,7 +2,9 @@ package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
+import com.example.comm.config.WebSecurityConfig;
 import com.example.domain.bean.CommSearch;
+import com.example.domain.bean.Login;
 import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.*;
 import com.example.domain.enums.Role;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RequestMapping("/user")
@@ -46,15 +49,24 @@ public class UserController extends BaseController{
 
    @RequestMapping("/userList")
    @LoggerManage(description = "组员列表")
-    public String userList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
-//       传递搜索类型
+   @Access(roles = Role.grouper)
+    public String userList(HttpSession session, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+       Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+       //       传递搜索类型
        model.addAttribute("searchType", SearchType.all);
-       Page<User> datas = userService.findAllUserCriteria(page,new UserSearchForm());
-       model.addAttribute("datas",datas);
-
-       assignModel(model);
-
-       return "admin/user_list";
+       if (login.getRole() == Role.admin){
+           Page<User> datas = userService.findAllUserCriteria(page,new UserSearchForm());
+           model.addAttribute("datas",datas);
+           assignModel(model);
+           return "admin/user_list";
+       }else if (login.getRole() == Role.grouper){
+//        根据组id查找数据
+           Page<User> datas = userService.findAllByGroupId(login.getGroup().getGroupId(),page);
+           model.addAttribute("datas",datas);
+           assignModel(model);
+           return "grouper/user_list";
+       }
+       return "/noAccess";
     }
 
     @RequestMapping("/userList/superSearch")
@@ -82,21 +94,40 @@ public class UserController extends BaseController{
      */
     @RequestMapping("/userList/{type}/{value}")
     @LoggerManage(description = "用户列表BySearch")
-    public String userListByType(Model model, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    @Access(roles = Role.grouper)
+    public String userListByType(HttpSession session, Model model, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         //       传递搜索类型
         model.addAttribute("searchType", SearchType.search);
-        assignModel(model);
-        model.addAttribute("userCommSearch", new CommSearch(type, value));
-        if (type == 1 && value != null){
+        if (login.getRole() == Role.admin){
+            assignModel(model);
+            model.addAttribute("userCommSearch", new CommSearch(type, value));
+            if (type == 1 && value != null){
 //        根据工号
-            Page<User> datas = userService.findAllByJobNum(value,page);
-            model.addAttribute("datas",datas);
-            return "admin/user_list";
-        }else if (type == 2 && value != null){
+                Page<User> datas = userService.findAllByJobNum(value,page);
+                model.addAttribute("datas",datas);
+                return "admin/user_list";
+            }else if (type == 2 && value != null){
 //        根据姓名
-            Page<User> datas = userService.findAllByName(value,page);
-            model.addAttribute("datas",datas);
-            return "admin/user_list";
+                Page<User> datas = userService.findAllByName(value,page);
+                model.addAttribute("datas",datas);
+                return "admin/user_list";
+            }
+        }else if (login.getRole() == Role.grouper){
+            Integer groupId = login.getGroup().getGroupId();
+            assignModel(model);
+            model.addAttribute("userCommSearch", new CommSearch(type, value));
+            if (type == 1 && value != null){
+//        根据工号
+                Page<User> datas = userService.findAllByGroupIdAndJobNum(groupId,value,page);
+                model.addAttribute("datas",datas);
+                return "grouper/user_list";
+            }else if (type == 2 && value != null){
+//        根据姓名
+                Page<User> datas = userService.findAllByByGroupIdAndName(groupId,value,page);
+                model.addAttribute("datas",datas);
+                return "grouper/user_list";
+            }
         }
 //        重定向
         return "redirect:/user/user_list";

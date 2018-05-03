@@ -2,9 +2,7 @@ package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
-import com.example.comm.config.WebSecurityConfig;
 import com.example.domain.bean.CommSearch;
-import com.example.domain.bean.Login;
 import com.example.domain.entity.Group;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Role;
@@ -20,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RequestMapping("/group")
@@ -62,30 +59,17 @@ public class GroupController extends BaseController{
 
     @RequestMapping("/{id}")
     @LoggerManage(description = "分组详细")
-    @Access(roles = Role.grouper)
-    public String detail(HttpSession session, @PathVariable Integer id, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
-        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
-        if (login.getRole() == Role.admin){
-            model.addAttribute("userCommSearch", new CommSearch(1, ""));
-            Page<User> datas = userService.findAllByGroup_GroupId(id, page);
-            Group group = groupService.findOne(id);
-            model.addAttribute("datas",datas);
-            model.addAttribute("group",group);
-            return "admin/group_datail";
-        }else if ((login.getRole() == Role.grouper) && (id == login.getGroup().getGroupId())){
-            model.addAttribute("userCommSearch", new CommSearch(1, ""));
-            Page<User> datas = userService.findAllByGroup_GroupId(id, page);
-            Group group = groupService.findOne(id);
-            model.addAttribute("datas",datas);
-            model.addAttribute("group",group);
-            return "grouper/group_datail";
-        }
-        return "/noAccess";
+    public String detail(@PathVariable Integer id, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        model.addAttribute("userCommSearch", new CommSearch(1, ""));
+        Page<User> datas = userService.findAllByGroupId(id, page);
+        Group group = groupService.findOne(id);
+        model.addAttribute("datas",datas);
+        model.addAttribute("group",group);
+        return "admin/group_datail";
     }
 
     @RequestMapping("/{id}/{type}/{value}")
     @LoggerManage(description = "分组详细BySearch")
-//    @Access(roles = Role.grouper)
     public String detailByType(@PathVariable Integer id, @PathVariable Integer type, @PathVariable String value, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
 
         model.addAttribute("userCommSearch", new CommSearch(type, value));
@@ -95,12 +79,12 @@ public class GroupController extends BaseController{
 
         if (type == 1 && value != null){
 //        根据工号
-            Page<User> datas = userService.findAllByJobNum(value,page);
+            Page<User> datas = userService.findAllByGroupIdAndJobNum(id, value, page);
             model.addAttribute("datas",datas);
             return "admin/group_datail";
         }else if (type == 2 && value != null){
 //        根据姓名
-            Page<User> datas = userService.findAllByName(value,page);
+            Page<User> datas = userService.findAllByByGroupIdAndName(id, value, page);
             model.addAttribute("datas",datas);
             return "admin/group_datail";
         }

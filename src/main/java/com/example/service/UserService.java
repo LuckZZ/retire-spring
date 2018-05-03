@@ -20,7 +20,13 @@ public interface UserService extends BaseCrudService<User,Integer>{
 
     boolean updateExistNO(Integer userId, String passTime);
 
-    Page<User> findAllByGroup_GroupId(Integer groupId, Integer page);
+    Page<User> findAllByGroupId(Integer groupId, Integer page);
+
+    /*根据组号、工号查询用户*/
+    Page<User> findAllByGroupIdAndJobNum(Integer groupId, String jobNum, Integer page);
+
+    /*根据组号、用户名查询用户*/
+    Page<User> findAllByByGroupIdAndName(Integer groupId,String name, Integer page);
 
     /*根据工号查询用户*/
     Page<User> findAllByJobNum(String jobNum, Integer page);

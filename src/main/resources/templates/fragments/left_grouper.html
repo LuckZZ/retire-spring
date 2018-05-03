@@ -37,7 +37,7 @@
             <ul class="sidebar-nav sidebar-nav-sub">
 
                 <li class="sidebar-nav-link">
-                    <a th:href="@{/group/{groupId}(groupId=${session.login_user.group.groupId})}" id="userList" th:class="(${activeId} eq 'userList')?'active':''">
+                    <a th:href="@{/user/userList}" id="userList" th:class="(${activeId} eq 'userList')?'active':''">
                         <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 组员
                     </a>
                 </li>

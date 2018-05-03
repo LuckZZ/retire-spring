@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/head::head_section('人员管理')">
+</head>
+
+<body data-type="widgets">
+<script th:src="@{/assets/js/theme.js}"></script>
+<div class="am-g tpl-g">
+    <!-- 头部 -->
+    <div th:replace="fragments/header::header_section(Admin)"></div>
+    <!-- 风格切换 -->
+    <div th:replace="fragments/theme::theme_section"></div>
+    <!-- 侧边导航栏 -->
+    <div th:replace="fragments/left_grouper::left_section('userList')"></div>
+
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper">
+
+        <div class="row-content am-cf">
+            <div class="row">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div class="widget am-cf">
+                        <div class="widget-head am-cf">
+                            <div class="widget-title  am-cf">用户列表</div>
+                        </div>
+                        <div class="widget-body  am-fr">
+                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                                <div class="am-form-group">
+                                    <div class="am-btn-toolbar">
+                                        <div class="am-btn-group am-btn-group-xs">
+                                            <!--<a type="button" class="am-btn am-btn-default am-btn-success" href="/user/addView"><span class="am-icon-plus"></span> 新增</a>
+                                            <a type="button" class="am-btn am-btn-default am-btn-danger" href="javascript:;" id="checked-del"><span class="am-icon-trash-o"></span> 删除</a>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div th:replace="fragments/user_search::comm_content"></div>
+
+                            <div class="am-u-sm-12">
+                                <div class="am-fr">
+                                    <!--<a type="button" class="am-btn am-btn-sm" id="super-search-btn">高级搜索</a>-->
+                                    <!--<a type="button" class="am-btn am-btn-sm" id="excel-user">导出</a>-->
+                                </div>
+                            </div>
+
+                            <!--<div class="am-u-sm-12" id="super-search-content" style="display:none;">
+                                <div th:replace="fragments/user_search::content"></div>
+                            </div>-->
+
+                            <input type="hidden" th:value="${searchType.toString()}" id="searchType"/>
+
+                            <div class="am-u-sm-12">
+                                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black">
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox" /></th>
+                                        <th>序号</th>
+                                        <th>工号</th>
+                                        <th>姓名</th>
+                                        <th>性别</th>
+                                        <th>组别</th>
+                                        <th>类型</th>
+                                        <th>民族</th>
+                                        <th>职务</th>
+                                        <th>部门</th>
+                                        <th>政治面貌</th>
+                                        <th th:if="${userSearchForm.exist} eq 'no'">离世日期</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="user:${datas}" th:class="(${user.exist.toString()} eq 'yes')?'':'pass-user'">
+                                        <td><input type="checkbox" th:value="${user.userId}" /></td>
+                                        <td th:text="${user.userId}">1</td>
+                                        <td th:text="${user.jobNum}">123456</td>
+                                        <td th:text="${user.name}">张三</td>
+                                        <td th:text="${user.gender.name}">性别</td>
+                                        <td th:text="${user.group.groupName}">组一</td>
+                                        <td th:text="${user.rank.name}">组长或组员</td>
+                                        <td th:text="${user.nation.nationName}">民族</td>
+                                        <td th:text="${user.duty.dutyName}" >职务</td>
+                                        <td th:text="${user.department.departmentName}" >部门</td>
+                                        <td th:text="${user.politics.politicsName}">政治面貌</td>
+                                        <td th:if="${userSearchForm.exist} eq 'no'" th:text="${user.passTime}">离世日期</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--分页-->
+                            <div th:replace="fragments/page::page(${datas})"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer_grouper::js"></div>
+
+</body>
+
+<script th:src="@{/js/l-checked.js}"></script>
+
+<script>
+    $(function() {
+
+        //先复制一份form表单，为高级搜索后，点击分页并提交上次表单使用
+        var $userSearchFormClone = $('#user-search-form').clone();
+
+        var keyClone = $("#head-select-key").clone();
+        var inputClone = $("#head-select-input").clone();
+
+        //用户id
+        var userId;
+
+        // 导出数据
+        $("#excel-user").on('click',function(){
+            //    打开模态框
+            $('#uer-excel-modal').modal();
+        });
+
+        $("#uer-excel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            var $form =  $('#export-user-form');
+            var $hideForm = $('#hide-form');
+            var searchType = $("#searchType").val();
+            var uId = checkedIds();
+            for (i=0;i<uId.length;i++){
+                $hideForm.append("<input type='hidden' name='selectedChecked' value='"+ uId[i] +"'>");
+            }
+            var inp = inputClone.val().trim();
+            if(searchType == 'search' && inp != ''){
+                $form.attr('action','/excel/exportUserBy/'+keyClone.val()+"/"+inp);
+            }else {
+                var $searchForm = $userSearchFormClone.clone();
+                $searchForm.find("select").each(function () {
+                    // 添加元素
+                    $hideForm.append(this);
+                });
+                $form.attr('action','/excel/exportUser');
+            }
+            $form.submit();
+            //清除添加的元素
+            $hideForm.empty();
+        });
+
+        // pageDiv 分页a标签
+        $("#pageDiv a").on('click',function () {
+            var href = $(this).attr('href');
+            $userSearchFormClone.attr("action",href);
+            $userSearchFormClone.submit();
+            return false;
+        });
+
+        //高级搜索 super-search-btn super-search-content
+        $("#super-search-btn").on('click',function(){
+            var $content = $("#super-search-content");
+            if($content.is(':hidden')){
+                $(this).text('普通搜索');
+                $content.show();
+            }else{
+                $(this).text('高级搜索');
+                $content.hide();
+            }
+        });
+
+        // 头部搜索
+        $("#head-select-btn").on('click',function(){
+            var key = $("#head-select-key").val();
+            var input = $("#head-select-input").val().trim();
+            if (input != ''){
+                window.location.href="/user/userList/"+key+"/"+input;
+            }
+            if(input == ''){
+                window.location.href="/user/userList";
+            }
+        });
+
+        //设置为在世人员 one-exist-ok
+        $(".one-exist-ok").on('click',function(){
+            //当前元素查找父级元素
+            var $tr = $(this).closest('tr');
+            //获得工号
+            var jobNum = $tr.find('td').eq(2).html();
+            //获得姓名
+            var name = $tr.find('td').eq(3).html();
+
+            var $oneExistOK= $('#oneExistOK-modal');
+
+            //设置工号、姓名
+            $oneExistOK.find(".jobNum").text(jobNum);
+
+            $oneExistOK.find(".name").text(name);
+
+            userId = $(this).data('id');
+
+            $oneExistOK.modal();
+
+        });
+
+        $("#oneExistOK-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            twoIdAjaxReload('/user/changeExist/1', userId, "");
+        });
+
+
+        //设置为离世人员 one-exist-no
+        $(".one-exist-no").on('click',function(){
+            userId = $(this).data('id');
+            // var pass = $(this).data('pass');
+            //    打开模态框
+            $('#pass-time-modal').modal();
+        });
+
+        //重写去世时间模态框的确认方法
+        $("#pass-time-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+            var passTime = $("#passTime").val();
+            twoIdAjaxReload('/user/changeExist/2', userId, passTime);
+        });
+
+        // 修改
+        $(".one-update").on('click',function () {
+            var v = $(this).data('id');
+            window.location.href="/user/updateView/"+v;
+        });
+
+        // 详细
+        $(".one-detail").on('click',function () {
+            var v = $(this).data('id');
+            window.location.href="/user/datailView/"+v;
+        });
+
+        //删除
+        $(".one-del").on('click',function () {
+            //当前元素查找父级元素
+            var $tr = $(this).closest('tr');
+            //获得工号
+            var jobNum = $tr.find('td').eq(2).html();
+            //获得姓名
+            var name = $tr.find('td').eq(3).html();
+
+           var $oneDel= $('#oneDel-modal');
+
+            //设置工号、姓名
+            $oneDel.find("#jobNum").text(jobNum);
+
+            $oneDel.find("#name").text(name);
+
+            userId = $(this).data('id');
+
+            $oneDel.modal();
+
+        });
+
+        //重写删除用户模态框的确认方法
+        $("#oneDel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            idAjaxReload('/user/delete',userId);
+        });
+
+
+        //删除已选择
+        $("#checked-del").on('click',function () {
+            $('#mulDel-modal').modal();
+            userId = checkedIds();
+        });
+
+        //重写批量删除用户模态框的确认方法
+        $("#mulDel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+            idAjaxReload('/user/delete',userId);
+        });
+
+    //    更改分组 one-upd-group
+        $(".one-upd-group").on('click',function () {
+            userId = $(this).data('id');
+            $("#result-modal").load('/user/changeGroupHtml',{value:userId});
+            //    打开模态框
+            $('#update-group-modal').modal();
+        });
+
+        //重写更改分组模态框的确认方法
+        $("#update-group-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+            var updateGroupId = $("#update-group").val();
+            twoIdAjaxReload('/user/changeGroup', userId, updateGroupId);
+        });
+
+    });
+</script>
+
+</html>

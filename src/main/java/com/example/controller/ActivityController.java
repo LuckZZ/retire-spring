@@ -1,9 +1,11 @@
 package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
+import com.example.comm.config.Access;
 import com.example.domain.bean.CommSearch;
 import com.example.domain.entity.Activity;
 import com.example.domain.enums.ActivityStatus;
+import com.example.domain.enums.Role;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.ActivityService;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/activity")
+@Access(roles = Role.admin)
 public class ActivityController extends BaseController{
 
     @Autowired

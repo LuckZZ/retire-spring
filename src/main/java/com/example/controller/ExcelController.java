@@ -6,12 +6,14 @@ import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.view.PoiBaseView;
 import com.example.comm.aop.LoggerManage;
+import com.example.comm.config.Access;
 import com.example.dao.ActivityDao;
 import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.Activity;
 import com.example.domain.entity.ActivityDef;
 import com.example.domain.entity.Join;
 import com.example.domain.entity.User;
+import com.example.domain.enums.Role;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.ActivityService;
@@ -36,6 +38,7 @@ import java.util.*;
  */
 @RequestMapping("/excel")
 @Controller
+@Access(roles = Role.admin)
 public class ExcelController extends BaseController{
 
     @Autowired

@@ -128,9 +128,23 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     }
 
     @Override
-    public Page<User> findAllByGroup_GroupId(Integer groupId, Integer page) {
+    public Page<User> findAllByGroupId(Integer groupId, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         Page<User> datas = userDao.findAllByGroup_GroupId(groupId, pageable);
+        return datas;
+    }
+
+    @Override
+    public Page<User> findAllByGroupIdAndJobNum(Integer groupId, String jobNum, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        Page<User> datas = userDao.findAllByGroup_GroupIdAndJobNum(groupId,jobNum,pageable);
+        return datas;
+    }
+
+    @Override
+    public Page<User> findAllByByGroupIdAndName(Integer groupId, String name, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        Page<User> datas = userDao.findAllByGroup_GroupIdAndName(groupId,name,pageable);
         return datas;
     }
 
