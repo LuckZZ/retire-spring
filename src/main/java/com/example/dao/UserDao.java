@@ -32,10 +32,6 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     @Query("update User set exist=:exist, passTime=:passTime where userId=:userId")
     int updateExist(@Param("exist") Exist exist, @Param("passTime") String passTime, @Param("userId") Integer userId);
 
-    long countByGroup_GroupId(Integer groupId);
-
-    List<User> findAllByGroup(Group group);
-
     @Modifying(clearAutomatically=true)
     @Query(value = "update tb_user set group_id=?1 where group_id=?2", nativeQuery = true)
     int updateGroup(Integer newGroupId, Integer oldGroupId);
@@ -44,7 +40,10 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     @Query(value = "update tb_user set group_id=?1 where user_id=?2", nativeQuery = true)
     int updateGroupByUseId(Integer groupId, Integer userId);
 
+    /*根据存在类型统计人数*/
     long countByExist(Exist exist);
+
+    long countByGroup_GroupIdAndExist(Integer groupId, Exist exist);
 
     /*根据组号、工号查询用户*/
     Page<User> findAllByGroup_GroupIdAndJobNum(Integer groupId, String jobNum, Pageable pageable);

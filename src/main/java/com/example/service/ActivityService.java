@@ -1,10 +1,7 @@
 package com.example.service;
 
 import com.example.domain.entity.Activity;
-import com.example.domain.enums.ActivityStatus;
 import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 public interface ActivityService extends BaseCrudService<Activity,Integer>{
 
@@ -12,13 +9,20 @@ public interface ActivityService extends BaseCrudService<Activity,Integer>{
 
     boolean existsByActivityName(String activityName);
 
-    Page<Activity> findAllByActivityStatus(ActivityStatus activityStatus, Integer page);
+    /*查询草稿活动*/
+    Page<Activity> findAllDraft(Integer page);
 
-    Page<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus, Integer page);
+    /*查询非草稿活动*/
+    Page<Activity> findAllNotDraft(Integer page);
 
-    Page<Activity> findAllByActivityStatusAndActivityName(ActivityStatus activityStatus, String activityName, Integer page);
+    /*根据组id，主要为组长，查询非草稿活动*/
+    Page<Activity> findAllNotDraft(Integer page, Integer groupId);
 
-    Page<Activity> findAllByActivityStatusNotAndActivityName(ActivityStatus activityStatus, String activityName, Integer page);
+    /*根据活动名称查询草稿活动*/
+    Page<Activity> findAllDraftByActivityName(String activityName, Integer page);
+
+    /*根据活动名称查询非草稿活动*/
+    Page<Activity> findAllNotDraftByActivityName(String activityName, Integer page);
 
     int activityPublish(Integer activityId);
 

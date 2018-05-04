@@ -6,6 +6,7 @@ import com.example.dao.GrouperDao;
 import com.example.dao.UserDao;
 import com.example.domain.entity.Group;
 import com.example.domain.entity.Grouper;
+import com.example.domain.enums.Exist;
 import com.example.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,9 +32,9 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
     public Page<Group> findAllNoCriteria(Integer page) {
         Page<Group> groups = super.findAllNoCriteria(page);
         for (Group group : groups) {
-            long count = userDao.countByGroup_GroupId(group.getGroupId());
+            long count = userDao.countByGroup_GroupIdAndExist(group.getGroupId(), Exist.yes);
 //            查找此组组长
-            List<Grouper> groupers = grouperDao.findAllByUser_Group_GroupId(group.getGroupId());
+            List<Grouper> groupers = grouperDao.findAllByUser_Group_GroupIdAndUser_Exist(group.getGroupId(), Exist.yes);
             group.setCount(count);
             group.setGroupers(groupers);
             group.setGroupersName(groupersToName(groupers));
@@ -51,7 +52,7 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
     public void delete(Integer[] groupIds) {
 //        查看是否有未分组，如果没有，新建未分组
         for (Integer groupId : groupIds) {
-            long count = userDao.countByGroup_GroupId(groupId);
+            long count = userDao.countByGroup_GroupIdAndExist(groupId, Exist.yes);
             if (count != 0){
                 Group newGroup = newGroup();
                 userDao.updateGroup(newGroup.getGroupId(), groupId);
@@ -86,9 +87,9 @@ public class GroupServiceImpl extends BaseCrudServiceImpl<Group, Integer, GroupD
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         Page<Group> groups = groupDao.findAllByGroupName(groupName, pageable);
         for (Group group : groups) {
-            long count = userDao.countByGroup_GroupId(group.getGroupId());
+            long count = userDao.countByGroup_GroupIdAndExist(group.getGroupId(), Exist.yes);
 //            查找此组组长
-            List<Grouper> groupers = grouperDao.findAllByUser_Group_GroupId(group.getGroupId());
+            List<Grouper> groupers = grouperDao.findAllByUser_Group_GroupIdAndUser_Exist(group.getGroupId(), Exist.yes);
             group.setCount(count);
             group.setGroupers(groupers);
             group.setGroupersName(groupersToName(groupers));

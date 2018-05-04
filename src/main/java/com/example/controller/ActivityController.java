@@ -2,7 +2,9 @@ package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
+import com.example.comm.config.WebSecurityConfig;
 import com.example.domain.bean.CommSearch;
+import com.example.domain.bean.Login;
 import com.example.domain.entity.Activity;
 import com.example.domain.enums.ActivityStatus;
 import com.example.domain.enums.Role;
@@ -16,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/activity")
@@ -24,7 +27,6 @@ public class ActivityController extends BaseController{
 
     @Autowired
     private ActivityService activityService;
-
 
     /**
      *
@@ -59,27 +61,37 @@ public class ActivityController extends BaseController{
 
     @RequestMapping("/activityList")
     @LoggerManage(description = "活动列表")
-    public String activityList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    @Access(roles = Role.grouper)
+    public String activityList(HttpSession session, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         model.addAttribute("commSearch", new CommSearch(1, ""));
-        Page<Activity> datas = activityService.findAllByActivityStatusNot(ActivityStatus.draft, page);
-        model.addAttribute("datas",datas);
-        return "admin/activity_list";
+        if (login.getRole() == Role.admin){
+            Page<Activity> datas = activityService.findAllNotDraft(page);
+            model.addAttribute("datas",datas);
+            return "admin/activity_list";
+        }else if (login.getRole() == Role.grouper){
+            Page<Activity> datas = activityService.findAllNotDraft(page, login.getGroup().getGroupId());
+            model.addAttribute("datas",datas);
+            return "grouper/activity_list";
+        }
+        return "/noAccess";
     }
 
     @RequestMapping("/draftList")
     @LoggerManage(description = "草稿列表")
     public String draft(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
         model.addAttribute("commSearch", new CommSearch(1, ""));
-        Page<Activity> datas = activityService.findAllByActivityStatus(ActivityStatus.draft, page);
+        Page<Activity> datas = activityService.findAllDraft(page);
         model.addAttribute("datas",datas);
         return "admin/draft_list";
     }
 
     @RequestMapping("/activityList/{value}")
     @LoggerManage(description = "活动列表ByActivityName")
+//    @Access(roles = Role.grouper)
     public String activityListByActivityName(Model model, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
         model.addAttribute("commSearch", new CommSearch(1, value));
-        Page<Activity> datas = activityService.findAllByActivityStatusNotAndActivityName(ActivityStatus.draft, value, page);
+        Page<Activity> datas = activityService.findAllNotDraftByActivityName(value, page);
         model.addAttribute("datas",datas);
         return "admin/activity_list";
     }
@@ -88,11 +100,10 @@ public class ActivityController extends BaseController{
     @LoggerManage(description = "草稿列表ByGroupName")
     public String draftByActivityName(Model model, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
         model.addAttribute("commSearch", new CommSearch(1, value));
-        Page<Activity> datas = activityService.findAllByActivityStatusAndActivityName(ActivityStatus.draft, value, page);
+        Page<Activity> datas = activityService.findAllDraftByActivityName(value, page);
         model.addAttribute("datas",datas);
         return "admin/draft_list";
     }
-
 
     /**
      * 进入增加活动界面

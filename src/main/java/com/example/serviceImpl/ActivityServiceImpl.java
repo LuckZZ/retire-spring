@@ -50,9 +50,9 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     }
 
     @Override
-    public Page<Activity> findAllByActivityStatus(ActivityStatus activityStatus, Integer page) {
+    public Page<Activity> findAllDraft(Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        Page<Activity> activities = activityDao.findAllByActivityStatus(activityStatus, pageable);
+        Page<Activity> activities = activityDao.findAllByActivityStatus(ActivityStatus.draft, pageable);
         for (Activity activity : activities) {
             activity = assignActivity(activity);
         }
@@ -60,9 +60,9 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     }
 
     @Override
-    public Page<Activity> findAllByActivityStatusNot(ActivityStatus activityStatus, Integer page) {
+    public Page<Activity> findAllNotDraft(Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        Page<Activity> activities = activityDao.findAllByActivityStatusNot(activityStatus, pageable);
+        Page<Activity> activities = activityDao.findAllByActivityStatusNot(ActivityStatus.draft, pageable);
         for (Activity activity : activities) {
             activity = assignActivity(activity);
         }
@@ -70,9 +70,19 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     }
 
     @Override
-    public Page<Activity> findAllByActivityStatusAndActivityName(ActivityStatus activityStatus, String activityName, Integer page) {
+    public Page<Activity> findAllNotDraft(Integer page, Integer groupId) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        Page<Activity> activities = activityDao.findAllByActivityStatusAndActivityName(activityStatus, activityName, pageable);
+        Page<Activity> activities = activityDao.findAllByActivityStatusNot(ActivityStatus.draft, pageable);
+        for (Activity activity : activities) {
+            activity = assignActivityWithGroupId(groupId, activity);
+        }
+        return activities;
+    }
+
+    @Override
+    public Page<Activity> findAllDraftByActivityName(String activityName, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        Page<Activity> activities = activityDao.findAllByActivityStatusAndActivityName(ActivityStatus.draft, activityName, pageable);
         for (Activity activity : activities) {
             activity = assignActivity(activity);
         }
@@ -80,9 +90,9 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     }
 
     @Override
-    public Page<Activity> findAllByActivityStatusNotAndActivityName(ActivityStatus activityStatus, String activityName, Integer page) {
+    public Page<Activity> findAllNotDraftByActivityName(String activityName, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        Page<Activity> activities = activityDao.findAllByActivityStatusNotAndActivityName(activityStatus, activityName, pageable);
+        Page<Activity> activities = activityDao.findAllByActivityStatusNotAndActivityName(ActivityStatus.draft, activityName, pageable);
         for (Activity activity : activities) {
             activity = assignActivity(activity);
         }
@@ -163,6 +173,14 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     private Activity assignActivity(Activity activity){
         long joinOkSize = joinDao.countByActivity_ActivityIdAndUser_Exist(activity.getActivityId(), Exist.yes);
         long userCount = userDao.countByExist(Exist.yes);
+        activity.setJoinOkCount(joinOkSize);
+        activity.setUserCount(userCount);
+        return activity;
+    }
+
+    private Activity assignActivityWithGroupId(Integer groupId, Activity activity){
+        long joinOkSize = joinDao.countByUser_Group_GroupIdAndActivity_ActivityIdAndUser_Exist(groupId, activity.getActivityId(), Exist.yes);
+        long userCount = userDao.countByGroup_GroupIdAndExist(groupId, Exist.yes);
         activity.setJoinOkCount(joinOkSize);
         activity.setUserCount(userCount);
         return activity;

@@ -2,6 +2,7 @@ package com.example.comm.config;
 
 import com.example.domain.bean.Login;
 import com.example.domain.enums.Role;
+import org.apache.log4j.Logger;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -16,12 +17,15 @@ import java.util.Set;
  * Create by : Zhangxuemeng
  */
 public class SecurityInterceptor extends HandlerInterceptorAdapter{
+    private Logger logger = Logger.getLogger(this.getClass());
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //     取出session
         HttpSession session = request.getSession();
         Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         if (login == null){
+            logger.warn("拦截原因:没有session "+"请求路径:"+request.getRequestURI());
             //无session 跳转登陆
             String url = "/login";
             response.sendRedirect(url);
@@ -39,6 +43,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter{
                 // 校验通过返回true, 通过
                 return true;
             }
+            logger.warn("拦截原因:没有权限 "+"请求路径:"+request.getRequestURI());
 //            无权限
             String XRequested =request.getHeader("X-Requested-With");
             if("XMLHttpRequest".equals(XRequested)){

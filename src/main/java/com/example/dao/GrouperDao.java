@@ -3,6 +3,7 @@ package com.example.dao;
 import com.example.domain.entity.Grouper;
 import com.example.domain.entity.User;
 import com.example.domain.enums.CanLogin;
+import com.example.domain.enums.Exist;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,7 +33,7 @@ public interface GrouperDao extends JpaRepository<Grouper, Integer> {
 
     Page<Grouper> findAllByUser_Name(String name, Pageable pageable);
 
-    List<Grouper> findAllByUser_Group_GroupId(Integer groupId);
+    List<Grouper> findAllByUser_Group_GroupIdAndUser_Exist(Integer groupId, Exist exist);
 
     /*组长表工号是否存在*/
     boolean existsByUser_JobNum(String jobNum);

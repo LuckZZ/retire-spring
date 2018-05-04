@@ -28,7 +28,10 @@ public interface JoinDao extends JpaRepository<Join,Integer>,JpaSpecificationExe
 
     List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_Name(Integer activityId, Exist exist, String name);
 
+    /*根据活动Id查询已报活动人数*/
     long countByActivity_ActivityIdAndUser_Exist(Integer activityId, Exist exist);
+
+    long countByUser_Group_GroupIdAndActivity_ActivityIdAndUser_Exist(Integer groupId, Integer activityId, Exist exist);
 
     void deleteAllByActivity_ActivityId(Integer activityId);
 
