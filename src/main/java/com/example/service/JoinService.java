@@ -8,24 +8,35 @@ import java.util.List;
 
 public interface JoinService extends BaseCrudService<Join,Integer>{
 
+    /*根据activityId和userId，查看Join是否存在此条数据*/
     boolean existsByActivityIdAndUserId(Integer activityId, Integer userId);
+
+    /*根据joinId和groupId，查看Join是否存在此条数据*/
+    boolean existsByJoinIdAndGroupId(Integer[] joinIds, Integer groupId);
 
     Join save(Integer userId, Integer activityId, String[] inputDefs, String attend);
 
     void delete(Integer[] joinIds);
 
-    /*根据activitiyId查询已报名*/
-    Page<Join> findAllByActivity_ActivityId(Integer activityId, Integer page);
-
     /*根据工号查询已报名*/
-    Page<Join> findAllByActivity_ActivityIdAndUser_JobNum(Integer activityId, String jobNum, Integer page);
+    Page<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum, Integer page);
 
-    List<Join> findAllByActivity_ActivityIdAndUser_JobNum(Integer activityId, String jobNum);
+    List<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum);
 
     /*根据姓名查询已报名*/
-    Page<Join> findAllByActivity_ActivityIdAndUser_Name(Integer activityId, String name, Integer page);
+    Page<Join> findAllByActivityIdAndName(Integer activityId, String name, Integer page);
 
-    List<Join> findAllByActivity_ActivityIdAndUser_Name(Integer activityId, String name);
+    List<Join> findAllByActivityIdAndName(Integer activityId, String name);
+
+    /*根据工号、组Id查询已报名*/
+    Page<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId, Integer page);
+
+    List<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId);
+
+    /*根据姓名、组Id查询已报名*/
+    Page<Join> findAllByActivityIdAndNameWithGroupId(Integer activityId, String name, Integer groupId, Integer page);
+
+    List<Join> findAllByActivityIdAndNameWithGroupId(Integer activityId, String name, Integer groupId);
 
     /*根据userSearchForm查询已报名*/
     Page<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm, Integer page);

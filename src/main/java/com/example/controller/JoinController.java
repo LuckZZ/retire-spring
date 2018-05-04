@@ -140,56 +140,104 @@ public class JoinController extends BaseController{
 
     @RequestMapping(value = "/joinOkView/{activityId}")
     @LoggerManage(description = "已报名界面")
-    public String joinOkView(@PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    @Access(roles = Role.grouper)
+    public String joinOkView(HttpSession session, @PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         Activity activity = activityService.findOne(activityId);
-        Page<Join> datas = joinService.findAllByActivity_ActivityId(activityId, page);
         assignModel(model, activity);
-        model.addAttribute("datas", datas);
-
-        return "admin/join_ok";
+        if (login.getRole() == Role.admin){
+            Page<Join> datas = joinService.findAllCriteria(activityId, getDefaultInputs(activity.getActivityDefs().size()), "-1", new JoinUserSearch(), page);
+            model.addAttribute("datas", datas);
+            return "admin/join_ok";
+        }else if(login.getRole() == Role.grouper){
+            Page<Join> datas = joinService.findAllCriteria(activityId, getDefaultInputs(activity.getActivityDefs().size()), "-1", new JoinUserSearch(String.valueOf(login.getGroup().getGroupId())), page);
+            model.addAttribute("datas", datas);
+            return "grouper/join_ok";
+        }
+        return Constant.NO_ACCESS_PAGE;
     }
 
     @RequestMapping(value = "/joinOkView/superSearch/{activityId}")
     @LoggerManage(description = "已报名高级搜索界面")
-    public String joinOkViewSuperSearch( HttpServletRequest request, @PathVariable Integer activityId, @ModelAttribute(value = "joinUserSearch") JoinUserSearch joinUserSearch, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    @Access(roles = Role.grouper)
+    public String joinOkViewSuperSearch(HttpSession session, HttpServletRequest request, @PathVariable Integer activityId, @ModelAttribute(value = "joinUserSearch") JoinUserSearch joinUserSearch, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         String[] inputDefs = request.getParameterValues("inputDefs");
         String attend = request.getParameter("attend");
 
         Activity activity = activityService.findOne(activityId);
-        Page<Join> datas = joinService.findAllCriteria(activityId, inputDefs, attend, joinUserSearch, page);
 
-        assignModel(model, activity);
+        if (login.getRole() == Role.admin){
+            Page<Join> datas = joinService.findAllCriteria(activityId, inputDefs, attend, joinUserSearch, page);
 
-        model.addAttribute("datas", datas);
+            assignModel(model, activity);
 
-        //        搜索表单的值，再传入页面
-        joinUserSearch.assignActivityDefSearches(activity.getActivityDefs());
-        List<ActivityDefSearch> activityDefSearches = joinUserSearch.getActivityDefSearches();
-        for (int i = 0; i < inputDefs.length; i++){
-            activityDefSearches.get(i).setOneInput(inputDefs[i]);
+            model.addAttribute("datas", datas);
+
+            //        搜索表单的值，再传入页面
+            joinUserSearch.assignActivityDefSearches(activity.getActivityDefs());
+            List<ActivityDefSearch> activityDefSearches = joinUserSearch.getActivityDefSearches();
+            for (int i = 0; i < inputDefs.length; i++){
+                activityDefSearches.get(i).setOneInput(inputDefs[i]);
+            }
+            model.addAttribute("joinUserSearch",joinUserSearch);
+
+            return "admin/join_ok";
+        }else if(login.getRole() == Role.grouper){
+            joinUserSearch.setGroup(String.valueOf(login.getGroup().getGroupId()));
+            Page<Join> datas = joinService.findAllCriteria(activityId, inputDefs, attend, joinUserSearch, page);
+
+            assignModel(model, activity);
+
+            model.addAttribute("datas", datas);
+
+            //        搜索表单的值，再传入页面
+            joinUserSearch.assignActivityDefSearches(activity.getActivityDefs());
+            List<ActivityDefSearch> activityDefSearches = joinUserSearch.getActivityDefSearches();
+            for (int i = 0; i < inputDefs.length; i++){
+                activityDefSearches.get(i).setOneInput(inputDefs[i]);
+            }
+            model.addAttribute("joinUserSearch",joinUserSearch);
+
+            return "grouper/join_ok";
         }
-        model.addAttribute("joinUserSearch",joinUserSearch);
-
-        return "admin/join_ok";
+        return Constant.NO_ACCESS_PAGE;
     }
 
     @RequestMapping(value = "/joinOkView/{activityId}/{type}/{value}")
     @LoggerManage(description = "已报名界面BySearch")
-    public String joinOkViewByType(@PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    @Access(roles = Role.grouper)
+    public String joinOkViewByType(HttpSession session, @PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         Activity activity = activityService.findOne(activityId);
         assignModel(model, activity);
         model.addAttribute("userCommSearch", new CommSearch(type, value));
         model.addAttribute("searchType", SearchType.search);
-        if (type == 1 && value != null){
+
+        if (login.getRole() == Role.admin){
+            if (type == 1 && value != null){
 //        根据工号
-            Page<Join> datas = joinService.findAllByActivity_ActivityIdAndUser_JobNum(activityId, value, page);
-            model.addAttribute("datas",datas);
-            return "admin/join_ok";
-        }else if (type == 2 && value != null){
+                Page<Join> datas = joinService.findAllByActivityIdAndJobNum(activityId, value, page);
+                model.addAttribute("datas",datas);
+                return "admin/join_ok";
+            }else if (type == 2 && value != null){
 //        根据姓名
-            Page<Join> datas = joinService.findAllByActivity_ActivityIdAndUser_Name(activityId, value, page);
-            model.addAttribute("datas",datas);
-            return "admin/join_ok";
+                Page<Join> datas = joinService.findAllByActivityIdAndName(activityId, value, page);
+                model.addAttribute("datas",datas);
+                return "admin/join_ok";
+            }
+        }else if(login.getRole() == Role.grouper){
+            if (type == 1 && value != null){
+//        根据工号
+                Page<Join> datas = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId(), page);
+                model.addAttribute("datas",datas);
+                return "admin/join_ok";
+            }else if (type == 2 && value != null){
+//        根据姓名
+                Page<Join> datas = joinService.findAllByActivityIdAndNameWithGroupId(activityId, value, login.getGroup().getGroupId(), page);
+                model.addAttribute("datas",datas);
+                return "admin/join_ok";
+            }
         }
 //        重定向
         return "redirect:/join/joinOkView/"+activityId;
@@ -236,13 +284,30 @@ public class JoinController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "/delete/{activityId}")
     @LoggerManage(description = "删除报名")
-    public Response delete(@PathVariable String activityId, HttpServletRequest request){
+    @Access(roles = Role.grouper)
+    public Response delete(HttpSession session, @PathVariable String activityId, HttpServletRequest request){
+        Login login = (Login)session.getAttribute(WebSecurityConfig.SESSION_KEY);
         String[] joinIds = request.getParameterValues("id");
         Integer[] ids = DataUtils.turn(joinIds);
         try {
+//            如果joinIds长度为0，则没有获得需要删除的joinId
+            if (joinIds.length == 0){
+                return result(ExceptionMsg.FAILED);
+            }
+//            活动关闭，不能删除
             if (!activityService.canJoin(Integer.parseInt(activityId))){
                 return result(ExceptionMsg.JoinDelForCloseFailed);
             }
+
+            //        如果是组长身份，先判断用户id是否在对应的组中
+            if (login.getRole() == Role.grouper){
+//
+                Integer[] jIds = DataUtils.turn(joinIds);
+              if (!joinService.existsByJoinIdAndGroupId(jIds, login.getGroup().getGroupId())){
+                  return result(ExceptionMsg.RoleNoAccess);
+              }
+            }
+
             joinService.delete(ids);
             return result(ExceptionMsg.JoinDelSuccess);
         }catch (Exception e){
@@ -289,6 +354,19 @@ public class JoinController extends BaseController{
         model.addAttribute("searchType", SearchType.allOrSuper);
 
         return model;
+    }
+
+    /**
+     *
+     * @param defCount
+     * @return
+     */
+    private String[] getDefaultInputs(int defCount){
+        String[] temps = new String[defCount];
+        for (int i = 0; i < defCount; i++){
+            temps[i] = "-1";
+        }
+        return temps;
     }
 
 }

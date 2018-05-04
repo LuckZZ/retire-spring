@@ -5,11 +5,9 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import cn.afterturn.easypoi.view.PoiBaseView;
-import com.example.comm.Constant;
 import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
 import com.example.comm.config.WebSecurityConfig;
-import com.example.dao.ActivityDao;
 import com.example.domain.bean.Login;
 import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.Activity;
@@ -30,11 +28,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -265,7 +263,10 @@ public class ExcelController extends BaseController{
     @ResponseBody
     @RequestMapping("/exportJoinUser/{activityId}")
     @LoggerManage(description = "导出报名用户表")
-    public Response exportJoinUser(@PathVariable Integer activityId, ModelMap map, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, HttpServletRequest request, HttpServletResponse response){
+    @Access(roles = Role.grouper)
+    public Response exportJoinUser(HttpSession session, @PathVariable Integer activityId, ModelMap map, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, HttpServletRequest request, HttpServletResponse response){
+
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
 
         String exportScope = request.getParameter("exportScope");
         String[] item = request.getParameterValues("item");
@@ -275,12 +276,29 @@ public class ExcelController extends BaseController{
 
         List<Join> joinList = new ArrayList<>();
 
-        if("all".equals(exportScope)){
-            joinList = joinService.findAllCriteria(activityId, inputDefs, attend, userSearchForm);
-        }else if("selected".equals(exportScope)){
-            String[] selectedChecked = request.getParameterValues("selectedChecked");
-            Integer[] joinIds = DataUtils.turn(selectedChecked);
-            joinList = joinService.findAllByJoinIds(joinIds);
+        if (login.getRole() == Role.admin){
+            if("all".equals(exportScope)){
+                joinList = joinService.findAllCriteria(activityId, inputDefs, attend, userSearchForm);
+            }else if("selected".equals(exportScope)){
+                String[] selectedChecked = request.getParameterValues("selectedChecked");
+                Integer[] joinIds = DataUtils.turn(selectedChecked);
+                joinList = joinService.findAllByJoinIds(joinIds);
+            }
+        }else if(login.getRole() == Role.grouper){
+            if("all".equals(exportScope)){
+                userSearchForm.setGroup(String.valueOf(login.getGroup().getGroupId()));
+                joinList = joinService.findAllCriteria(activityId, inputDefs, attend, userSearchForm);
+            }else if("selected".equals(exportScope)){
+                String[] selectedChecked = request.getParameterValues("selectedChecked");
+                Integer[] joinIds = DataUtils.turn(selectedChecked);
+                if (!joinService.existsByJoinIdAndGroupId(joinIds, login.getGroup().getGroupId())){
+//                    如果不存在
+                    return result(ExceptionMsg.RoleNoAccess);
+                }
+                joinList = joinService.findAllByJoinIds(joinIds);
+            }
+        }else {
+            return result(ExceptionMsg.RoleNoAccess);
         }
 
         List<ExcelExportEntity> beanList = assignBeanList(item);
@@ -315,23 +333,42 @@ public class ExcelController extends BaseController{
     @ResponseBody
     @RequestMapping("/exportJoinUserBy/{activityId}/{type}/{value}")
     @LoggerManage(description = "导出已报名用户表")
-    public Response exportJoinUserBy(@PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, ModelMap map, HttpServletRequest request, HttpServletResponse response){
+    @Access(roles = Role.grouper)
+    public Response exportJoinUserBy(HttpSession session, @PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, ModelMap map, HttpServletRequest request, HttpServletResponse response){
+
+        Login login = (Login)session.getAttribute(WebSecurityConfig.SESSION_KEY);
 
         String exportScope = request.getParameter("exportScope");
         String[] item = request.getParameterValues("item");
 
         List<Join> joinList = new ArrayList<>();
 
-        if("all".equals(exportScope)){
-            if (type == 1){
-                joinList = joinService.findAllByActivity_ActivityIdAndUser_JobNum(activityId, value);
-            }else if(type == 2){
-                joinList = joinService.findAllByActivity_ActivityIdAndUser_Name(activityId, value);
+        if (login.getRole() == Role.admin){
+            if("all".equals(exportScope)){
+                if (type == 1){
+                    joinList = joinService.findAllByActivityIdAndJobNum(activityId, value);
+                }else if(type == 2){
+                    joinList = joinService.findAllByActivityIdAndName(activityId, value);
+                }
+            }else if("selected".equals(exportScope)){
+                String[] selectedChecked = request.getParameterValues("selectedChecked");
+                Integer[] joinIds = DataUtils.turn(selectedChecked);
+                joinList = joinService.findAllByJoinIds(joinIds);
             }
-        }else if("selected".equals(exportScope)){
-            String[] selectedChecked = request.getParameterValues("selectedChecked");
-            Integer[] joinIds = DataUtils.turn(selectedChecked);
-            joinList = joinService.findAllByJoinIds(joinIds);
+        }else if(login.getRole() == Role.grouper){
+            if("all".equals(exportScope)){
+                if (type == 1){
+                    joinList = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId());
+                }else if(type == 2){
+                    joinList = joinService.findAllByActivityIdAndNameWithGroupId(activityId, value, login.getGroup().getGroupId());
+                }
+            }else if("selected".equals(exportScope)){
+                String[] selectedChecked = request.getParameterValues("selectedChecked");
+                Integer[] joinIds = DataUtils.turn(selectedChecked);
+                joinList = joinService.findAllByJoinIds(joinIds);
+            }
+        }else {
+            return result(ExceptionMsg.RoleNoAccess);
         }
 
         List<ExcelExportEntity> beanList = assignBeanList(item);

@@ -78,7 +78,7 @@
                                         <td th:text="${join.user.jobNum}">工号123456</td>
                                         <td th:text="${join.user.name}">姓名张三</td>
                                         <td th:text="${join.user.group.groupName}">组别组一</td>
-                                        <td th:text="${user.rank.name}">组长或组员</td>
+                                        <td th:text="${join.user.rank.name}">组长或组员</td>
                                         <td th:each="joinDef:${join.joinDefs}" th:text="${joinDef.input}">labelDefs</td>
                                         <td th:text="${join.attend.name}">参加不参加</td>
 

@@ -49,6 +49,16 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     }
 
     @Override
+    public boolean existsByJoinIdAndGroupId(Integer[] joinIds, Integer groupId) {
+        for (Integer jId : joinIds) {
+            if (!joinDao.existsByJoinIdAndUser_Group_GroupId(jId, groupId)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public Join save(Integer userId, Integer activityId, String[] inputDefs, String attend) {
         User user = userDao.findOne(userId);
         Activity activity = activityService.findOne(activityId);
@@ -84,31 +94,47 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     }
 
     @Override
-    public Page<Join> findAllByActivity_ActivityId(Integer activityId, Integer page) {
-        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return joinDao.findAllByActivity_ActivityIdAndUser_Exist(activityId, Exist.yes,pageable);
-    }
-
-    @Override
-    public Page<Join> findAllByActivity_ActivityIdAndUser_JobNum(Integer activityId, String jobNum, Integer page) {
+    public Page<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNum(activityId, Exist.yes, jobNum, pageable);
     }
 
     @Override
-    public List<Join> findAllByActivity_ActivityIdAndUser_JobNum(Integer activityId, String jobNum) {
+    public List<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum) {
         return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNum(activityId, Exist.yes, jobNum);
     }
 
     @Override
-    public Page<Join> findAllByActivity_ActivityIdAndUser_Name(Integer activityId, String name, Integer page) {
+    public Page<Join> findAllByActivityIdAndName(Integer activityId, String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_Name(activityId, Exist.yes, name, pageable);
     }
 
     @Override
-    public List<Join> findAllByActivity_ActivityIdAndUser_Name(Integer activityId, String name) {
+    public List<Join> findAllByActivityIdAndName(Integer activityId, String name) {
         return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_Name(activityId, Exist.yes, name);
+    }
+
+    @Override
+    public Page<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupId(activityId,Exist.yes,jobNum,groupId,pageable);
+    }
+
+    @Override
+    public List<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId) {
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupId(activityId,Exist.yes,jobNum,groupId);
+    }
+
+    @Override
+    public Page<Join> findAllByActivityIdAndNameWithGroupId(Integer activityId, String name, Integer groupId, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupId(activityId,Exist.yes,name,groupId,pageable);
+    }
+
+    @Override
+    public List<Join> findAllByActivityIdAndNameWithGroupId(Integer activityId, String name, Integer groupId) {
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupId(activityId,Exist.yes,name,groupId);
     }
 
     @Override
@@ -199,13 +225,17 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
                     if (isAttend(attend)){
 //                        参加
                         list.add(cb.equal(root.get("attend").as(Attend.class), Attend.yes));
-                        list.add(root.get("joinId").in(joinIdByDef));
+                        if (joinIdByDef != null && joinIdByDef.size() > 0) {
+                            list.add(root.get("joinId").in(joinIdByDef));
+                        }
                     }else if (!isAttend(attend)){
 //                    不参加
                         list.add(cb.equal(root.get("attend").as(Attend.class), Attend.no));
                     }
                 }else {
-                    list.add(root.get("joinId").in(joinIdByDef));
+                    if (joinIdByDef != null && joinIdByDef.size() > 0){
+                        list.add(root.get("joinId").in(joinIdByDef));
+                    }
                 }
                 Predicate[] p = new Predicate[list.size()];
                 return cb.and(list.toArray(p));

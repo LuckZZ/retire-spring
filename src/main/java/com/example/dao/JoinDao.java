@@ -11,7 +11,11 @@ import java.util.List;
 
 public interface JoinDao extends JpaRepository<Join,Integer>,JpaSpecificationExecutor<Join> {
 
+    /*根据activityId和userId，查看Join是否存在此条数据*/
     boolean existsByActivity_ActivityIdAndUser_UserId(Integer activityId, Integer userId);
+
+    /*根据joinId和groupId，查看Join是否存在此条数据*/
+    boolean existsByJoinIdAndUser_Group_GroupId(Integer joinId, Integer groupId);
 
     /*查询报名用户*/
     Page<Join> findAllByActivity_ActivityIdAndUser_Exist(Integer activityId, Exist exist, Pageable pageable);
@@ -27,6 +31,16 @@ public interface JoinDao extends JpaRepository<Join,Integer>,JpaSpecificationExe
     Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_Name(Integer activityId, Exist exist, String name, Pageable pageable);
 
     List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_Name(Integer activityId, Exist exist, String name);
+
+    /*根据工号、组Id查询报名用户*/
+    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupId(Integer activityId, Exist exist, String jobNum, Integer groupId, Pageable pageable);
+
+    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupId(Integer activityId, Exist exist, String jobNum, Integer groupId);
+
+    /*根据姓名、组Id查询报名用户*/
+    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupId(Integer activityId, Exist exist, String name, Integer groupId, Pageable pageable);
+
+    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupId(Integer activityId, Exist exist, String name, Integer groupId);
 
     /*根据活动Id查询已报活动人数*/
     long countByActivity_ActivityIdAndUser_Exist(Integer activityId, Exist exist);
