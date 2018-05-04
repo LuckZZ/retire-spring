@@ -86,6 +86,12 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
 
     @Transactional
     @Override
+    public int updateLastTimeAndNowTime(String lastTime, String nowTime, Integer adminId) {
+        return adminDao.updateLastTimeAndNowTime(lastTime, nowTime, adminId);
+    }
+
+    @Transactional
+    @Override
     public Admin save(Admin admin) {
         //        设置canLogin的值
         if(admin.getCanLogin() == null){

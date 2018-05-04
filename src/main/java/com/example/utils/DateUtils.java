@@ -77,4 +77,10 @@ public class DateUtils {
         return getDayBegin(getCurrentTime())-86400000l*30;
     }*/
 
+    public static String getImmediateDate(){
+        Date date = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return df.format(date);
+    }
+
 }

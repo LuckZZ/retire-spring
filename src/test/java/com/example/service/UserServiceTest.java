@@ -50,11 +50,6 @@ public class UserServiceTest {
         userService.save(user);
     }
 
-    public void delete(){
-        User user = userService.findOne(4);
-        grouperDao.deleteByUser(user);
-    }
-
     @Test
     public void updateGroup(){
         userDao.updateGroup(17,20);

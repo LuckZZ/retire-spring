@@ -12,6 +12,7 @@ import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.AdminService;
 import com.example.service.GrouperService;
+import com.example.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +64,7 @@ public class IndexController extends BaseController{
     @RequestMapping("/loginPost")
     @LoggerManage(description = "登陆验证")
     public Response loginPost(HttpSession session, HttpServletRequest request){
+        request.getSession();
         String jobNum = request.getParameter("jobNum");
         String password = request.getParameter("password");
         String loginType = request.getParameter("loginType");
@@ -78,12 +80,17 @@ public class IndexController extends BaseController{
             if (admins.size() == 0){
                 return result(ExceptionMsg.LoginPasswordFailed);
             }
+            Admin admin = admins.get(0);
 //           查看登陆权限
-            CanLogin canLogin = admins.get(0).getCanLogin();
+            CanLogin canLogin = admin.getCanLogin();
             if (canLogin == null || canLogin == CanLogin.no){
                 return result(ExceptionMsg.LoginCantFailed);
             }
-            Login login = new Login(admins.get(0).getAdminId(), jobNum, admins.get(0).getName(), Role.admin);
+//            更新登录时间
+            adminService.updateLastTimeAndNowTime(admin.getNowTime(), DateUtils.getImmediateDate(),admin.getAdminId());
+
+//            记录sesion
+            Login login = new Login(admin.getAdminId(), jobNum, admin.getName(), Role.admin);
             session.setAttribute(WebSecurityConfig.SESSION_KEY, login);
             return result("admin/index",ExceptionMsg.LoginSuccess);
         }else if("1".equals(loginType)){
@@ -97,12 +104,16 @@ public class IndexController extends BaseController{
             if (groupers.size() == 0){
                 return result(ExceptionMsg.LoginPasswordFailed);
             }
+            Grouper grouper = groupers.get(0);
 //           查看登陆权限
-            CanLogin canLogin = groupers.get(0).getCanLogin();
+            CanLogin canLogin = grouper.getCanLogin();
             if (canLogin == null || canLogin == CanLogin.no){
                 return result(ExceptionMsg.LoginCantFailed);
             }
-            Login login = new Login(groupers.get(0).getGrouperId(), jobNum, groupers.get(0).getUser().getName(), Role.grouper,groupers.get(0).getUser().getGroup());
+            //            更新登录时间
+            grouperService.updateLastTimeAndNowTime(grouper.getNowTime(), DateUtils.getImmediateDate(), grouper.getGrouperId());
+//            记录session
+            Login login = new Login(grouper.getGrouperId(), jobNum, grouper.getUser().getName(), Role.grouper, grouper.getUser().getGroup());
             session.setAttribute(WebSecurityConfig.SESSION_KEY, login);
             return result("grouper/index",ExceptionMsg.LoginSuccess);
 

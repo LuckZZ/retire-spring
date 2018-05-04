@@ -15,24 +15,36 @@ import java.util.List;
 @Repository
 public interface AdminDao extends JpaRepository<Admin, Integer> {
 
+    /*根据工号查看管理员是否存在*/
     boolean existsByJobNum(String jobNum);
 
+    /*根据工号和密码查询管理员列表*/
     List<Admin> findAllByJobNumAndPassword(String jobNum, String password);
 
+    /*修改管理员姓名和登录权限*/
     @Modifying(clearAutomatically=true)
     @Query("update Admin set name=:name,canLogin=:canLogin  where adminId=:adminId")
     int updateNameAndCanLogin(@Param("name") String name, @Param("canLogin") CanLogin canLogin, @Param("adminId") Integer adminId);
 
+    /*修改管理员密码*/
     @Modifying(clearAutomatically=true)
     @Query("update Admin set password=:password where adminId=:adminId")
     int updatePassword(@Param("password") String password, @Param("adminId") Integer adminId);
 
+    /*修改管理员登录权限*/
     @Modifying(clearAutomatically=true)
     @Query("update Admin set canLogin=:canLogin where adminId=:adminId")
     int updateCanLogin(@Param("canLogin") CanLogin canLogin, @Param("adminId") Integer adminId);
 
+    /*修改管理员最近一次登陆时间和当前登录时间*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Admin set lastTime=:lastTime,nowTime=:nowTime where adminId=:adminId")
+    int updateLastTimeAndNowTime(@Param("lastTime") String lastTime, @Param("nowTime") String nowTime, @Param("adminId") Integer adminId);
+
+    /*根据工号查询管理员*/
     Page<Admin> findAllByJobNum(String jobNum, Pageable pageable);
 
+    /*根姓名查询管理员*/
     Page<Admin> findAllByName(String name, Pageable pageable);
 
 }

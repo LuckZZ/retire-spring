@@ -55,12 +55,12 @@ public class GrouperController extends BaseController{
         model.addAttribute("userCommSearch", new CommSearch(type, value));
         if (type == 1 && value != null){
 //        根据工号
-            Page<Grouper> datas = grouperService.findAllByUser_JobNum(value,page);
+            Page<Grouper> datas = grouperService.findAllByJobNum(value,page);
             model.addAttribute("datas",datas);
             return "admin/grouper_list";
         }else if (type == 2 && value != null){
 //        根据姓名
-            Page<Grouper> datas = grouperService.findAllByUser_Name(value,page);
+            Page<Grouper> datas = grouperService.findAllByName(value,page);
             model.addAttribute("datas",datas);
             return "admin/grouper_list";
         }

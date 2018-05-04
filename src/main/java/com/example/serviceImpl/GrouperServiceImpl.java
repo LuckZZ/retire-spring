@@ -25,6 +25,12 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
     @Autowired
     private GrouperDao grouperDao;
 
+    @Transactional
+    @Override
+    public int updateLastTimeAndNowTime(String lastTime, String nowTime, Integer grouperId) {
+        return grouperDao.updateLastTimeAndNowTime(lastTime, nowTime, grouperId);
+    }
+
     /**
      * 用于设置用户是否为组长
      * 如设置为组长：保存到grouper表中；更改user的rank字段
@@ -42,7 +48,7 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
 //            以前是组长，现在设置为组员
             newRank = Rank.user;
 //            删除组长
-            grouperDao.deleteByUser(user);
+            grouperDao.deleteByUserId(userId);
         }else if (oldRank == Rank.user){
 //            以前是组员，现在设置为组长
             newRank = Rank.grouper;
@@ -92,13 +98,13 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
      }
 
     @Override
-    public Page<Grouper> findAllByUser_JobNum(String jobNum, Integer page) {
+    public Page<Grouper> findAllByJobNum(String jobNum, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return grouperDao.findAllByUser_JobNum(jobNum, pageable);
     }
 
     @Override
-    public Page<Grouper> findAllByUser_Name(String name, Integer page) {
+    public Page<Grouper> findAllByName(String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return grouperDao.findAllByUser_Name(name, pageable);
     }

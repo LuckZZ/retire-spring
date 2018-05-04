@@ -7,6 +7,9 @@ import java.util.List;
 
 public interface GrouperService extends BaseCrudService<Grouper,Integer>{
 
+    /*修改组长最近一次登陆时间和当前登录时间*/
+    int updateLastTimeAndNowTime(String lastTime, String nowTime, Integer grouperId);
+
     /**
      * 是否为组长，取反
      * @param userId 用户id
@@ -29,9 +32,9 @@ public interface GrouperService extends BaseCrudService<Grouper,Integer>{
      */
     void remove(Integer[] grouperIds);
 
-    Page<Grouper> findAllByUser_JobNum(String jobNum, Integer page);
+    Page<Grouper> findAllByJobNum(String jobNum, Integer page);
 
-    Page<Grouper> findAllByUser_Name(String name, Integer page);
+    Page<Grouper> findAllByName(String name, Integer page);
 
     /*组长表工号是否存在*/
     boolean existsByJobNum(String jobNum);

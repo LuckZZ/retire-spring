@@ -26,7 +26,10 @@ public class Admin extends BaseEntity implements Serializable{
     private String password;        //密码非空
 
     @Column(nullable = true)
-    private String lastTime;        //最后登录日可以为空
+    private String lastTime;        //最近登录时间可以为空
+
+    @Column(nullable = true)
+    private String nowTime;      //当前登录时间可以为空
 
     @Column(nullable = false)
     private CanLogin canLogin;      //是否允许登陆
@@ -99,4 +102,11 @@ public class Admin extends BaseEntity implements Serializable{
         this.imgUrl = imgUrl;
     }
 
+    public String getNowTime() {
+        return nowTime;
+    }
+
+    public void setNowTime(String nowTime) {
+        this.nowTime = nowTime;
+    }
 }

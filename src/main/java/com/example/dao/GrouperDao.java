@@ -1,7 +1,6 @@
 package com.example.dao;
 
 import com.example.domain.entity.Grouper;
-import com.example.domain.entity.User;
 import com.example.domain.enums.CanLogin;
 import com.example.domain.enums.Exist;
 import org.springframework.data.domain.Page;
@@ -16,23 +15,31 @@ import java.util.List;
 public interface GrouperDao extends JpaRepository<Grouper, Integer> {
 
     @Modifying(clearAutomatically=true)
-    @Query("delete from Grouper where user=:user")
-    void deleteByUser(@Param("user") User user);
+    @Query("delete from Grouper where user.userId=:userId")
+    void deleteByUserId(@Param("userId") Integer userId);
 
+    /*修改登录权限*/
     @Modifying(clearAutomatically=true)
     @Query("update Grouper set canLogin=:canLogin where grouperId=:grouperId")
     int updateCanLogin(@Param("canLogin") CanLogin canLogin, @Param("grouperId") Integer grouperId);
 
+    /*修改密码*/
     @Modifying(clearAutomatically=true)
     @Query("update Grouper set password=:password where grouperId=:grouperId")
     int updatePwd(@Param("password") String password, @Param("grouperId") Integer grouperId);
 
-    Grouper findByUser(User user);
+    /*修改组长最近一次登陆时间和当前登录时间*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Grouper set lastTime=:lastTime,nowTime=:nowTime where grouperId=:grouperId")
+    int updateLastTimeAndNowTime(@Param("lastTime") String lastTime, @Param("nowTime") String nowTime, @Param("grouperId") Integer grouperId);
 
+    /*根据工号查询组长*/
     Page<Grouper> findAllByUser_JobNum(String jobNum, Pageable pageable);
 
+    /*根据姓名查询组长*/
     Page<Grouper> findAllByUser_Name(String name, Pageable pageable);
 
+    /*查询存在的所有组长*/
     List<Grouper> findAllByUser_Group_GroupIdAndUser_Exist(Integer groupId, Exist exist);
 
     /*组长表工号是否存在*/
