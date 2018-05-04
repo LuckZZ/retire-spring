@@ -1,5 +1,6 @@
 package com.example.comm.config;
 
+import com.example.comm.Constant;
 import com.example.domain.bean.Login;
 import com.example.domain.enums.Role;
 import org.apache.log4j.Logger;
@@ -27,7 +28,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter{
         if (login == null){
             logger.warn("拦截原因:没有session "+"请求路径:"+request.getRequestURI());
             //无session 跳转登陆
-            String url = "/login";
+            String url = Constant.LOGIN;
             response.sendRedirect(url);
             return false;
         }
@@ -48,18 +49,15 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter{
             String XRequested =request.getHeader("X-Requested-With");
             if("XMLHttpRequest".equals(XRequested)){
 //                ajax请求
-                response.getWriter().write("IsAjax");
-                String url = "/noAccessAjax";
-                response.sendRedirect(url);
+                response.sendRedirect(Constant.NO_ACCESS_AJAX);
             }else {
 //            非ajax请求
-                String url = "/noAccess";
-                response.sendRedirect(url);
+                response.sendRedirect(Constant.NO_ACCESS_PAGE);
             }
             return  false;
         }
 //            跳转登陆
-        String url = "/login";
+        String url = Constant.LOGIN;
         response.sendRedirect(url);
         return  false;
     }

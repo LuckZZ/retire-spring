@@ -8,7 +8,11 @@ import java.util.List;
 
 public interface UserService extends BaseCrudService<User,Integer>{
 
+    /*是否存在此工号*/
     boolean existsByJobNum(String jobNum);
+
+    /*根据userId和groupId查询是否有对应的数据*/
+    boolean existsByUserIdAndGroupId(Integer userId, Integer groupId);
 
     void delete(Integer[] userIds);
 
@@ -22,12 +26,6 @@ public interface UserService extends BaseCrudService<User,Integer>{
 
     Page<User> findAllByGroupId(Integer groupId, Integer page);
 
-    /*根据组号、工号查询用户*/
-    Page<User> findAllByGroupIdAndJobNum(Integer groupId, String jobNum, Integer page);
-
-    /*根据组号、用户名查询用户*/
-    Page<User> findAllByByGroupIdAndName(Integer groupId,String name, Integer page);
-
     /*根据工号查询用户*/
     Page<User> findAllByJobNum(String jobNum, Integer page);
 
@@ -37,6 +35,12 @@ public interface UserService extends BaseCrudService<User,Integer>{
     Page<User> findAllByName(String name, Integer page);
 
     List<User> findAllByName(String name);
+
+    /*根据组号、工号查询用户*/
+    Page<User> findAllByGroupIdAndJobNum(Integer groupId, String jobNum, Integer page);
+
+    /*根据组号、用户名查询用户*/
+    Page<User> findAllByByGroupIdAndName(Integer groupId,String name, Integer page);
 
     /*根据userSearchForm查询用户*/
     Page<User> findAllUserCriteria(Integer page, UserSearchForm userSearchForm);
@@ -57,6 +61,16 @@ public interface UserService extends BaseCrudService<User,Integer>{
     Page<User> findAllNoJoinByName(Integer activityId, String name, Integer page);
 
     List<User> findAllNoJoinByName(Integer activityId, String name);
+
+    /*根据组id、工号查询未报名用户*/
+    Page<User> findAllNoJoinByJobNumWithGroupId(Integer groupId, Integer activityId, String jobNum, Integer page);
+
+    List<User> findAllNoJoinByJobNumWithGroupId(Integer groupId, Integer activityId, String jobNum);
+
+    /*根据组id、工号查询未报名用户*/
+    Page<User> findAllNoJoinByNameWithGroupId(Integer groupId, Integer activityId, String name, Integer page);
+
+    List<User> findAllNoJoinByNameWithGroupId(Integer groupId, Integer activityId, String name);
 
     /*根据userIds查询用户*/
     List<User> findAllByUserIds(Integer[] userIds);

@@ -17,6 +17,10 @@ public class JoinUserSearch extends UserSearchForm{
     public JoinUserSearch() {
     }
 
+    public JoinUserSearch(String group) {
+        super(group);
+    }
+
     public JoinUserSearch(List<ActivityDef> activityDefs) {
         assignActivityDefSearches(activityDefs);
     }

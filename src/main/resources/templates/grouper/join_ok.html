@@ -13,7 +13,7 @@
     <!-- 风格切换 -->
     <div th:replace="fragments/theme::theme_section"></div>
     <!-- 侧边导航栏 -->
-    <div th:replace="fragments/left_admin::left_section('activityList')"></div>
+    <div th:replace="fragments/left_grouper::left_section('activityList')"></div>
 
     <!-- 内容区域 -->
     <div class="tpl-content-wrapper">
@@ -64,7 +64,7 @@
                                         <th>序号</th>
                                         <th>工号</th>
                                         <th>姓名</th>
-                                        <th>组别</th>
+                                <!--        <th>组别</th>-->
                                         <th>类型</th>
                                         <th th:each="activityDef:${activity.activityDefs}" th:text="${activityDef.label}">labelDefs</th>
                                         <th>是否参加</th>
@@ -109,7 +109,7 @@
 
 <div th:replace="fragments/alert::alert_excel"></div>
 
-<div th:replace="fragments/footer::js"></div>
+<div th:replace="fragments/footer_grouper::js"></div>
 </body>
 
 <script th:src="@{/js/l-checked.js}"></script>

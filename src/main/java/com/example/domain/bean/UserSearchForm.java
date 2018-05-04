@@ -20,6 +20,13 @@ public class UserSearchForm {
 //    政治面貌
     private String politics = "-1";
 
+    public UserSearchForm() {
+    }
+
+    public UserSearchForm(String group) {
+        this.group = group;
+    }
+
     public String getGroup() {
         return group;
     }

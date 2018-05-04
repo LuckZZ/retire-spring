@@ -37,6 +37,11 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
         return userDao.existsByJobNum(jobNum);
     }
 
+    @Override
+    public boolean existsByUserIdAndGroupId(Integer userId, Integer groupId) {
+        return userDao.existsByUserIdAndGroup_GroupId(userId, groupId);
+    }
+
     @Transactional
     @Override
     public void delete(Integer[] userIds) {
@@ -173,6 +178,28 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Override
     public List<User> findAllNoJoinByName(Integer activityId, String name) {
         return userDao.findAllNoJoinByName(Exist.yes, activityId, name);
+    }
+
+    @Override
+    public Page<User> findAllNoJoinByJobNumWithGroupId(Integer groupId, Integer activityId, String jobNum, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return userDao.findAllNoJoinByJobNumWithGroupId(Exist.yes, groupId, activityId, jobNum, pageable);
+    }
+
+    @Override
+    public List<User> findAllNoJoinByJobNumWithGroupId(Integer groupId, Integer activityId, String jobNum) {
+        return userDao.findAllNoJoinByJobNumWithGroupId(Exist.yes, groupId, activityId, jobNum);
+    }
+
+    @Override
+    public Page<User> findAllNoJoinByNameWithGroupId(Integer groupId, Integer activityId, String name, Integer page) {
+        Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
+        return userDao.findAllNoJoinByNameWithGroupId(Exist.yes, groupId, activityId, name, pageable);
+    }
+
+    @Override
+    public List<User> findAllNoJoinByNameWithGroupId(Integer groupId, Integer activityId, String name) {
+        return userDao.findAllNoJoinByNameWithGroupId(Exist.yes, groupId, activityId, name);
     }
 
     @Override

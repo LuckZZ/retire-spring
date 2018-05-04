@@ -1,6 +1,5 @@
 package com.example.dao;
 
-import com.example.domain.entity.Group;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Exist;
 import com.example.domain.enums.Rank;
@@ -18,11 +17,11 @@ import java.util.List;
 @Repository
 public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationExecutor<User> {
 
+    /*是否存在此工号*/
     boolean existsByJobNum(String jobNum);
 
-    List<User> findAllByJobNum(String jobNum);
-
-    List<User> findAllByName(String name);
+    /*根据userId和groupId查询是否有对应的数据*/
+    boolean existsByUserIdAndGroup_GroupId(Integer userId, Integer groupId);
 
     @Modifying(clearAutomatically=true)
     @Query("update User set rank=:rank where userId=:userId")
@@ -57,8 +56,12 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     /*根据工号查询用户*/
     Page<User> findAllByJobNum(String jobNum, Pageable pageable);
 
+    List<User> findAllByJobNum(String jobNum);
+
     /*根据姓名查询用户*/
     Page<User> findAllByName(String name, Pageable pageable);
+
+    List<User> findAllByName(String name);
 
     /*根据工号查询未报名用户*/
     @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
@@ -73,4 +76,18 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
 
     @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
     List<User> findAllNoJoinByName(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
+
+    /*根据组id，工号查询未报名用户*/
+    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
+    Page<User> findAllNoJoinByJobNumWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum, Pageable pageable);
+
+    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
+    List<User> findAllNoJoinByJobNumWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
+
+    /*根据组id，姓名查询未报名用户*/
+    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.name=:name")
+    Page<User> findAllNoJoinByNameWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("name")String name, Pageable pageable);
+
+    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
+    List<User> findAllNoJoinByNameWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
 }

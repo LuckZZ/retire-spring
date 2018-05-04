@@ -1,10 +1,13 @@
 package com.example.controller;
 
+import com.example.comm.Constant;
 import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
+import com.example.comm.config.WebSecurityConfig;
 import com.example.domain.bean.ActivityDefSearch;
 import com.example.domain.bean.CommSearch;
 import com.example.domain.bean.JoinUserSearch;
+import com.example.domain.bean.Login;
 import com.example.domain.entity.*;
 import com.example.domain.enums.Role;
 import com.example.domain.enums.SearchType;
@@ -19,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RequestMapping("/join")
@@ -52,50 +56,84 @@ public class JoinController extends BaseController{
 
     @RequestMapping(value = "/joinNoView/{activityId}")
     @LoggerManage(description = "待报名界面")
-    public String joinNoView(@PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    @Access(roles = Role.grouper)
+    public String joinNoView(HttpSession session, @PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         Activity activity = activityService.findOne(activityId);
-        Page<User> datas = userService.findAllNoJoinCriteria(activityId, new JoinUserSearch(), page);
-
-        assignModel(model, activity);
-        model.addAttribute("datas", datas);
-
-        return "admin/join_no";
+        if (login.getRole() == Role.admin){
+            Page<User> datas = userService.findAllNoJoinCriteria(activityId, new JoinUserSearch(), page);
+            assignModel(model, activity);
+            model.addAttribute("datas", datas);
+            return "admin/join_no";
+        }else if(login.getRole() == Role.grouper){
+            Page<User> datas = userService.findAllNoJoinCriteria(activityId, new JoinUserSearch(String.valueOf(login.getGroup().getGroupId())), page);
+            assignModel(model, activity);
+            model.addAttribute("datas", datas);
+            return "grouper/join_no";
+        }
+        return Constant.NO_ACCESS_PAGE;
     }
 
     @RequestMapping("/joinNoView/superSearch/{activityId}")
     @LoggerManage(description = "待报名界面高级搜索列表")
-    public String joinNoViewSuperSearch(@PathVariable Integer activityId, Model model, @ModelAttribute(value = "joinUserSearch") JoinUserSearch joinUserSearch, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    @Access(roles = Role.grouper)
+    public String joinNoViewSuperSearch(HttpSession session, @PathVariable Integer activityId, Model model, @ModelAttribute(value = "joinUserSearch") JoinUserSearch joinUserSearch, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         Activity activity = activityService.findOne(activityId);
-        Page<User> datas = userService.findAllNoJoinCriteria(activityId, joinUserSearch, page);
-
         assignModel(model, activity);
-        model.addAttribute("datas",datas);
-
+        if (login.getRole() == Role.admin){
+            Page<User> datas = userService.findAllNoJoinCriteria(activityId, joinUserSearch, page);
+            model.addAttribute("datas",datas);
 //        搜索表单的值，再传入页面
-        model.addAttribute("joinUserSearch",joinUserSearch);
-
-        return "admin/join_no";
+            model.addAttribute("joinUserSearch",joinUserSearch);
+            return "admin/join_no";
+        }else if(login.getRole() == Role.grouper){
+            joinUserSearch.setGroup(String.valueOf(login.getGroup().getGroupId()));
+            Page<User> datas = userService.findAllNoJoinCriteria(activityId, joinUserSearch, page);
+            model.addAttribute("datas",datas);
+//        搜索表单的值，再传入页面
+            model.addAttribute("joinUserSearch",joinUserSearch);
+            return "grouper/join_no";
+        }
+        return Constant.NO_ACCESS_PAGE;
     }
 
     @RequestMapping("/joinNoView/{activityId}/{type}/{value}")
     @LoggerManage(description = "待报名界面BySearch")
-    public String joinNoViewByType(Model model, @PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+    @Access(roles = Role.grouper)
+    public String joinNoViewByType(HttpSession session, Model model, @PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         Activity activity = activityService.findOne(activityId);
         assignModel(model, activity);
         model.addAttribute("userCommSearch", new CommSearch(type, value));
         model.addAttribute("searchType", SearchType.search);
-
-        if (type == 1 && value != null){
+        if (login.getRole() == Role.admin){
+            if (type == 1 && value != null){
 //        根据工号
-            Page<User> datas = userService.findAllNoJoinByJobNum(activityId, value, page);
-            model.addAttribute("datas",datas);
-            return "admin/join_no";
-        }else if (type == 2 && value != null){
+                Page<User> datas = userService.findAllNoJoinByJobNum(activityId, value, page);
+                model.addAttribute("datas",datas);
+                return "admin/join_no";
+            }else if (type == 2 && value != null){
 //        根据姓名
-            Page<User> datas = userService.findAllNoJoinByName(activityId, value, page);
-            model.addAttribute("datas",datas);
-            return "admin/join_no";
+                Page<User> datas = userService.findAllNoJoinByName(activityId, value, page);
+                model.addAttribute("datas",datas);
+                return "admin/join_no";
+            }
+        }else if(login.getRole() == Role.grouper){
+
+            if (type == 1 && value != null){
+//        根据工号
+                Page<User> datas = userService.findAllNoJoinByJobNumWithGroupId(login.getGroup().getGroupId(),activityId, value, page);
+                model.addAttribute("datas",datas);
+                return "grouper/join_no";
+            }else if (type == 2 && value != null){
+//        根据姓名
+                Page<User> datas = userService.findAllNoJoinByNameWithGroupId(login.getGroup().getGroupId(), activityId, value, page);
+                model.addAttribute("datas",datas);
+                return "grouper/join_no";
+            }
         }
+
 //        重定向
         return "redirect:/join/joinNoView/"+activityId;
     }
@@ -160,13 +198,23 @@ public class JoinController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "/joinActivity")
     @LoggerManage(description = "活动报名")
-    public Response joinActivity(HttpServletRequest request){
+    @Access(roles = Role.grouper)
+    public Response joinActivity(HttpSession session, HttpServletRequest request){
+
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
 
         try {
             Integer userId = Integer.parseInt(request.getParameter("userId"));
             Integer activityId = Integer.parseInt(request.getParameter("activityId"));
             String[] inputDefs = request.getParameterValues("inputDefs");
             String attend = request.getParameter("attend");
+
+//        如果是组长身份，先判断用户id是否在对应的组中
+            if (login.getRole() == Role.grouper){
+                if (!userService.existsByUserIdAndGroupId(userId, login.getGroup().getGroupId())){
+                    return result(ExceptionMsg.RoleNoAccess);
+                }
+            }
 
             if (!activityService.canJoin(activityId)){
                 return result(ExceptionMsg.JoinForCloseFailed);
