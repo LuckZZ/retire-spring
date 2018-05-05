@@ -38,7 +38,7 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
     /*根姓名查询管理员*/
     Page<Admin> findAllByName(String name, Integer page);
 
-    /*修改管理员最近一次登陆和当前登录时间*/
-    int updateLastTimeAndNowTime(String lastTime, String nowTime, Integer adminId);
+    /*修改管理员最近一次登陆*/
+    int updateLastTime(String lastTime, Integer adminId);
 
 }

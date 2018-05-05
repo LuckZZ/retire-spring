@@ -87,7 +87,7 @@ public class IndexController extends BaseController{
                 return result(ExceptionMsg.LoginCantFailed);
             }
 //            更新登录时间
-            adminService.updateLastTimeAndNowTime(admin.getNowTime(), DateUtils.getImmediateDate(),admin.getAdminId());
+            adminService.updateLastTime(DateUtils.getImmediateDate(),admin.getAdminId());
 
 //            记录sesion
             Login login = new Login(admin.getAdminId(), jobNum, admin.getName(), Role.admin);
@@ -111,7 +111,7 @@ public class IndexController extends BaseController{
                 return result(ExceptionMsg.LoginCantFailed);
             }
             //            更新登录时间
-            grouperService.updateLastTimeAndNowTime(grouper.getNowTime(), DateUtils.getImmediateDate(), grouper.getGrouperId());
+            grouperService.updateLastTime(DateUtils.getImmediateDate(), grouper.getGrouperId());
 //            记录session
             Login login = new Login(grouper.getGrouperId(), jobNum, grouper.getUser().getName(), Role.grouper, grouper.getUser().getGroup());
             session.setAttribute(WebSecurityConfig.SESSION_KEY, login);

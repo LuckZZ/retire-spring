@@ -36,10 +36,10 @@ public interface AdminDao extends JpaRepository<Admin, Integer> {
     @Query("update Admin set canLogin=:canLogin where adminId=:adminId")
     int updateCanLogin(@Param("canLogin") CanLogin canLogin, @Param("adminId") Integer adminId);
 
-    /*修改管理员最近一次登陆时间和当前登录时间*/
+    /*修改管理员最近一次登陆时间*/
     @Modifying(clearAutomatically=true)
-    @Query("update Admin set lastTime=:lastTime,nowTime=:nowTime where adminId=:adminId")
-    int updateLastTimeAndNowTime(@Param("lastTime") String lastTime, @Param("nowTime") String nowTime, @Param("adminId") Integer adminId);
+    @Query("update Admin set lastTime=:lastTime where adminId=:adminId")
+    int updateLastTime(@Param("lastTime") String lastTime, @Param("adminId") Integer adminId);
 
     /*根据工号查询管理员*/
     Page<Admin> findAllByJobNum(String jobNum, Pageable pageable);

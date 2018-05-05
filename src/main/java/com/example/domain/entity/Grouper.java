@@ -26,9 +26,6 @@ public class Grouper extends BaseEntity implements Serializable {
     @Column(nullable = true)
     private String lastTime;        //最近登录时间可以为空
 
-    @Column(nullable = true)
-    private String nowTime;        //当前登录时间可以为空
-
     @Column(nullable = false)
     private CanLogin canLogin;      //是否允许登陆
 
@@ -79,13 +76,5 @@ public class Grouper extends BaseEntity implements Serializable {
 
     public void setCanLogin(CanLogin canLogin) {
         this.canLogin = canLogin;
-    }
-
-    public String getNowTime() {
-        return nowTime;
-    }
-
-    public void setNowTime(String nowTime) {
-        this.nowTime = nowTime;
     }
 }

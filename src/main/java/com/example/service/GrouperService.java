@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface GrouperService extends BaseCrudService<Grouper,Integer>{
 
-    /*修改组长最近一次登陆时间和当前登录时间*/
-    int updateLastTimeAndNowTime(String lastTime, String nowTime, Integer grouperId);
+    /*修改组长最近一次登陆时间*/
+    int updateLastTime(String lastTime, Integer grouperId);
 
     /**
      * 是否为组长，取反

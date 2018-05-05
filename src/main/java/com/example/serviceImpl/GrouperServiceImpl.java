@@ -27,8 +27,8 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
 
     @Transactional
     @Override
-    public int updateLastTimeAndNowTime(String lastTime, String nowTime, Integer grouperId) {
-        return grouperDao.updateLastTimeAndNowTime(lastTime, nowTime, grouperId);
+    public int updateLastTime(String lastTime, Integer grouperId) {
+        return grouperDao.updateLastTime(lastTime, grouperId);
     }
 
     /**

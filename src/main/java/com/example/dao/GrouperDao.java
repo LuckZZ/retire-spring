@@ -28,10 +28,10 @@ public interface GrouperDao extends JpaRepository<Grouper, Integer> {
     @Query("update Grouper set password=:password where grouperId=:grouperId")
     int updatePwd(@Param("password") String password, @Param("grouperId") Integer grouperId);
 
-    /*修改组长最近一次登陆时间和当前登录时间*/
+    /*修改组长最近一次登陆时间*/
     @Modifying(clearAutomatically=true)
-    @Query("update Grouper set lastTime=:lastTime,nowTime=:nowTime where grouperId=:grouperId")
-    int updateLastTimeAndNowTime(@Param("lastTime") String lastTime, @Param("nowTime") String nowTime, @Param("grouperId") Integer grouperId);
+    @Query("update Grouper set lastTime=:lastTime where grouperId=:grouperId")
+    int updateLastTime(@Param("lastTime") String lastTime, @Param("grouperId") Integer grouperId);
 
     /*根据工号查询组长*/
     Page<Grouper> findAllByUser_JobNum(String jobNum, Pageable pageable);

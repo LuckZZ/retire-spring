@@ -86,8 +86,8 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
 
     @Transactional
     @Override
-    public int updateLastTimeAndNowTime(String lastTime, String nowTime, Integer adminId) {
-        return adminDao.updateLastTimeAndNowTime(lastTime, nowTime, adminId);
+    public int updateLastTime(String lastTime, Integer adminId) {
+        return adminDao.updateLastTime(lastTime, adminId);
     }
 
     @Transactional
