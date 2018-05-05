@@ -21,6 +21,7 @@ import com.example.service.ActivityService;
 import com.example.service.JoinService;
 import com.example.service.UserService;
 import com.example.utils.DataUtils;
+import com.example.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -262,7 +263,7 @@ public class ExcelController extends BaseController{
 
     @ResponseBody
     @RequestMapping("/exportJoinUser/{activityId}")
-    @LoggerManage(description = "导出报名用户表")
+    @LoggerManage(description = "导出已报名用户表")
     @Access(roles = Role.grouper)
     public Response exportJoinUser(HttpSession session, @PathVariable Integer activityId, ModelMap map, @ModelAttribute(value = "userSearchForm") UserSearchForm userSearchForm, HttpServletRequest request, HttpServletResponse response){
 
@@ -311,6 +312,7 @@ public class ExcelController extends BaseController{
         }
 
         beanList.add(new ExcelExportEntity("是否参加", "attend"));
+        beanList.add(new ExcelExportEntity("提交时间", "creatTime"));
         beanList.add(new ExcelExportEntity("状态", "status"));
 
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -321,6 +323,7 @@ public class ExcelController extends BaseController{
                 row.put("label"+i,join.getJoinDefs().get(i).getInput());
             }
             row.put("attend",join.getAttend().getName());
+            row.put("creatTime", DateUtils.timeStampToFormat(join.getCreateTime()));
             row.put("status","报名成功");
             list.add(row);
         }
@@ -381,6 +384,7 @@ public class ExcelController extends BaseController{
         }
 
         beanList.add(new ExcelExportEntity("是否参加", "attend"));
+        beanList.add(new ExcelExportEntity("提交时间", "creatTime"));
         beanList.add(new ExcelExportEntity("状态", "status"));
 
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -391,6 +395,7 @@ public class ExcelController extends BaseController{
                 row.put("label"+i,join.getJoinDefs().get(i).getInput());
             }
             row.put("attend",join.getAttend().getName());
+            row.put("creatTime", DateUtils.timeStampToFormat(join.getCreateTime()));
             row.put("status","报名成功");
             list.add(row);
         }
