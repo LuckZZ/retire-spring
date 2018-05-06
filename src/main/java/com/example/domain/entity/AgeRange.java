@@ -19,6 +19,12 @@ public class AgeRange implements Serializable{
     @Column(nullable = false)
     private String ageRangeName;  //非空
 
+    @Column(nullable = false)
+    private Integer minAge;
+
+    @Column(nullable = false)
+    private Integer maxAge;
+
     //set、get方法
 
     public Integer getAgeRangeId() {
@@ -35,5 +41,21 @@ public class AgeRange implements Serializable{
 
     public void setAgeRangeName(String ageRangeName) {
         this.ageRangeName = ageRangeName;
+    }
+
+    public Integer getMinAge() {
+        return minAge;
+    }
+
+    public void setMinAge(Integer minAge) {
+        this.minAge = minAge;
+    }
+
+    public Integer getMaxAge() {
+        return maxAge;
+    }
+
+    public void setMaxAge(Integer maxAge) {
+        this.maxAge = maxAge;
     }
 }

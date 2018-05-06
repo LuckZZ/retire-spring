@@ -6,7 +6,6 @@ import com.example.domain.enums.Rank;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
 
 /**
  * User实体类有属性:
@@ -91,8 +90,12 @@ public class User extends BaseEntity implements Serializable,Cloneable{
 
     @Column
     private String other;
-    //set、get方法
 
+    //    不生成列
+    @Transient
+    private String age; //年龄不生成列
+
+    //set、get方法
 
     public Integer getUserId() {
         return userId;
@@ -268,6 +271,14 @@ public class User extends BaseEntity implements Serializable,Cloneable{
 
     public void setOther(String other) {
         this.other = other;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
     }
 
     /**
