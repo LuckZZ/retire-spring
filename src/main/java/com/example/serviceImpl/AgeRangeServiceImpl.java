@@ -5,6 +5,7 @@ import com.example.domain.entity.*;
 import com.example.domain.enums.Gender;
 import com.example.service.AgeRangeService;
 import com.example.utils.UserAgePage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,9 @@ import java.util.List;
 
 @Service
 public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,AgeRangeDao> implements AgeRangeService{
+
+    @Autowired
+    private AgeRangeDao ageRangeDao;
 
     @PersistenceUnit
     private EntityManagerFactory emf;
@@ -37,6 +41,12 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
     public UserAgePage findAllUserAndAge(Integer ageRangeId, Integer page) {
         UserAgePage userAgeData = new UserAgePage();
         return userAgeData;
+    }
+
+    @Override
+    public AgeRange save(Integer minAge, Integer maxAge) {
+        AgeRange ageRange = new AgeRange(minAge, maxAge);
+        return  ageRangeDao.save(ageRange);
     }
 
     /**

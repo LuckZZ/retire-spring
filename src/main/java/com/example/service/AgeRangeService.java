@@ -8,4 +8,7 @@ public interface AgeRangeService extends BaseCrudService<AgeRange,Integer>{
     UserAgePage findAllUserAndAge(Integer page);
 
     UserAgePage findAllUserAndAge(Integer ageRangeId, Integer page);
+
+    AgeRange save(Integer minAge, Integer maxAge);
+
 }

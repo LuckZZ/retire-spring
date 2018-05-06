@@ -53,6 +53,15 @@ $(function () {
             //自定义活动列
             inputDef:{
                 required:true
+            },
+            minAge:{
+                required:true,
+                range:[0,120]
+            },
+            maxAge:{
+                required:true,
+                range:[0,120],
+                compareVal:"#minAge"
             }
         },
         messages:{
@@ -90,6 +99,9 @@ $(function () {
             },
             activityName:{
                 remote:"此活动名已存在"
+            },
+            maxAge:{
+                compareVal:"最大年龄必须大于最小年龄"
             }
         },
         errorPlacement: function(error, element) {
@@ -103,5 +115,12 @@ $(function () {
         var date1 = new Date(Date.parse(startDate.replace("-", "/")));
         var date2 = new Date(Date.parse(value.replace("-", "/")));
         return date1 < date2;
+    };
+
+    //数值比较，v1<v2返回true
+    $.validator.methods.compareVal = function(value, element, param) {
+        var v1 = $(param).val();
+        var v2 = value;
+        return v1 < v2;
     };
 });
