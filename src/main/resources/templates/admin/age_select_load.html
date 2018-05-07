@@ -4,6 +4,7 @@
 <!--此页面是加载年龄范围选择-->
     <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
         <select data-am-selected="{btnSize: 'sm'}">
+            <option value="-1">所有</option>
             <option th:each="ageRange:${ageRanges}" th:value="${ageRange.ageRangeId}" th:text="|${ageRange.minAge}-${ageRange.maxAge}岁|">80-90岁</option>
         </select>
         <span class="am-input-group-btn">

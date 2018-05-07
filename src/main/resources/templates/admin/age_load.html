@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<body>
+<!--此页面展示年龄范围，用于删除年龄范围功能-->
+<table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black">
+    <tbody>
+    <tr th:each="ageRange:${ageRanges}">
+        <td th:text="|${ageRange.minAge}-${ageRange.maxAge}岁|">50-60岁</td>
+        <td>
+            <div class="tpl-table-black-operation">
+                <a th:attr="data-id=${ageRange.ageRangeId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
+                    <i class="am-icon-trash"></i> 删除
+                </a>
+            </div>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+</body>
+<script>
+    $(function () {
+        //改变
+        $(".one-del").on('click',function(){
+            var id = $(this).data('id');
+            $.ajax({
+                url: "/age/delete",
+                type: "POST",
+                data:{
+                    ageRangeId:id
+                },
+                error: function ()
+                {
+                    console.log("grouper_add error function!");
+                    toastr.error('出现错误！', '错误');
+                },
+                success: function (data)
+                {
+                    loadContent();
+                    if (data.codeBool){
+                        toastr.success(data.message, '操作成功');
+                    }else {
+                        toastr.error(data.message, '操作失败');
+                    }
+                }
+            });
+        });
+    });
+</script>
+</html>

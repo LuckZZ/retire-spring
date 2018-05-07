@@ -46,9 +46,26 @@ public class AgeController extends BaseController {
     }
 
     @RequestMapping("/ageSelect")
+    @LoggerManage(description = "年龄统计选择")
     public String test(Model model){
         List<AgeRange> ageRanges = ageRangeService.findAll();
         model.addAttribute("ageRanges",ageRanges);
         return "/admin/age_select_load";
+    }
+
+    @RequestMapping("/delHtml")
+    @LoggerManage(description = "删除年龄统计界面")
+    public String delHtml(Model model){
+        List<AgeRange> ageRanges = ageRangeService.findAll();
+        model.addAttribute("ageRanges",ageRanges);
+        return "/admin/age_load";
+    }
+
+    @ResponseBody
+    @RequestMapping("/delete")
+    @LoggerManage(description = "删除年龄统计")
+    public Response delete(@RequestParam(value = "ageRangeId") Integer ageRangeId){
+        ageRangeService.delete(ageRangeId);
+        return result(ExceptionMsg.AgeDelSuccess);
     }
 }

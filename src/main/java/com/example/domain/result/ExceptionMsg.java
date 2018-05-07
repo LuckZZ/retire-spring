@@ -95,6 +95,9 @@ public enum ExceptionMsg {
     AgeAddFailed("新增年龄范围失败",false),
     AgeAddSuccess("新增年龄范围成功",true),
 
+    AgeDelFailed("删除年龄范围失败",false),
+    AgeDelSuccess("删除年龄范围成功",true),
+
     LoginJobNumNotUerFailed("登陆账号不存在",false),
     LoginPasswordFailed("密码错误",false),
     LoginCantFailed("该用户无登陆权限",false),

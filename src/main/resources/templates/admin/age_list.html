@@ -134,6 +134,19 @@
         </div>
     </div>
 </div>
+
+<div class="am-modal am-modal-confirm" tabindex="-1" id="deleteAge-modal">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">删除年龄范围
+            <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+        </div>
+        <div class="am-modal-bd">
+            <div class="am-u-sm-12" id="result-modal">
+            </div>
+        </div>
+    </div>
+</div>
+
 <div th:replace="fragments/footer::js"></div>
 </body>
 <!--jquery验证-->
@@ -150,7 +163,6 @@
         $("#input-age").load('/age/ageSelect');
         //是否参加change事件
         $("#search-key").on('change',function(){
-
             var key = $("#search-key").val();
             var $divValue = $("#input-value");
             var $divAge =  $("#input-age");
@@ -161,14 +173,6 @@
                 $divValue.hide();
                 $divAge.show();
             }
-
-   /*         var $tr = $(this).closest('tr');
-            var $div =  $tr.find('.tr-select');
-            if ($(this).val() == 'no'){
-                $div.hide();
-            }else {
-                $div.show();
-            }*/
         });
 
         //新增,打开模态框
@@ -199,14 +203,31 @@
                 var myform = $("#addAgeForm");
                 //ajax提交form
                 formAjaxNoReload(myform,"/age/save");
-
                 //加载input-age内容
                 $("#input-age").load('/age/ageSelect');
-
             }
         });
 
+        // 删除年龄范围
+        $("#checked-del").on('click',function(){
+            loadContent();
+            $("#deleteAge-modal").modal();
+        });
+
+        //设置删除年龄范围模态框关闭时，加载input-age内容
+        $('#deleteAge-modal').on('close.modal.amui', function(){
+            //加载input-age内容
+            $("#input-age").load('/age/ageSelect');
+        });
+
     });
+
+    //把内容加载到模态框
+    function loadContent() {
+        console.log("删除年龄范围模态框刷新方法")
+        $("#result-modal").load('/age/delHtml');
+    }
+
 </script>
 
 </html>
