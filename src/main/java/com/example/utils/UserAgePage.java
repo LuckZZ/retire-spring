@@ -16,6 +16,8 @@ public class UserAgePage {
     private int totalPages;
 //    当前页数
     private int number;
+//    平均年龄
+    private int avgAge;
 
     public List<User> getContent() {
         return content;
@@ -39,5 +41,13 @@ public class UserAgePage {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public int getAvgAge() {
+        return avgAge;
+    }
+
+    public void setAvgAge(int avgAge) {
+        this.avgAge = avgAge;
     }
 }

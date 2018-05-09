@@ -14,7 +14,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,AgeRangeDao> implements AgeRangeService{
@@ -24,19 +26,6 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
 
     @PersistenceUnit
     private EntityManagerFactory emf;
-
-    @Override
-    public UserAgePage findAllUserAndAge(Integer page) {
-        UserAgePage userAgeData = new UserAgePage();
-        List<User> list = nativeQueryUserAge(SearchType.No, null ,page);
-//       数据
-        userAgeData.setContent(list);
-//        当前页数
-        userAgeData.setNumber(page);
-//      总页数
-        userAgeData.setTotalPages(getToalPages(SearchType.No, null));
-        return userAgeData;
-    }
 
     @Override
     public AgeRange save(Integer minAge, Integer maxAge) {
@@ -75,22 +64,24 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         UserAgePage userAgeData = new UserAgePage();
         //        当前页数
         userAgeData.setNumber(page);
-
+        Map<String, Integer> map;
         if (ageRangeId != -1){
             AgeRange ageRange = ageRangeDao.findOne(ageRangeId);
             List<User> list = nativeQueryUserAgeByRange(exist, ageRange.getMinAge(), ageRange.getMaxAge(), page);
 //        数据
             userAgeData.setContent(list);
-//      总页数
-            userAgeData.setTotalPages(getToalPagesByRange(exist, ageRange.getMinAge(), ageRange.getMaxAge()));
+            map = getToalPagesByRange(exist, ageRange.getMinAge(), ageRange.getMaxAge());
         }else {
 //            选择所有
             List<User> list = nativeQueryUserAgeByRange(exist, -1, -1, page);
 //        数据
             userAgeData.setContent(list);
-//      总页数
-            userAgeData.setTotalPages(getToalPagesByRange(exist, -1, -1));
+            map = getToalPagesByRange(exist, -1, -1);
         }
+        //      总页数
+        userAgeData.setTotalPages(map.get("toalPages"));
+//          平均年龄
+        userAgeData.setAvgAge(map.get("avgAge"));
 
         return userAgeData;
     }
@@ -187,25 +178,35 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
     }
 
     /**
-     SELECT COUNT(*) FROM tb_user t1 INNER JOIN
+     SELECT COUNT(*), AVG(u.age) AS avg_age, AVG(u.pass_age ) AS avg_pass_age FROM
      (
-     SELECT user_id,(YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age FROM tb_user WHERE exist=0 HAVING age BETWEEN 3 AND 5
-     )  t2
-     ON t1.user_id = t2.user_id;
+     SELECT
+     (YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age ,
+     (YEAR(pass_time)-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(pass_time, '%m%d')) AS pass_age
+     FROM tb_user
+     WHERE exist=0
+     HAVING age BETWEEN 3 AND 5
+     ) u
      */
-    private int getToalPagesByRange(Exist exist, Integer minAge, Integer maxAge){
+    private Map<String, Integer> getToalPagesByRange(Exist exist, Integer minAge, Integer maxAge){
         EntityManager em = emf.createEntityManager();
 //        定义sql
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT COUNT(*) ");
-        sql.append(" FROM tb_user t1 INNER JOIN ( ");
-        sql.append(" SELECT user_id,(YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age FROM tb_user ");
+        sql.append(" SELECT COUNT(*), ROUND(AVG(u.age), 0) AS avg_age, ROUND(AVG(u.pass_age), 0) AS avg_pass_age ");
+        sql.append(" FROM ( ");
+        sql.append(" SELECT ");
+        sql.append(" (YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age , ");
+        sql.append(" (YEAR(pass_time)-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(pass_time, '%m%d')) AS pass_age ");
+        sql.append(" FROM tb_user ");
         sql.append(" WHERE exist="+exist.ordinal()+" ");
         if (minAge != -1 && maxAge!=-1){
-            sql.append(" HAVING age BETWEEN "+minAge+" AND "+maxAge+" ");
+            if (exist == Exist.yes){
+                sql.append(" HAVING age BETWEEN "+minAge+" AND "+maxAge+" ");
+            }else if(exist == Exist.no){
+                sql.append(" HAVING pass_age BETWEEN "+minAge+" AND "+maxAge+" ");
+            }
         }
-        sql.append(" ) t2 ");
-        sql.append(" ON t1.user_id = t2.user_id ");
+        sql.append(" ) u ");
 
         //创建原生SQL查询QUERY实例
         Query query =  em.createNativeQuery(sql.toString());
@@ -213,9 +214,18 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         //每一个对象数组存的是相应的实体属性
         List objecArraytList = query.getResultList();
         em.close();
-        Object obj =  objecArraytList.get(0);
-        int toalPages = Integer.parseInt(obj.toString())/10+1;
-        return toalPages;
+        Object[] obj =  (Object[]) objecArraytList.get(0);
+        int toalPages = Integer.parseInt(obj[0] == null ? "0" : obj[0].toString())/10+1;
+        int avgAge = 0;
+        if (exist == Exist.yes){
+            avgAge = Integer.parseInt(obj[1] == null ? "0" : obj[1].toString());
+        }else if(exist == Exist.no){
+            avgAge = Integer.parseInt(obj[2] == null ? "0" : obj[2].toString());
+        }
+        Map<String, Integer> map = new HashMap();
+        map.put("toalPages",toalPages);
+        map.put("avgAge",avgAge);
+        return map;
     }
 
     private List<User> convert(List objecArraytList) {

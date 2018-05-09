@@ -35,7 +35,7 @@ public class AgeController extends BaseController {
     @RequestMapping("/ageList")
     @LoggerManage(description = "年龄统计列表")
     public String ageList(Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
-        UserAgePage datas = ageRangeService.findAllUserAndAge(page);
+        UserAgePage datas = ageRangeService.findAllByAgeRange(Exist.yes, -1, page);
         model.addAttribute("datas", datas);
         model.addAttribute("userCommSearch", new CommSearch(1, ""));
         return "admin/age_list";

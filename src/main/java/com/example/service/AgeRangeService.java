@@ -6,8 +6,6 @@ import com.example.utils.UserAgePage;
 
 public interface AgeRangeService extends BaseCrudService<AgeRange,Integer>{
 
-    UserAgePage findAllUserAndAge(Integer page);
-
     /*保存*/
     AgeRange save(Integer minAge, Integer maxAge);
 
