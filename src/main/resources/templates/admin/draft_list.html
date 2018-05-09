@@ -9,7 +9,7 @@
 <script th:src="@{/assets/js/theme.js}"></script>
 <div class="am-g tpl-g">
     <!-- 头部 -->
-    <div th:replace="fragments/header::header_section(Admin)"></div>
+    <div th:replace="fragments/header::header_section"></div>
     <!-- 风格切换 -->
     <div th:replace="fragments/theme::theme_section"></div>
     <!-- 侧边导航栏 -->
@@ -17,6 +17,8 @@
 
     <!-- 内容区域 -->
     <div class="tpl-content-wrapper">
+        <!-- 欢迎 -->
+        <div th:replace="fragments/header::welcome_section"></div>
 
         <div class="row-content am-cf">
             <div class="row">

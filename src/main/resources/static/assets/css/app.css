@@ -24,7 +24,7 @@ header {
   width: 170px;
 }
 .tpl-header-fluid {
-  margin-left: 240px;
+  /*margin-left: 240px;*/
   height: 56px;
   padding-left: 20px;
   padding-right: 20px;
