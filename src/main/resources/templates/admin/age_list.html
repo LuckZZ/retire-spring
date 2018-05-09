@@ -37,19 +37,19 @@
                             </div>
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
                                 <div class="am-form-group tpl-table-list-select">
-                                    <select data-am-selected="{btnSize: 'sm'}" id="search-key">
-                                        <option value="search-jobNum">工号</option>
-                                        <option value="search-name">姓名</option>
-                                        <option value="search-current">在世</option>
-                                        <option value="search-pass">离世</option>
+                                    <select data-am-selected="{btnSize: 'sm'}" id="head-select-key" th:field="${userCommSearch.type}">
+                                        <option value="1">工号</option>
+                                        <option value="2">姓名</option>
+                                        <option value="3">在世</option>
+                                        <option value="4">离世</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3" id="input-value">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field"/>
+                                    <input type="text" class="am-form-field" id="head-select-input" th:value="((${userCommSearch.type} eq '1') or (${userCommSearch.type} eq '2')) ? ${userCommSearch.value} : ''"/>
                                     <span class="am-input-group-btn">
-            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
+            <button id="head-select-btn1" class="am-btn am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
           </span>
                                 </div>
                             </div>
@@ -72,11 +72,12 @@
                                         <th>部门</th>
                                         <th>出生日期</th>
                                         <th>退休日期</th>
+                                        <th th:if="(${userCommSearch.type} eq '4')">离世日期</th>
                                         <th>年龄</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user:${datas.content}">
+                                    <tr th:each="user:${datas.content}" th:class="(${user.exist.toString()} eq 'yes')?'':'pass-user'">
                                         <td><input type="checkbox" th:value="${user.userId}" /></td>
                                         <td th:text="${user.userId}">1</td>
                                         <td th:text="${user.jobNum}">123456</td>
@@ -87,6 +88,7 @@
                                         <td th:text="${user.department.departmentName}" >部门</td>
                                         <td th:text="${user.birth}" >2018-5-4</td>
                                         <td th:text="${user.retireTime}" >2018-5-5</td>
+                                        <td th:if="(${userCommSearch.type} eq '4')" th:text="${user.passTime}">2018-5-9</td>
                                         <td th:text="${user.age}" >50</td>
                                     </tr>
                                     </tbody>
@@ -159,20 +161,14 @@
 
 <script>
     $(function () {
+        //页面加载完成时执行
         //加载input-age内容
         $("#input-age").load('/age/ageSelect');
+        switchSearchDiv();
+
         //是否参加change事件
-        $("#search-key").on('change',function(){
-            var key = $("#search-key").val();
-            var $divValue = $("#input-value");
-            var $divAge =  $("#input-age");
-            if (key=="search-jobNum" || key=="search-name"){
-                $divValue.show();
-                $divAge.hide();
-            }else if(key=="search-current" || key=="search-pass"){
-                $divValue.hide();
-                $divAge.show();
-            }
+        $("#head-select-key").on('change',function(){
+            switchSearchDiv();
         });
 
         //新增,打开模态框
@@ -220,6 +216,18 @@
             $("#input-age").load('/age/ageSelect');
         });
 
+
+        // 头部搜索，按工号或姓名搜索
+        $("#head-select-btn1").on('click',function(){
+            var key = $("#head-select-key").val();
+            var input = $("#head-select-input").val().trim();
+            if (input != ''){
+                window.location.href="/age/ageList/"+key+"/"+input;
+            }
+            if(input == ''){
+                window.location.href="/age/ageList";
+            }
+        });
     });
 
     //把内容加载到模态框
@@ -228,6 +236,19 @@
         $("#result-modal").load('/age/delHtml');
     }
 
+    function switchSearchDiv() {
+        var key = $("#head-select-key").val();
+        var $divValue = $("#input-value");
+        var $divAge =  $("#input-age");
+        if (key=="1" || key=="2"){
+            $divValue.show();
+            $divAge.hide();
+        }else if(key=="3" || key=="4"){
+            $divValue.hide();
+            $divAge.show();
+        }
+    }
+    
 </script>
 
 </html>

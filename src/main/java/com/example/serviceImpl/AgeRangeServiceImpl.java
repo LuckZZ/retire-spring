@@ -2,6 +2,7 @@ package com.example.serviceImpl;
 
 import com.example.dao.AgeRangeDao;
 import com.example.domain.entity.*;
+import com.example.domain.enums.Exist;
 import com.example.domain.enums.Gender;
 import com.example.service.AgeRangeService;
 import com.example.utils.UserAgePage;
@@ -27,19 +28,13 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
     @Override
     public UserAgePage findAllUserAndAge(Integer page) {
         UserAgePage userAgeData = new UserAgePage();
-        List<User> list = nativeQueryUserAge(page);
+        List<User> list = nativeQueryUserAge(SearchType.No, null ,page);
 //       数据
         userAgeData.setContent(list);
 //        当前页数
         userAgeData.setNumber(page);
 //      总页数
-        userAgeData.setTotalPages(getToalPages());
-        return userAgeData;
-    }
-
-    @Override
-    public UserAgePage findAllUserAndAge(Integer ageRangeId, Integer page) {
-        UserAgePage userAgeData = new UserAgePage();
+        userAgeData.setTotalPages(getToalPages(SearchType.No, null));
         return userAgeData;
     }
 
@@ -47,6 +42,57 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
     public AgeRange save(Integer minAge, Integer maxAge) {
         AgeRange ageRange = new AgeRange(minAge, maxAge);
         return  ageRangeDao.save(ageRange);
+    }
+
+    @Override
+    public UserAgePage findAllUserAndAgeByJobNum(String jobNum, Integer page) {
+        UserAgePage userAgeData = new UserAgePage();
+        List<User> list = nativeQueryUserAge(SearchType.JobNum, jobNum, page);
+//       数据
+        userAgeData.setContent(list);
+//        当前页数
+        userAgeData.setNumber(page);
+//      总页数
+        userAgeData.setTotalPages(getToalPages(SearchType.JobNum, jobNum));
+        return userAgeData;
+    }
+
+    @Override
+    public UserAgePage findAllUserAndAgeByName(String name, Integer page) {
+        UserAgePage userAgeData = new UserAgePage();
+        List<User> list = nativeQueryUserAge(SearchType.Name, name, page);
+//       数据
+        userAgeData.setContent(list);
+//        当前页数
+        userAgeData.setNumber(page);
+//      总页数
+        userAgeData.setTotalPages(getToalPages(SearchType.Name, name));
+        return userAgeData;
+    }
+
+    @Override
+    public UserAgePage findAllByAgeRange(Exist exist, Integer ageRangeId, Integer page) {
+        UserAgePage userAgeData = new UserAgePage();
+        //        当前页数
+        userAgeData.setNumber(page);
+
+        if (ageRangeId != -1){
+            AgeRange ageRange = ageRangeDao.findOne(ageRangeId);
+            List<User> list = nativeQueryUserAgeByRange(exist, ageRange.getMinAge(), ageRange.getMaxAge(), page);
+//        数据
+            userAgeData.setContent(list);
+//      总页数
+            userAgeData.setTotalPages(getToalPagesByRange(exist, ageRange.getMinAge(), ageRange.getMaxAge()));
+        }else {
+//            选择所有
+            List<User> list = nativeQueryUserAgeByRange(exist, -1, -1, page);
+//        数据
+            userAgeData.setContent(list);
+//      总页数
+            userAgeData.setTotalPages(getToalPagesByRange(exist, -1, -1));
+        }
+
+        return userAgeData;
     }
 
     /**
@@ -62,18 +108,26 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
      LEFT JOIN tb_department de ON u.department_id=de.department_id
      * @return
      */
-    private List<User> nativeQueryUserAge(Integer page){
+    private List<User> nativeQueryUserAge(SearchType searchType, String value, Integer page){
         EntityManager em = emf.createEntityManager();
 //        定义sql
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT u.user_id, u.job_num, u.name, u.gender, g.group_name, du.duty_name, de.department_name, u.birth, u.work_time, u.retire_time, u.pass_time, ");
-        sql.append(" (YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age  ");
+        sql.append(" SELECT u.user_id, u.job_num, u.name, u.gender, g.group_name, du.duty_name, de.department_name, u.birth, u.work_time, u.retire_time, u.pass_time, u.exist, ");
+        sql.append(" (YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age,  ");
+        sql.append(" (YEAR(pass_time)-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(pass_time, '%m%d')) AS pass_age ");
         sql.append(" FROM tb_user u ");
         sql.append(" LEFT JOIN tb_group g ON u.group_id=g.group_id ");
         sql.append(" LEFT JOIN tb_duty du ON u.duty_id=du.duty_id ");
         sql.append(" LEFT JOIN tb_department de ON u.department_id=de.department_id ");
-        sql.append(" LIMIT "+(page*10)+",10 ");
+        if (searchType == SearchType.JobNum){
+            sql.append(" WHERE u.job_num='"+value+"' ");
+        }else if(searchType == SearchType.Name){
+            sql.append(" WHERE u.name='"+value+"' ");
+        }else {
+            sql.append(" WHERE u.exist="+Exist.yes.ordinal()+" ");
+        }
 
+        sql.append(" LIMIT "+(page*10)+",10 ");
         //创建原生SQL查询QUERY实例
         Query query =  em.createNativeQuery(sql.toString());
         //执行查询，返回的是对象数组(Object[])列表,
@@ -83,15 +137,75 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         return convert(objecArraytList);
     }
 
-    private int getToalPages(){
+    private List<User> nativeQueryUserAgeByRange(Exist exist, Integer minAge, Integer maxAge, Integer page){
+        EntityManager em = emf.createEntityManager();
+//        定义sql
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT u.user_id, u.job_num, u.name, u.gender, g.group_name, du.duty_name, de.department_name, u.birth, u.work_time, u.retire_time, u.pass_time, u.exist,");
+        sql.append(" (YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age,  ");
+        sql.append(" (YEAR(pass_time)-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(pass_time, '%m%d')) AS pass_age ");
+        sql.append(" FROM tb_user u ");
+        sql.append(" LEFT JOIN tb_group g ON u.group_id=g.group_id ");
+        sql.append(" LEFT JOIN tb_duty du ON u.duty_id=du.duty_id ");
+        sql.append(" LEFT JOIN tb_department de ON u.department_id=de.department_id ");
+        sql.append(" WHERE u.exist="+exist.ordinal()+" ");
+        if (minAge != -1 && maxAge!=-1){
+            sql.append("  HAVING age BETWEEN "+minAge+" AND "+maxAge+" ");
+        }
+        sql.append(" LIMIT "+(page*10)+",10 ");
+        //创建原生SQL查询QUERY实例
+        Query query =  em.createNativeQuery(sql.toString());
+        //执行查询，返回的是对象数组(Object[])列表,
+        //每一个对象数组存的是相应的实体属性
+        List objecArraytList = query.getResultList();
+        em.close();
+        return convert(objecArraytList);
+    }
+
+    private int getToalPages(SearchType searchType, String value){
         EntityManager em = emf.createEntityManager();
 //        定义sql
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT COUNT(*) ");
         sql.append(" FROM tb_user u ");
-        sql.append(" LEFT JOIN tb_group g ON u.group_id=g.group_id ");
-        sql.append(" LEFT JOIN tb_duty du ON u.duty_id=du.duty_id ");
-        sql.append(" LEFT JOIN tb_department de ON u.department_id=de.department_id ");
+        if (searchType == SearchType.JobNum){
+            sql.append(" WHERE u.job_num='"+value+"' ");
+        }else if(searchType == SearchType.Name){
+            sql.append(" WHERE u.name='"+value+"' ");
+        }else {
+            sql.append(" WHERE u.exist="+Exist.yes.ordinal()+" ");
+        }
+        //创建原生SQL查询QUERY实例
+        Query query =  em.createNativeQuery(sql.toString());
+        //执行查询，返回的是对象数组(Object[])列表,
+        //每一个对象数组存的是相应的实体属性
+        List objecArraytList = query.getResultList();
+        em.close();
+        Object obj =  objecArraytList.get(0);
+        int toalPages = Integer.parseInt(obj.toString())/10+1;
+        return toalPages;
+    }
+
+    /**
+     SELECT COUNT(*) FROM tb_user t1 INNER JOIN
+     (
+     SELECT user_id,(YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age FROM tb_user WHERE exist=0 HAVING age BETWEEN 3 AND 5
+     )  t2
+     ON t1.user_id = t2.user_id;
+     */
+    private int getToalPagesByRange(Exist exist, Integer minAge, Integer maxAge){
+        EntityManager em = emf.createEntityManager();
+//        定义sql
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT COUNT(*) ");
+        sql.append(" FROM tb_user t1 INNER JOIN ( ");
+        sql.append(" SELECT user_id,(YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age FROM tb_user ");
+        sql.append(" WHERE exist="+exist.ordinal()+" ");
+        if (minAge != -1 && maxAge!=-1){
+            sql.append(" HAVING age BETWEEN "+minAge+" AND "+maxAge+" ");
+        }
+        sql.append(" ) t2 ");
+        sql.append(" ON t1.user_id = t2.user_id ");
 
         //创建原生SQL查询QUERY实例
         Query query =  em.createNativeQuery(sql.toString());
@@ -100,7 +214,7 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         List objecArraytList = query.getResultList();
         em.close();
         Object obj =  objecArraytList.get(0);
-        int toalPages = Integer.parseInt(obj.toString())/10;
+        int toalPages = Integer.parseInt(obj.toString())/10+1;
         return toalPages;
     }
 
@@ -120,10 +234,19 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
             user.setWorkTime(obj[8] == null ? "" : obj[8].toString());
             user.setRetireTime(obj[9] == null ? "" : obj[9].toString());
             user.setPassTime(obj[10] == null ? "" : obj[10].toString());
-            user.setAge(obj[11] == null ? "" : obj[11].toString());
+            user.setExist(Exist.values()[Integer.parseInt(obj[11] == null ? "" : obj[11].toString())]);
+            if (user.getExist() == Exist.yes){
+                user.setAge(obj[12] == null ? "" : obj[12].toString());
+            }else if (user.getExist() == Exist.no){
+                user.setAge(obj[13] == null ? "" : obj[13].toString());
+            }
             lists.add(user);
         }
         return lists;
     }
 
+    /*搜索类型*/
+    enum SearchType{
+        No, JobNum, Name;
+    }
 }
