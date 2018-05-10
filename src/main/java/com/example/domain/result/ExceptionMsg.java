@@ -103,7 +103,9 @@ public enum ExceptionMsg {
     LoginCantFailed("该用户无登陆权限",false),
     LoginSuccess("登陆成功",true),
 
-    RoleNoAccess("此用户无权限",false);
+    RoleNoAccess("此用户无权限",false),
+
+    pwdUpdateSuccess("密码修改成功",true);
 
     private String message;
     private boolean codeBool;

@@ -74,8 +74,8 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
 
     @Transactional
     @Override
-    public int updatePwd(String password, Integer grouperId) {
-        return grouperDao.updatePwd(password,grouperId);
+    public int updatePassword(String password, Integer grouperId) {
+        return grouperDao.updatePassword(password,grouperId);
     }
 
     /**

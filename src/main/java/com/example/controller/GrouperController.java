@@ -2,7 +2,9 @@ package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
+import com.example.comm.config.WebSecurityConfig;
 import com.example.domain.bean.CommSearch;
+import com.example.domain.bean.Login;
 import com.example.domain.entity.Grouper;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Role;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RequestMapping("/grouper")
@@ -112,7 +115,7 @@ public class GrouperController extends BaseController{
     @LoggerManage(description = "重置组长密码")
     public Response updatePwd(@RequestParam(value = "grouperId") String grouperId,@RequestParam(value = "password") String password){
         Integer id = Integer.parseInt(grouperId);
-        grouperService.updatePwd(password,id);
+        grouperService.updatePassword(password,id);
         return result(ExceptionMsg.ResetPwdSuccess);
     }
 
@@ -137,5 +140,25 @@ public class GrouperController extends BaseController{
         model.addAttribute("grouper",new Grouper());
         return "grouper/pwd_update";
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/pwdUpdate")
+    @LoggerManage(description = "修改管理员密码")
+    @Access(roles = Role.grouper)
+    public Response pwdUpdate(HttpServletRequest request){
+        String oldPassword = request.getParameter("oldPassword");
+        String password = request.getParameter("password");
+        //     取出session
+        HttpSession session = request.getSession();
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+        Integer grouperId = login.getId();
+        Grouper grouper = grouperService.findOne(grouperId);
+        if (!grouper.getPassword().equals(oldPassword)){
+            return result(ExceptionMsg.LoginPasswordFailed);
+        }
+        grouperService.updatePassword(password, grouperId);
+        return result(ExceptionMsg.pwdUpdateSuccess);
+    }
+
 
 }

@@ -24,12 +24,10 @@ public interface GrouperService extends BaseCrudService<Grouper,Integer>{
      */
     boolean notCanLogin(Integer grouperId);
 
-    int updatePwd(String password, Integer grouperId);
+    /*修改组长密码*/
+    int updatePassword(String password, Integer grouperId);
 
-    /**
-     * 从组长表中删除组长，并设置用户表用户的rank值
-     * @param grouperIds
-     */
+     /*从组长表中删除组长，并设置用户表用户的rank值*/
     void remove(Integer[] grouperIds);
 
     Page<Grouper> findAllByJobNum(String jobNum, Integer page);

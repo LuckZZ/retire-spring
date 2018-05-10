@@ -26,7 +26,7 @@ public interface GrouperDao extends JpaRepository<Grouper, Integer> {
     /*修改密码*/
     @Modifying(clearAutomatically=true)
     @Query("update Grouper set password=:password where grouperId=:grouperId")
-    int updatePwd(@Param("password") String password, @Param("grouperId") Integer grouperId);
+    int updatePassword(@Param("password") String password, @Param("grouperId") Integer grouperId);
 
     /*修改组长最近一次登陆时间*/
     @Modifying(clearAutomatically=true)

@@ -56,6 +56,7 @@ function formAjaxNoReload(paramForm,paramUrl) {
         {
             if (data.codeBool){
                 toastr.success(data.message, '操作成功');
+                paramForm[0].reset();
             }else {
                 toastr.error(data.message, '操作失败');
             }

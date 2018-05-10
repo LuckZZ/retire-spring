@@ -62,6 +62,10 @@ $(function () {
                 required:true,
                 range:[0,120],
                 compareVal:"#minAge"
+            },
+            oldPassword:{
+                required:true,
+                rangelength:[6,10]
             }
         },
         messages:{
@@ -102,6 +106,9 @@ $(function () {
             },
             maxAge:{
                 compareVal:"最大年龄必须大于最小年龄"
+            },
+            oldPassword:{
+                rangelength:"密码6-10位"
             }
         },
         errorPlacement: function(error, element) {

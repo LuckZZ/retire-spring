@@ -2,7 +2,9 @@ package com.example.controller;
 
 import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
+import com.example.comm.config.WebSecurityConfig;
 import com.example.domain.bean.CommSearch;
+import com.example.domain.bean.Login;
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
 import com.example.domain.enums.Role;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @RequestMapping("/admin")
 @Controller
@@ -106,6 +109,24 @@ public class AdminController extends BaseController{
     public String pwdUpdateView(Model model){
         model.addAttribute("admin",new Admin());
         return "admin/pwd_update";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/pwdUpdate")
+    @LoggerManage(description = "修改管理员密码")
+    public Response pwdUpdate(HttpServletRequest request){
+        String oldPassword = request.getParameter("oldPassword");
+        String password = request.getParameter("password");
+        //     取出session
+        HttpSession session = request.getSession();
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+        Integer adminId = login.getId();
+        Admin admin = adminService.findOne(adminId);
+        if (!admin.getPassword().equals(oldPassword)){
+            return result(ExceptionMsg.LoginPasswordFailed);
+        }
+        adminService.updatePassword(password, adminId);
+        return result(ExceptionMsg.pwdUpdateSuccess);
     }
 
     @ResponseBody

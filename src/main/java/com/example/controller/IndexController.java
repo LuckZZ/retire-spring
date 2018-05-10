@@ -64,7 +64,6 @@ public class IndexController extends BaseController{
     @RequestMapping("/loginPost")
     @LoggerManage(description = "登陆验证")
     public Response loginPost(HttpSession session, HttpServletRequest request){
-        request.getSession();
         String jobNum = request.getParameter("jobNum");
         String password = request.getParameter("password");
         String loginType = request.getParameter("loginType");

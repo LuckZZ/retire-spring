@@ -21,37 +21,58 @@
         <div th:replace="fragments/header::welcome_section"></div>
 
         <ol class="zz-breadcrumb">
-            <li><a href="/grouper/pwdUpdateView" class="am-icon-bar-chart">修改密码</a></li>
+            <li><a href="/admin/pwdUpdateView" class="am-icon-bar-chart">修改密码</a></li>
         </ol>
 
         <div class="row-content am-cf">
             <div class="row">
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
-                      <!--  This is index!-->
-
-               <!--         <div align="center">
-
-                            <div id="box">
-                                <input type="checkbox" value="1">西瓜
-                                <input type="checkbox" value="2">芒果
-                                <input type="checkbox" value="3">橙
-                                <input type="checkbox" value="4">山竹
-                                <input type="checkbox" value="5">草莓
-                                <input type="checkbox" value="6">火龙果
+                        <div class="widget-head am-cf">
+                            <div class="widget-title am-fl">修改密码</div>
+                            <div class="widget-function am-fr">
+                                <!--<a href="javascript:;" class="am-icon-cog"></a>-->
                             </div>
+                        </div>
+                        <div class="widget-body am-fr">
 
-                            <br>
+                            <form class="am-form tpl-form-border-form tpl-form-border-br" id="pwdUpdateForm" action="#">
 
-                            <input type="checkbox" id="allChecked">全选
+                                <div class="am-form-group">
+                                    <label for="password" class="am-u-sm-3 am-form-label">旧密码</label>
+                                    <div class="am-u-sm-9">
+                                        <input name="oldPassword" type="password" class="tpl-form-input" id="oldPassword" placeholder="输入密码(6-10位)">
+                                    </div>
+                                </div>
 
-                        </div>-->
+                                <div class="am-form-group">
+                                    <label for="password" class="am-u-sm-3 am-form-label">新密码</label>
+                                    <div class="am-u-sm-9">
+                                        <input name="password" type="password" class="tpl-form-input" id="password" placeholder="输入密码(6-10位)">
+                                    </div>
+                                </div>
 
+                                <div class="am-form-group">
+                                    <label for="passwordCfm" class="am-u-sm-3 am-form-label">确认密码</label>
+                                    <!--data-equal-to密码验证-->
+                                    <div class="am-u-sm-9">
+                                        <input name="passwordCfm" type="password" class="tpl-form-input" id="passwordCfm" placeholder="再次输入密码">
+                                    </div>
+                                </div>
 
+                                <div class="am-form-group">
+                                    <div class="am-u-sm-9 am-u-sm-push-3">
+                                        <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     </div>
@@ -60,18 +81,24 @@
     <div th:replace="fragments/alert::alert_section"></div>
 
     <div th:replace="fragments/footer_grouper::js"></div>
-
 </body>
+
+<!--jquery验证-->
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/messages_zh.min.js}"></script>
+
+<script th:src="@{/js/l-validate.js}"></script>
 
 <script>
     $(function () {
-
-
- /*       $('#allChecked').change(function(){
-            $('#box').children(':checkbox').prop('checked',$(this).is(':checked')?true:false);
-        });*/
-
-
+        // 提交时验证表单，small元素包裹错误信息
+        $("#pwdUpdateForm").validate({
+            submitHandler:function(form){
+                var myform = $("#pwdUpdateForm");
+                //ajax提交form
+                formAjaxNoReload(myform,"/grouper/pwdUpdate");
+            }
+        });
     });
 </script>
 
