@@ -37,9 +37,11 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     @Override
     public Activity save(String activityName, String[] labels, String[] inputs) {
         List<ActivityDef> activityDefs = new ArrayList<>();
-         for (int i = 0; i < labels.length; i ++){
-             activityDefs.add(new ActivityDef(labels[i], inputs[i]));
-         }
+        if (labels != null && inputs != null){
+            for (int i = 0; i < labels.length; i ++){
+                activityDefs.add(new ActivityDef(labels[i], inputs[i]));
+            }
+        }
         Activity activity = new Activity(activityName, activityDefs, ActivityStatus.draft);
         return activityDao.save(activity);
     }

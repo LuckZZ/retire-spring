@@ -20,6 +20,12 @@
         <!-- 欢迎 -->
         <div th:replace="fragments/header::welcome_section"></div>
 
+        <ol class="zz-breadcrumb">
+            <li><a href="/activity/draftList" class="am-icon-wpforms">活动管理</a></li>
+            <li class="zz-active">草稿列表</li>
+        </ol>
+
+
         <div class="row-content am-cf">
             <div class="row">
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
@@ -32,7 +38,7 @@
                                 <div class="am-form-group">
                                     <div class="am-btn-toolbar">
                                         <div class="am-btn-group am-btn-group-xs">
-                                            <a type="button" class="am-btn am-btn-default am-btn-success" href="/activity/addActivityView"><span class="am-icon-plus"></span> 新增</a>
+                                            <a type="button" class="am-btn am-btn-default am-btn-success" href="/activity/addDraftView"><span class="am-icon-plus"></span> 新增</a>
                                         </div>
                                     </div>
                                 </div>
@@ -54,7 +60,7 @@
                             </div>
 
                             <div class="am-u-sm-12">
-                                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " th:each="activity:${datas}">
+                                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " th:each="activity,iterStat:${datas}">
                                     <thead>
                                     <tr>
                                         <th>序号</th>
@@ -66,7 +72,8 @@
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td th:text="${activity.activityId}">1</td>
+                                        <!--<td th:text="${activity.activityId}">1</td>-->
+                                        <td th:text="${iterStat.count}+${datas.number*10}">序号1</td>
                                         <td th:text="${activity.activityName}">活动一</td>
                                         <td th:each="activityDef:${activity.activityDefs}">
                                             <select data-am-selected="{btnSize: 'sm'}">

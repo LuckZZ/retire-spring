@@ -129,4 +129,13 @@ public class GrouperController extends BaseController{
             return result(ExceptionMsg.GrouperRemoveFailed);
         }
     }
+
+    @RequestMapping(value = "/pwdUpdateView")
+    @LoggerManage(description = "修改组长密码界面")
+    @Access(roles = Role.grouper)
+    public String pwdUpdateView(Model model){
+        model.addAttribute("grouper",new Grouper());
+        return "grouper/pwd_update";
+    }
+
 }

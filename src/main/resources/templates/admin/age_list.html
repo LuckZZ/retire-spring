@@ -19,6 +19,10 @@
         <!-- 欢迎 -->
         <div th:replace="fragments/header::welcome_section"></div>
 
+        <ol class="zz-breadcrumb">
+            <li><a href="/age/ageList" class="am-icon-bar-chart">年龄统计</a></li>
+        </ol>
+
         <div class="row-content am-cf">
             <div class="row">
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
@@ -70,7 +74,7 @@
                                 <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                                     <thead>
                                     <tr>
-                                        <th><input type="checkbox"/></th>
+                                        <!--<th><input type="checkbox"/></th>-->
                                         <th>序号</th>
                                         <th>工号</th>
                                         <th>姓名</th>
@@ -85,9 +89,10 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user:${datas.content}" th:class="(${user.exist.toString()} eq 'yes')?'':'pass-user'">
-                                        <td><input type="checkbox" th:value="${user.userId}" /></td>
-                                        <td th:text="${user.userId}">1</td>
+                                    <tr th:each="user,iterStat:${datas.content}" th:class="(${user.exist.toString()} eq 'yes')?'':'pass-user'">
+                                        <!--<td><input type="checkbox" th:value="${user.userId}" /></td>-->
+                                        <!--<td th:text="${user.userId}">1</td>-->
+                                        <td th:text="${iterStat.count}+${datas.number*10}">序号1</td>
                                         <td th:text="${user.jobNum}">123456</td>
                                         <td th:text="${user.name}">张三</td>
                                         <td th:text="${user.gender.name}">性别</td>

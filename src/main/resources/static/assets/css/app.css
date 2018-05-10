@@ -300,7 +300,8 @@ ul.tpl-dropdown-content .tpl-dropdown-menu-messages-item .menu-messages-content 
 }
 .user-panel-logged-in-text {
   display: block;
-  color: #cfcfcf;
+  /*color: #cfcfcf;*/
+  color:#6d787c;
   font-size: 14px;
 }
 .tpl-user-panel-action-link {

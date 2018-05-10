@@ -101,6 +101,13 @@ public class AdminController extends BaseController{
         return "admin/admin_add";
     }
 
+    @RequestMapping(value = "/pwdUpdateView")
+    @LoggerManage(description = "修改管理员密码界面")
+    public String pwdUpdateView(Model model){
+        model.addAttribute("admin",new Admin());
+        return "admin/pwd_update";
+    }
+
     @ResponseBody
     @RequestMapping(value = "/delete")
     @LoggerManage(description = "删除管理员")

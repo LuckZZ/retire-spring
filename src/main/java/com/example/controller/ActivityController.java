@@ -117,6 +117,18 @@ public class ActivityController extends BaseController{
     }
 
     /**
+     * 进入增加草稿界面
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/addDraftView")
+    @LoggerManage(description = "增加活动界面")
+    public String addDraftView(Model model){
+        return "admin/draft_add";
+    }
+
+
+    /**
      * 修改活动界面
      * @param activityId
      * @param model

@@ -20,6 +20,12 @@
         <!-- 欢迎 -->
         <div th:replace="fragments/header::welcome_section"></div>
 
+        <ol class="zz-breadcrumb">
+            <li><a href="/activity/activityList" class="am-icon-wpforms">活动管理</a></li>
+            <li><a href="/activity/activityList">活动列表</a></li>
+            <li class="zz-active">活动报名</li>
+        </ol>
+
         <div class="row-content am-cf">
             <div class="row">
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
@@ -71,9 +77,10 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user:${datas}">
+                                    <tr th:each="user,iterStat:${datas}">
                                         <td><input type="checkbox" th:value="${user.userId}"/></td>
-                                        <td th:text="${user.userId}">序号1</td>
+                                        <!--<td th:text="${user.userId}">序号1</td>-->
+                                        <td th:text="${iterStat.count}+${datas.number*10}">序号1</td>
                                         <td th:text="${user.jobNum}">工号123456</td>
                                         <td th:text="${user.name}">姓名张三</td>
                                         <td th:text="${user.group.groupName}">组别组一</td>

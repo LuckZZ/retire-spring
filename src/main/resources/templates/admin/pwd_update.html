@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="fragments/head::head_section('首页')">
+<head th:include="fragments/head::head_section('修改密码')">
 </head>
 
 <body data-type="widgets">
@@ -13,7 +13,7 @@
     <!-- 风格切换 -->
     <div th:replace="fragments/theme::theme_section"></div>
     <!-- 侧边导航栏 -->
-    <div th:replace="fragments/left_admin::left_section('home')"></div>
+    <div th:replace="fragments/left_admin::left_section('pwdUpdateView')"></div>
 
     <!-- 内容区域 -->
     <div class="tpl-content-wrapper">
@@ -21,13 +21,8 @@
         <div th:replace="fragments/header::welcome_section"></div>
 
         <ol class="zz-breadcrumb">
-            <li><a href="/admin/index" class="am-icon-home">首页</a></li>
+            <li><a href="/admin/pwdUpdateView" class="am-icon-bar-chart">修改密码</a></li>
         </ol>
-  <!--      <ol class="zz-breadcrumb">
-            <li><a href="#" class="am-icon-home">首页</a></li>
-            <li><a href="#">表单</a></li>
-            <li class="zz-active">Amaze UI 表单</li>
-        </ol>-->
 
         <div class="row-content am-cf">
             <div class="row">
@@ -35,7 +30,7 @@
                     <div class="widget am-cf">
                       <!--  This is index!-->
 
-                        <div align="center">
+               <!--         <div align="center">
 
                             <div id="box">
                                 <input type="checkbox" value="1">西瓜
@@ -50,7 +45,7 @@
 
                             <input type="checkbox" id="allChecked">全选
 
-                        </div>
+                        </div>-->
 
 
                     </div>
@@ -71,9 +66,9 @@
     $(function () {
 
 
-        $('#allChecked').change(function(){
+ /*       $('#allChecked').change(function(){
             $('#box').children(':checkbox').prop('checked',$(this).is(':checked')?true:false);
-        });
+        });*/
 
 
     });

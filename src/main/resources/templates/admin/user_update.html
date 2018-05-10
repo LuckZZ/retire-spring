@@ -19,12 +19,18 @@
             <!-- 欢迎 -->
             <div th:replace="fragments/header::welcome_section"></div>
 
+            <ol class="zz-breadcrumb">
+                <li><a href="/user/userList" class="am-icon-user">人员管理</a></li>
+                <li><a href="/user/userList">组员列表</a></li>
+                <li class="zz-active">修改组员信息</li>
+            </ol>
+
             <div class="row-content am-cf">
                 <div class="row">
                     <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                         <div class="widget am-cf">
                             <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">修改用户</div>
+                                <div class="widget-title am-fl">修改组员信息</div>
                                 <div class="widget-function am-fr">
                                     <!--<a href="javascript:;" class="am-icon-cog"></a>-->
                                 </div>

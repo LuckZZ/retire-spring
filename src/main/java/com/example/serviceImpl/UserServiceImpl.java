@@ -1,5 +1,6 @@
 package com.example.serviceImpl;
 import com.example.comm.Constant;
+import com.example.dao.GrouperDao;
 import com.example.dao.JoinDao;
 import com.example.dao.UserDao;
 import com.example.domain.bean.UserSearchForm;
@@ -32,6 +33,12 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private GrouperDao grouperDao;
+
+    @Autowired
+    private JoinDao joinDao;
+
     @Override
     public boolean existsByJobNum(String jobNum) {
         return userDao.existsByJobNum(jobNum);
@@ -45,6 +52,15 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Transactional
     @Override
     public void delete(Integer[] userIds) {
+//       删除组长表
+        for (int i = 0; i < userIds.length; i ++){
+            grouperDao.deleteByUserId(userIds[i]);
+        }
+        //       删除报名表
+        for (int i = 0; i < userIds.length; i ++){
+            joinDao.deleteAllByUser_UserId(userIds[i]);
+        }
+//        删除组员表
         for (int i = 0; i < userIds.length; i ++){
             userDao.delete(userIds[i]);
         }
@@ -135,7 +151,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Override
     public Page<User> findAllByGroupId(Integer groupId, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        Page<User> datas = userDao.findAllByGroup_GroupId(groupId, pageable);
+        Page<User> datas = userDao.findAllByGroup_GroupIdAndExist(groupId, Exist.yes, pageable);
         return datas;
     }
 
@@ -207,9 +223,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
         Iterable<Integer> it = Arrays.asList(userIds);
         return userDao.findAll(it);
     }
-
-    @Autowired
-    private JoinDao joinDao;
 
     @Override
     public Page<User> findAllNoJoinCriteria(Integer activityId, UserSearchForm userSearchForm, Integer page) {

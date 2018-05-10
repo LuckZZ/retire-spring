@@ -12,7 +12,7 @@
         <!-- 风格切换 -->
         <div th:replace="fragments/theme::theme_section"></div>
         <!-- 侧边导航栏 -->
-        <div th:replace="fragments/left_admin::left_section('activityList')"></div>
+        <div th:replace="fragments/left_admin::left_section('draftList')"></div>
 
         <!-- 内容区域 -->
         <div class="tpl-content-wrapper">
@@ -20,8 +20,8 @@
             <div th:replace="fragments/header::welcome_section"></div>
 
             <ol class="zz-breadcrumb">
-                <li><a href="/activity/activityList" class="am-icon-wpforms">活动管理</a></li>
-                <li><a href="/activity/activityList">活动列表</a></li>
+                <li><a href="/activity/draftList" class="am-icon-wpforms">活动管理</a></li>
+                <li><a href="/activity/draftList">草稿列表</a></li>
                 <li class="zz-active">活动新增</li>
             </ol>
 

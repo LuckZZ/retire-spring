@@ -20,6 +20,11 @@
             <!-- 欢迎 -->
             <div th:replace="fragments/header::welcome_section"></div>
 
+            <ol class="zz-breadcrumb">
+              <li><a href="/admin/adminList" class="am-icon-user">人员管理</a></li>
+              <li class="zz-active">管理员列表</li>
+            </ol>
+
             <div class="row-content am-cf">
                 <div class="row">
                     <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
@@ -55,9 +60,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="admin:${datas}">
+                                            <tr th:each="admin,iterStat:${datas}">
                                                 <td><input type="checkbox" th:value="${admin.adminId}"/></td>
-                                                <td th:text="${admin.adminId}">1</td>
+                                                <!--<td th:text="${admin.adminId}">1</td>-->
+                                                <td th:text="${iterStat.count}+${datas.number*10}">序号1</td>
                                                 <td th:text="${admin.jobNum}">123456</td>
                                                 <td th:text="${admin.name}">测试管理员一</td>
                                                 <td th:text="${admin.lastTime}">2016-09-26</td>
@@ -256,7 +262,6 @@
                 formAjaxNoReload(myform,"/admin/update/2");
             }
         });
-
 
     });
 </script>

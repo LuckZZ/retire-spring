@@ -51,7 +51,7 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     Page<User> findAllByGroup_GroupIdAndName(Integer groupId, String name, Pageable pageable);
 
     /*根据组号查询用户*/
-    Page<User> findAllByGroup_GroupId(Integer groupId, Pageable pageable);
+    Page<User> findAllByGroup_GroupIdAndExist(Integer groupId, Exist exist, Pageable pageable);
 
     /*根据工号查询用户*/
     Page<User> findAllByJobNum(String jobNum, Pageable pageable);

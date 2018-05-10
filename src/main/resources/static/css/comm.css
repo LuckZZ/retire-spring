@@ -43,3 +43,26 @@ input[type=number]::-webkit-outer-spin-button {
 .login-pic img{
     height: 180px;
 }
+
+/*链接链*/
+.zz-breadcrumb{
+    font-size: 85%;
+}
+.zz-breadcrumb>li {
+    display: inline-block;
+}
+.zz-breadcrumb>li+li:before {
+    content: "\00bb\00a0";
+    padding: 0 8px;
+    color: #ccc;
+}
+.zz-breadcrumb>.zz-active {
+    color: #999;
+}
+.zz-breadcrumb>li [class*=am-icon-]:before {
+    color: #999;
+    margin-right: 5px;
+}
+ol.zz-breadcrumb{
+    margin-bottom: 0px;
+}

@@ -13,15 +13,13 @@
             </div>
             <span class="user-panel-logged-in-text">
               <i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>
-              禁言小张
+              <span th:text="${session.login_user.role.name}"></span>
           </span>
-            <a href="javascript:;" class="tpl-user-panel-action-link"> <span class="am-icon-pencil"></span> 账号设置</a>
         </div>
     </div>
 
     <!-- 菜单 -->
     <ul class="sidebar-nav">
-        <li class="sidebar-nav-heading">Components <span class="sidebar-nav-heading-info"> 附加组件</span></li>
 
         <li class="sidebar-nav-link">
             <a href="/admin/index" id="home"  th:class="(${activeId} eq 'home')?'active':''">
@@ -31,7 +29,7 @@
 
         <li class="sidebar-nav-link">
             <a href="javascript:;" class="sidebar-nav-sub-title">
-                <i class="am-icon-table sidebar-nav-link-logo"></i> 人员管理
+                <i class="am-icon-user sidebar-nav-link-logo"></i> 人员管理
                 <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
             </a>
             <ul class="sidebar-nav sidebar-nav-sub">
@@ -82,7 +80,7 @@
 
         <li class="sidebar-nav-link">
             <a href="javascript:;" class="sidebar-nav-sub-title">
-                <i class="am-icon-table sidebar-nav-link-logo"></i> 活动管理
+                <i class="am-icon-wpforms sidebar-nav-link-logo"></i> 活动管理
                 <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
             </a>
             <ul class="sidebar-nav sidebar-nav-sub">
@@ -103,7 +101,14 @@
 
         <li class="sidebar-nav-link">
             <a href="/age/ageList" id="ageList" th:class="(${activeId} eq 'ageList')?'active':''">
-                <i class="am-icon-home sidebar-nav-link-logo"></i>年龄统计
+                <i class="am-icon-bar-chart sidebar-nav-link-logo"></i>年龄统计
+            </a>
+
+        </li>
+
+        <li class="sidebar-nav-link">
+            <a href="/admin/pwdUpdateView" id="pwdUpdateView" th:class="(${activeId} eq 'pwdUpdateView')?'active':''">
+                <i class="am-icon-wrench sidebar-nav-link-logo"></i>修改密码
             </a>
         </li>
 
