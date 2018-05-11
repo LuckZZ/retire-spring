@@ -68,6 +68,8 @@ public class IndexController extends BaseController{
         String password = request.getParameter("password");
         String loginType = request.getParameter("loginType");
 
+        logger.info("正在登陆...  JobNum："+jobNum+" Role："+Role.values()[Integer.parseInt(loginType)].getName());
+
         if ("0".equals(loginType)){
 //        管理员 工号是否存在
             boolean exists = adminService.existsByJobNum(jobNum);
@@ -91,6 +93,9 @@ public class IndexController extends BaseController{
 //            记录sesion
             Login login = new Login(admin.getAdminId(), jobNum, admin.getName(), Role.admin);
             session.setAttribute(WebSecurityConfig.SESSION_KEY, login);
+
+            logger.info("登陆成功...  JobNum："+jobNum+" Role："+Role.values()[Integer.parseInt(loginType)].getName());
+
             return result("admin/index",ExceptionMsg.LoginSuccess);
         }else if("1".equals(loginType)){
 //        组长 工号是否存在
@@ -114,6 +119,9 @@ public class IndexController extends BaseController{
 //            记录session
             Login login = new Login(grouper.getGrouperId(), jobNum, grouper.getUser().getName(), Role.grouper, grouper.getUser().getGroup());
             session.setAttribute(WebSecurityConfig.SESSION_KEY, login);
+
+            logger.info("登陆成功...  JobNum："+jobNum+" Role："+Role.values()[Integer.parseInt(loginType)].getName());
+
             return result("grouper/index",ExceptionMsg.LoginSuccess);
 
         }
