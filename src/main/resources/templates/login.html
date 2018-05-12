@@ -107,15 +107,15 @@
             var str_jobNum = $("#jobNum").val();
             var str_password = $("#password").val();
             var sel_loginType = $("#loginType").val();
-            $.cookie("rmbUser", "true",{expire:7});
-            $.cookie("c_jobNum",str_jobNum,{expire:7});
-            $.cookie("c_password",str_password,{expire:7});
-            $.cookie("c_loginType",sel_loginType,{expire:7});
+            $.cookie("rmbUser", "true",{expires:7});
+            $.cookie("c_jobNum",str_jobNum,{expires:7});
+            $.cookie("c_password",str_password,{expires:7});
+            $.cookie("c_loginType",sel_loginType,{expires:7});
         }else {
-            $.cookie("rmbUser", "false",{expire:-1});
-            $.cookie("c_jobNum","",{expire:-1});
-            $.cookie("c_password","",{expire:-1});
-            $.cookie("c_loginType","0",{expire:-1});
+            $.cookie("rmbUser", "false",{expires:-1});
+            $.cookie("c_jobNum","",{expires:-1});
+            $.cookie("c_password","",{expires:-1});
+            $.cookie("c_loginType","0",{expires:-1});
         }
     }
 

@@ -13,7 +13,20 @@ $(function () {
         }
     }
 
-})
+    //    测试cookie
+    // $.cookie("cookie-msg", data.message);
+    // alert("cookie-msg:"+$.cookie("cookie-msg"));
+    // alert("true:"+($.cookie("cookie-msg")!=""));
+    // $.cookie("cookie-msg", "");
+    // alert("cookie-msg:"+$.cookie("cookie-msg"));
+    // alert("true:"+($.cookie("cookie-msg")==""));
+    // alert("false:"+($.cookie("cookie-msg")!=""));
+    if ($.cookie("cookie-msg")!=""){
+        toastr.success($.cookie("cookie-msg"), '操作成功');
+        $.cookie("cookie-msg", "");
+    }
+
+});
 
 /**
  * toastrOpt提示框
@@ -83,6 +96,9 @@ function formAjaxReload(paramForm,paramUrl) {
         success: function (data)
         {
             if (data.codeBool){
+                //刷新页面前，把提示信息存入cookie
+                $.cookie("cookie-msg", data.message);
+                //刷新页面
                 location.reload();
             }else {
                 toastr.error(data.message, '操作失败');
@@ -112,6 +128,9 @@ function idAjaxReload(paramUrl,paramId) {
         success: function (data)
         {
             if (data.codeBool){
+                //刷新页面前，把提示信息存入cookie
+                $.cookie("cookie-msg", data.message);
+                //刷新页面
                 location.reload();
             }else {
                 toastr.error(data.message, '操作失败');
@@ -136,6 +155,9 @@ function twoIdAjaxReload(paramUrl,paramVal1,paramVal2) {
         success: function (data)
         {
             if (data.codeBool){
+                //刷新页面前，把提示信息存入cookie
+                $.cookie("cookie-msg", data.message);
+                //刷新页面
                 location.reload();
             }else {
                 toastr.error(data.message, '操作失败');
