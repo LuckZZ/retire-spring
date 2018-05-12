@@ -14,8 +14,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="userLoad:${usersLoad}">
-            <td th:text="${userLoad.userId}">1</td>
+        <tr th:each="userLoad,iterStat:${usersLoad}">
+            <!--<td th:text="${userLoad.userId}">1</td>-->
+            <td th:text="${iterStat.count}">序号1</td>
             <td th:text="${userLoad.jobNum}">123456</td>
             <td th:text="${userLoad.name}">组长名字</td>
             <td th:text="${userLoad.group.groupName}">组别一</td>

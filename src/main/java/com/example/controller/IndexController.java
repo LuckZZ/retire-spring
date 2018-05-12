@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.comm.Constant;
 import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
 import com.example.comm.config.WebSecurityConfig;
@@ -13,6 +14,7 @@ import com.example.domain.result.Response;
 import com.example.service.AdminService;
 import com.example.service.GrouperService;
 import com.example.utils.DateUtils;
+import com.example.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +69,9 @@ public class IndexController extends BaseController{
         String jobNum = request.getParameter("jobNum");
         String password = request.getParameter("password");
         String loginType = request.getParameter("loginType");
+
+//        加密后，密码
+        password = getPasswordMD5(password);
 
         logger.info("正在登陆...  JobNum："+jobNum+" Role："+Role.values()[Integer.parseInt(loginType)].getName());
 
@@ -164,6 +169,16 @@ public class IndexController extends BaseController{
     @Access(roles = {Role.admin})
     public String hello(){
         return "this is hello";
+    }
+
+    /**
+     * 密码加密后，字符串
+     * @param password
+     * @return
+     */
+    private String getPasswordMD5(String password){
+        String str = MD5Util.encrypt(password+ Constant.PASSWORD_SALT);
+        return str;
     }
 
 }

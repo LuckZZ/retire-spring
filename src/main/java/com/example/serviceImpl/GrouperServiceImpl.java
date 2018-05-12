@@ -8,6 +8,7 @@ import com.example.domain.entity.User;
 import com.example.domain.enums.CanLogin;
 import com.example.domain.enums.Rank;
 import com.example.service.GrouperService;
+import com.example.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,7 +53,7 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
         }else if (oldRank == Rank.user){
 //            以前是组员，现在设置为组长
             newRank = Rank.grouper;
-            grouperDao.save(new Grouper(user,"123456", CanLogin.no));
+            grouperDao.save(new Grouper(user,getPasswordMD5("123456"), CanLogin.no));
         }
 //            更改用户rank字段
         userDao.updateRank(newRank,userId);
@@ -117,6 +118,16 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
     @Override
     public List<Grouper> findAllByJobNumAndPassword(String jobNum, String password) {
         return grouperDao.findAllByUser_JobNumAndPassword(jobNum, password);
+    }
+
+    /**
+     * 密码加密后，字符串
+     * @param password
+     * @return
+     */
+    private String getPasswordMD5(String password){
+        String str = MD5Util.encrypt(password+ Constant.PASSWORD_SALT);
+        return str;
     }
 
 }

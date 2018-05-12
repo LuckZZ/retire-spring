@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.comm.Constant;
 import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
 import com.example.comm.config.WebSecurityConfig;
@@ -13,6 +14,7 @@ import com.example.domain.result.Response;
 import com.example.service.GrouperService;
 import com.example.service.UserService;
 import com.example.utils.DataUtils;
+import com.example.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -115,7 +117,7 @@ public class GrouperController extends BaseController{
     @LoggerManage(description = "重置组长密码")
     public Response updatePwd(@RequestParam(value = "grouperId") String grouperId,@RequestParam(value = "password") String password){
         Integer id = Integer.parseInt(grouperId);
-        grouperService.updatePassword(password,id);
+        grouperService.updatePassword(getPasswordMD5(password),id);
         return result(ExceptionMsg.ResetPwdSuccess);
     }
 
@@ -143,7 +145,7 @@ public class GrouperController extends BaseController{
 
     @ResponseBody
     @RequestMapping(value = "/pwdUpdate")
-    @LoggerManage(description = "修改管理员密码")
+    @LoggerManage(description = "修改组长密码")
     @Access(roles = Role.grouper)
     public Response pwdUpdate(HttpServletRequest request){
         String oldPassword = request.getParameter("oldPassword");
@@ -153,12 +155,21 @@ public class GrouperController extends BaseController{
         Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         Integer grouperId = login.getId();
         Grouper grouper = grouperService.findOne(grouperId);
-        if (!grouper.getPassword().equals(oldPassword)){
+        if (!grouper.getPassword().equals(getPasswordMD5(oldPassword))){
             return result(ExceptionMsg.LoginPasswordFailed);
         }
-        grouperService.updatePassword(password, grouperId);
+        grouperService.updatePassword(getPasswordMD5(password), grouperId);
         return result(ExceptionMsg.pwdUpdateSuccess);
     }
 
+    /**
+     * 密码加密后，字符串
+     * @param password
+     * @return
+     */
+    private String getPasswordMD5(String password){
+        String str = MD5Util.encrypt(password+ Constant.PASSWORD_SALT);
+        return str;
+    }
 
 }
