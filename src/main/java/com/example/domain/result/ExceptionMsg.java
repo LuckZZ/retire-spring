@@ -105,7 +105,11 @@ public enum ExceptionMsg {
 
     RoleNoAccess("此用户无权限",false),
 
-    pwdUpdateSuccess("密码修改成功",true);
+    pwdUpdateSuccess("密码修改成功",true),
+
+    FileUploadEmptyFailed("图片上传为空",false),
+    FileUploadFailed("图片上传失败",false),
+    FileUploadSuccess("图片上传成功",true);
 
     private String message;
     private boolean codeBool;

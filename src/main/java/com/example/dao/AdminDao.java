@@ -15,6 +15,11 @@ import java.util.List;
 @Repository
 public interface AdminDao extends JpaRepository<Admin, Integer> {
 
+    /*根据adminId修改图片*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Admin set imgUrl=:imgUrl where adminId=:adminId")
+    int updateImg(@Param("imgUrl") String imgUrl, @Param("adminId") Integer adminId);
+
     /*根据工号查看管理员是否存在*/
     boolean existsByJobNum(String jobNum);
 

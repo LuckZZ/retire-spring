@@ -23,6 +23,11 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     /*根据userId和groupId查询是否有对应的数据*/
     boolean existsByUserIdAndGroup_GroupId(Integer userId, Integer groupId);
 
+    /*根据userId修改图片*/
+    @Modifying(clearAutomatically=true)
+    @Query("update User set imgUrl=:imgUrl where userId=:userId")
+    int updateImg(@Param("imgUrl") String imgUrl, @Param("userId") Integer userId);
+
     @Modifying(clearAutomatically=true)
     @Query("update User set rank=:rank where userId=:userId")
     int updateRank(@Param("rank") Rank rank, @Param("userId") Integer userId);

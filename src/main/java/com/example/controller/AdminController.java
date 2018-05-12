@@ -12,7 +12,9 @@ import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.AdminService;
 import com.example.utils.DataUtils;
+import com.example.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.UUID;
 
 @RequestMapping("/admin")
 @Controller
@@ -28,6 +32,9 @@ import javax.servlet.http.HttpSession;
 public class AdminController extends BaseController{
     @Autowired
     private AdminService adminService;
+
+    @Value("${file.pictures.url}")
+    private String filePicturesUrl;
 
     @RequestMapping("/adminList")
     @LoggerManage(description = "管理员列表")
@@ -220,31 +227,40 @@ public class AdminController extends BaseController{
     public Response fileUpload(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request){
 
         String adminId = request.getParameter("adminId");
-        String jobNum = request.getParameter("jobNum");
-        String imgUrl = request.getParameter("imgUrl");
-        String fileName = file.getOriginalFilename();
-
-        System.out.println("adminId:"+adminId);
-        System.out.println("jobNum:"+jobNum);
-        System.out.println("imgUrl:"+imgUrl);
-        System.out.println("fileName:"+fileName);
-
- /*       String filePath = request.getSession().getServletContext().getRealPath("/");
-        System.out.println(filePath);*/
+        String oldFileName = file.getOriginalFilename();
 
         if(file.isEmpty()){
-            return result(ExceptionMsg.FAILED);
+            logger.warn("文件为空");
+            return result(ExceptionMsg.FileUploadEmptyFailed);
         }
 
-        return result(ExceptionMsg.SUCCESS);
+        String fileName= UUID.randomUUID().toString()+"."+ FileUtils.getFileExtName(oldFileName);
+//        String savePath = filePicturesUrl +fileName;
 
-/*        ImgUtils imgUtils = new ImgUtils(jobNum,file);
         try {
-            imgUtils.save();
-            return result(ExceptionMsg.SUCCESS);
+//            上传图片
+            FileUtils.uploadFile(file, filePicturesUrl, fileName);
+            logger.info("上传图片成功,图片名："+fileName);
         } catch (IOException e) {
             e.printStackTrace();
-            return result(ExceptionMsg.FAILED);
-        }*/
+            logger.error("上传图片出现异常："+e);
+            return result(ExceptionMsg.FileUploadFailed);
+        }
+        //        删除以前的图片
+        Admin admin =  adminService.findOne(Integer.parseInt(adminId));
+        FileUtils.deleteFile(filePicturesUrl+admin.getImgUrl());
+        //            修改数据库
+        adminService.updateImg(fileName, Integer.parseInt(adminId));
+
+        HttpSession session = request.getSession();
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+//        如果相等，修改session图片
+        if (login.getId() == Integer.parseInt(adminId)){
+            login.setImgUrl(fileName);
+            session.setAttribute(WebSecurityConfig.SESSION_KEY, login);
+        }
+
+        return result(ExceptionMsg.FileUploadSuccess);
     }
+
 }

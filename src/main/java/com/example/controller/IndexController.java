@@ -91,7 +91,7 @@ public class IndexController extends BaseController{
             adminService.updateLastTime(DateUtils.getCuttentFormatTime(),admin.getAdminId());
 
 //            记录sesion
-            Login login = new Login(admin.getAdminId(), jobNum, admin.getName(), Role.admin);
+            Login login = new Login(admin.getAdminId(), jobNum, admin.getName(), admin.getImgUrl(), Role.admin);
             session.setAttribute(WebSecurityConfig.SESSION_KEY, login);
 
             logger.info("登陆成功...  JobNum："+jobNum+" Role："+Role.values()[Integer.parseInt(loginType)].getName());
@@ -117,7 +117,7 @@ public class IndexController extends BaseController{
             //            更新登录时间
             grouperService.updateLastTime(DateUtils.getCuttentFormatTime(), grouper.getGrouperId());
 //            记录session
-            Login login = new Login(grouper.getGrouperId(), jobNum, grouper.getUser().getName(), Role.grouper, grouper.getUser().getGroup());
+            Login login = new Login(grouper.getGrouperId(), jobNum, grouper.getUser().getName(), grouper.getUser().getImgUrl(), Role.grouper, grouper.getUser().getGroup());
             session.setAttribute(WebSecurityConfig.SESSION_KEY, login);
 
             logger.info("登陆成功...  JobNum："+jobNum+" Role："+Role.values()[Integer.parseInt(loginType)].getName());

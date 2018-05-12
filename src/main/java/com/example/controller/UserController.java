@@ -13,7 +13,9 @@ import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.*;
 import com.example.utils.DataUtils;
+import com.example.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @RequestMapping("/user")
 @Controller
@@ -46,6 +50,9 @@ public class UserController extends BaseController{
 
     @Autowired
     private DutyService dutyService;
+
+    @Value("${file.pictures.url}")
+    private String filePicturesUrl;
 
    @RequestMapping("/userList")
    @LoggerManage(description = "组员列表")
@@ -232,34 +239,35 @@ public class UserController extends BaseController{
     @LoggerManage(description = "图片上传")
     public Response fileUpload(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request){
 
-        String adminId = request.getParameter("userId");
-        String jobNum = request.getParameter("jobNum");
-        String imgUrl = request.getParameter("imgUrl");
-        String fileName = file.getOriginalFilename();
-
-        System.out.println("userId:"+adminId);
-        System.out.println("jobNum:"+jobNum);
-        System.out.println("imgUrl:"+imgUrl);
-        System.out.println("fileName:"+fileName);
-
- /*       String filePath = request.getSession().getServletContext().getRealPath("/");
-        System.out.println(filePath);*/
+        String userId = request.getParameter("userId");
+        String oldFileName = file.getOriginalFilename();
 
         if(file.isEmpty()){
-            return result(ExceptionMsg.FAILED);
+            logger.warn("文件为空");
+            return result(ExceptionMsg.FileUploadEmptyFailed);
         }
 
-        return result(ExceptionMsg.SUCCESS);
+        String fileName= UUID.randomUUID().toString()+"."+FileUtils.getFileExtName(oldFileName);
+//        String savePath = filePicturesUrl +fileName;
 
-/*        ImgUtils imgUtils = new ImgUtils(jobNum,file);
         try {
-            imgUtils.save();
-            return result(ExceptionMsg.SUCCESS);
+//            上传图片
+            FileUtils.uploadFile(file, filePicturesUrl, fileName);
+            logger.info("上传图片成功,图片名："+fileName);
         } catch (IOException e) {
             e.printStackTrace();
-            return result(ExceptionMsg.FAILED);
-        }*/
+            logger.error("上传图片出现异常："+e);
+            return result(ExceptionMsg.FileUploadFailed);
+        }
+//        删除以前的图片
+        User user =  userService.findOne(Integer.parseInt(userId));
+        FileUtils.deleteFile(filePicturesUrl+user.getImgUrl());
+        //            修改数据库
+        userService.updateImg(fileName, Integer.parseInt(userId));
+
+        return result(ExceptionMsg.FileUploadSuccess);
     }
+
     @RequestMapping("/changeGroupHtml")
     @LoggerManage(description = "修改组员分组页面")
     public String changeGroupHtml(@RequestParam(value = "value") String value, Model model){

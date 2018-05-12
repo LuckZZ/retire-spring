@@ -8,6 +8,9 @@ import java.util.List;
 
 public interface AdminService extends BaseCrudService<Admin,Integer>{
 
+    /*根据adminId修改图片*/
+    int updateImg(String imgUrl, Integer adminId);
+
     /*根据工号和密码查询所有管理员*/
     List<Admin> findAllByJobNumAndPassword(String jobNum, String password);
 

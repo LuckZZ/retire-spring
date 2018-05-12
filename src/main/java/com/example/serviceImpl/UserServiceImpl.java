@@ -11,7 +11,9 @@ import com.example.domain.enums.Exist;
 import com.example.domain.enums.Gender;
 import com.example.domain.enums.Rank;
 import com.example.service.UserService;
+import com.example.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +42,9 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Autowired
     private JoinDao joinDao;
 
+    @Value("${file.pictures.url}")
+    private String filePicturesUrl;
+
     @Override
     public boolean existsByJobNum(String jobNum) {
         return userDao.existsByJobNum(jobNum);
@@ -51,6 +57,12 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
 
     @Transactional
     @Override
+    public int updateImg(String imgUrl, Integer userId) {
+        return userDao.updateImg(imgUrl, userId);
+    }
+
+    @Transactional
+    @Override
     public void delete(Integer[] userIds) {
 //       删除组长表
         for (int i = 0; i < userIds.length; i ++){
@@ -59,6 +71,12 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
         //       删除报名表
         for (int i = 0; i < userIds.length; i ++){
             joinDao.deleteAllByUser_UserId(userIds[i]);
+        }
+        //        删除图片
+        for (int i = 0; i < userIds.length; i ++){
+//            userDao.delete(userIds[i]);
+            User user = userDao.findOne(userIds[i]);
+            FileUtils.deleteFile(filePicturesUrl+user.getImgUrl());
         }
 //        删除组员表
         for (int i = 0; i < userIds.length; i ++){

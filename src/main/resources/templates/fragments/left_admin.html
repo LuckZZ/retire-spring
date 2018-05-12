@@ -9,7 +9,7 @@
     <div class="tpl-sidebar-user-panel">
         <div class="tpl-user-panel-slide-toggleable">
             <div class="tpl-user-panel-profile-picture">
-                <img th:src="@{/assets/img/user04.png}" alt="">
+                <img th:src="${session.login_user.imgUrl == null?'/img/user.jpg':'/images/'+session.login_user.imgUrl}" alt="">
             </div>
             <span class="user-panel-logged-in-text">
               <i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>

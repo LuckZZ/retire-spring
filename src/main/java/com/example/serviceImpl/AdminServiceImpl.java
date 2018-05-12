@@ -5,7 +5,9 @@ import com.example.dao.AdminDao;
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
 import com.example.service.AdminService;
+import com.example.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,15 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
 
     @Autowired
     private AdminDao adminDao;
+
+    @Value("${file.pictures.url}")
+    private String filePicturesUrl;
+
+    @Transactional
+    @Override
+    public int updateImg(String imgUrl, Integer adminId) {
+        return adminDao.updateImg(imgUrl, adminId);
+    }
 
     @Override
     public List<Admin> findAllByJobNumAndPassword(String jobNum, String password) {
@@ -54,6 +65,12 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
     @Transactional
     @Override
     public void delete(Integer[] adminIds) {
+//        删除图片
+        for (int i = 0; i < adminIds.length; i ++){
+            Admin admin = adminDao.findOne(adminIds[i]);
+            FileUtils.deleteFile(filePicturesUrl+admin.getImgUrl());
+        }
+//        删除管理员
         for (int i = 0; i < adminIds.length; i ++){
             adminDao.delete(adminIds[i]);
         }

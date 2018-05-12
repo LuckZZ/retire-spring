@@ -10,23 +10,26 @@ public class Login {
     private Integer id;
     private String jobNum;
     private String name;
+    private String imgUrl;
     private Role role;
     private Group group;
 
     public Login() {
     }
 
-    public Login(Integer id, String jobNum, String name, Role role) {
+    public Login(Integer id, String jobNum, String name, String imgUrl, Role role) {
         this.id = id;
         this.jobNum = jobNum;
         this.name = name;
+        this.imgUrl = imgUrl;
         this.role = role;
     }
 
-    public Login(Integer id, String jobNum, String name, Role role, Group group) {
+    public Login(Integer id, String jobNum, String name, String imgUrl, Role role, Group group) {
         this.id = id;
         this.jobNum = jobNum;
         this.name = name;
+        this.imgUrl = imgUrl;
         this.role = role;
         this.group = group;
     }
@@ -69,5 +72,13 @@ public class Login {
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 }
