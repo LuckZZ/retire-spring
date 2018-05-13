@@ -109,7 +109,10 @@ public enum ExceptionMsg {
 
     FileUploadEmptyFailed("图片上传为空",false),
     FileUploadFailed("图片上传失败",false),
-    FileUploadSuccess("图片上传成功",true);
+    FileUploadSuccess("图片上传成功",true),
+
+    EmailUpdFailed("邮箱修改失败",false),
+    EmailUpdSuccess("邮箱修改成功",true);
 
     private String message;
     private boolean codeBool;

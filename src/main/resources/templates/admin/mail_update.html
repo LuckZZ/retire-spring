@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/head::head_section('修改邮箱')">
+</head>
+
+<body data-type="widgets">
+    <!--theme.js放到这，快速获得缓存的主题-->
+    <script th:src="@{/assets/js/theme.js}"></script>
+    <div class="am-g tpl-g">
+    <!-- 头部 -->
+    <div th:replace="fragments/header::header_section"></div>
+    <!-- 风格切换 -->
+    <div th:replace="fragments/theme::theme_section"></div>
+    <!-- 侧边导航栏 -->
+    <div th:replace="fragments/left_admin::left_section('emailUpdateView')"></div>
+
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper">
+        <!-- 欢迎 -->
+        <div th:replace="fragments/header::welcome_section"></div>
+
+        <ol class="zz-breadcrumb">
+            <li><a href="/admin/emailUpdateView" class="am-icon-bar-chart">修改邮箱</a></li>
+        </ol>
+
+        <div class="row-content am-cf">
+            <div class="row">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div class="widget am-cf">
+                        <div class="widget-head am-cf">
+                            <div class="widget-title am-fl">修改邮箱</div>
+                            <div class="widget-function am-fr">
+                                <!--<a href="javascript:;" class="am-icon-cog"></a>-->
+                            </div>
+                        </div>
+                        <div class="widget-body am-fr">
+
+                            <form class="am-form tpl-form-border-form tpl-form-border-br" id="#" action="#">
+
+                                <div class="am-form-group">
+                                    <label class="am-u-sm-3 am-form-label">邮箱:</label>
+                                    <div class="am-u-sm-9 zz-task">
+                                        <span class="task-title-sp" th:text="${(admin.email != null) &&(admin.email != '')}?${admin.email}:'未绑定邮箱'"> 529055293@qq.com</span>
+                                        <span class="label label-sm" th:if="${(admin.email != null)&&(admin.email != '')}" th:text="${(admin.verify != null)}?${admin.verify.name}:''" th:classappend="(${admin.verify.toString()} eq 'yes')?'label-success':'label-warning'">未验证</span>
+                                    </div>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <div class="am-u-sm-9 am-u-sm-push-3 zz-task error">
+                                        <span th:if="(${admin.verify.toString()} eq 'no')">此邮箱未验证，请点击未验证进行验证。如您忘记密码，通过验证成功的邮箱，可找回密码！</span>
+                                    </div>
+                                </div>
+
+                                <br/>
+
+                                <div class="am-form-group">
+                                    <div class="am-u-sm-9 am-u-sm-push-3">
+                                        <a type="button" href="/admin/emailAddView" class="am-btn am-btn-primary tpl-btn-bg-color-success" th:text="${(admin.email != null) &&(admin.email != '')}?'修改邮箱':'增加邮箱'"></a>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+
+    <!--alert-->
+
+    <div th:replace="fragments/footer::js"></div>
+</body>
+
+</html>

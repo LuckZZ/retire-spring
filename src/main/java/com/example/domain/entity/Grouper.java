@@ -1,6 +1,7 @@
 package com.example.domain.entity;
 
 import com.example.domain.enums.CanLogin;
+import com.example.domain.enums.Verify;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,6 +29,12 @@ public class Grouper extends BaseEntity implements Serializable {
 
     @Column(nullable = false)
     private CanLogin canLogin;      //是否允许登陆
+
+    @Column
+    private String email;
+
+    @Column
+    private Verify verify;
 
     public Grouper() {
     }
@@ -76,5 +83,21 @@ public class Grouper extends BaseEntity implements Serializable {
 
     public void setCanLogin(CanLogin canLogin) {
         this.canLogin = canLogin;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Verify getVerify() {
+        return verify;
+    }
+
+    public void setVerify(Verify verify) {
+        this.verify = verify;
     }
 }

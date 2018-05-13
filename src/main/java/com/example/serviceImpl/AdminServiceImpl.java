@@ -4,6 +4,7 @@ import com.example.comm.Constant;
 import com.example.dao.AdminDao;
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
+import com.example.domain.enums.Verify;
 import com.example.service.AdminService;
 import com.example.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,18 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
     @Override
     public int updateImg(String imgUrl, Integer adminId) {
         return adminDao.updateImg(imgUrl, adminId);
+    }
+
+    @Transactional
+    @Override
+    public int updateEmail(String email, Verify verify, Integer adminId) {
+        return adminDao.updateEmail(email, verify, adminId);
+    }
+
+    @Transactional
+    @Override
+    public int updateVerify(Verify verify, Integer adminId) {
+        return adminDao.updateVerify(verify, adminId);
     }
 
     @Override

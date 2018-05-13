@@ -2,6 +2,7 @@ package com.example.dao;
 
 import com.example.domain.entity.Admin;
 import com.example.domain.enums.CanLogin;
+import com.example.domain.enums.Verify;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +20,16 @@ public interface AdminDao extends JpaRepository<Admin, Integer> {
     @Modifying(clearAutomatically=true)
     @Query("update Admin set imgUrl=:imgUrl where adminId=:adminId")
     int updateImg(@Param("imgUrl") String imgUrl, @Param("adminId") Integer adminId);
+
+    /*根据adminId修改邮箱和验证情况*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Admin set email=:email,verify=:verify where adminId=:adminId")
+    int updateEmail(@Param("email") String email, @Param("verify") Verify verify, @Param("adminId") Integer adminId);
+
+    /*根据adminId修改邮箱验证情况*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Admin set verify=:verify where adminId=:adminId")
+    int updateVerify(@Param("verify") Verify verify, @Param("adminId") Integer adminId);
 
     /*根据工号查看管理员是否存在*/
     boolean existsByJobNum(String jobNum);

@@ -66,3 +66,26 @@ input[type=number]::-webkit-outer-spin-button {
 ol.zz-breadcrumb{
     margin-bottom: 0px;
 }
+
+/*zz-task*/
+.zz-task {
+    padding: 10px!important;
+    border-bottom: 1px solid #F4F6F9;
+    height: auto!important;
+    font-size: 14px!important;
+}
+.zz-task .task-title-sp {
+    margin-right: 5px;
+}
+.zz-task .label {
+    padding: 3px 6px;
+    color: #fff;
+}
+.zz-task .label-success {
+    background-color: #36c6d3;
+}
+.zz-task .label-warning {
+    background-color: #F1C40F!important;
+}
+
+

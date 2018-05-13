@@ -55,6 +55,7 @@
                                         <th>姓名</th>
                                         <th>组别</th>
                                         <th>最近一次登陆</th>
+                                        <th>邮箱</th>
                                         <th>状态</th>
                                         <th>操作</th>
                                     </tr>
@@ -68,6 +69,7 @@
                                         <td th:text="${grouper.user.name}">组长</td>
                                         <td th:text="${grouper.user.group.groupName}">组别一</td>
                                         <td th:text="${grouper.lastTime}">2016-09-26</td>
+                                        <td th:text="${grouper.email}">529055293@qq.com</td>
                                         <td th:text="${grouper.canLogin.name}">是否允许登陆</td>
                                         <td>
                                             <div class="am-dropdown" data-am-dropdown>

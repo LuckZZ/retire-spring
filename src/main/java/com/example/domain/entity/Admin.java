@@ -1,6 +1,7 @@
 package com.example.domain.entity;
 
 import com.example.domain.enums.CanLogin;
+import com.example.domain.enums.Verify;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,6 +34,12 @@ public class Admin extends BaseEntity implements Serializable{
 
     @Column
     private String imgUrl;             //图片地址
+
+    @Column
+    private String email;
+
+    @Column
+    private Verify verify;
 
     public Admin() {
     }
@@ -98,5 +105,21 @@ public class Admin extends BaseEntity implements Serializable{
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Verify getVerify() {
+        return verify;
+    }
+
+    public void setVerify(Verify verify) {
+        this.verify = verify;
     }
 }

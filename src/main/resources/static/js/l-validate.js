@@ -66,6 +66,13 @@ $(function () {
             oldPassword:{
                 required:true,
                 rangelength:[6,10]
+            },
+            email:{
+                required:true
+            },
+            emailCfm:{
+                required:true,
+                equalTo:"#email"
             }
         },
         messages:{
@@ -109,6 +116,9 @@ $(function () {
             },
             oldPassword:{
                 rangelength:"密码6-10位"
+            },
+            emailCfm:{
+                equalTo:"两次邮箱输入不一致"
             }
         },
         errorPlacement: function(error, element) {

@@ -21,7 +21,7 @@ $(function () {
     // alert("cookie-msg:"+$.cookie("cookie-msg"));
     // alert("true:"+($.cookie("cookie-msg")==""));
     // alert("false:"+($.cookie("cookie-msg")!=""));
-    if ($.cookie("cookie-msg")!=""){
+    if (($.cookie("cookie-msg")!="") && (typeof($.cookie("cookie-msg"))!="undefined")){
         toastr.success($.cookie("cookie-msg"), '操作成功');
         $.cookie("cookie-msg", "");
     }
