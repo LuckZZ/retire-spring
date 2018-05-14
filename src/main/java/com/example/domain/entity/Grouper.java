@@ -36,6 +36,12 @@ public class Grouper extends BaseEntity implements Serializable {
     @Column
     private Verify verify;
 
+    @Column
+    private String verifyCode;
+
+    @Column
+    private String codeTime;
+
     public Grouper() {
     }
 
@@ -99,5 +105,21 @@ public class Grouper extends BaseEntity implements Serializable {
 
     public void setVerify(Verify verify) {
         this.verify = verify;
+    }
+
+    public String getVerifyCode() {
+        return verifyCode;
+    }
+
+    public void setVerifyCode(String verifyCode) {
+        this.verifyCode = verifyCode;
+    }
+
+    public String getCodeTime() {
+        return codeTime;
+    }
+
+    public void setCodeTime(String codeTime) {
+        this.codeTime = codeTime;
     }
 }

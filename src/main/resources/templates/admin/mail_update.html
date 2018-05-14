@@ -41,8 +41,9 @@
                                 <div class="am-form-group">
                                     <label class="am-u-sm-3 am-form-label">邮箱:</label>
                                     <div class="am-u-sm-9 zz-task">
+                                        <input type="hidden" th:value="${admin.verify.toString()}" id="verify-value" disabled/>
                                         <span class="task-title-sp" th:text="${(admin.email != null) &&(admin.email != '')}?${admin.email}:'未绑定邮箱'"> 529055293@qq.com</span>
-                                        <span class="label label-sm" th:if="${(admin.email != null)&&(admin.email != '')}" th:text="${(admin.verify != null)}?${admin.verify.name}:''" th:classappend="(${admin.verify.toString()} eq 'yes')?'label-success':'label-warning'">未验证</span>
+                                        <a class="label label-sm" id="email-verify" th:if="${(admin.email != null)&&(admin.email != '')}" th:text="${(admin.verify != null)}?${admin.verify.name}:''" th:classappend="(${admin.verify.toString()} eq 'yes')?'label-success':'label-warning'">未验证</a>
                                     </div>
                                 </div>
 
@@ -75,5 +76,32 @@
 
     <div th:replace="fragments/footer::js"></div>
 </body>
-
+    <script>
+        $("#email-verify").on('click',function(){
+            var verifyV = $("#verify-value").val();
+            if (verifyV == 'no'){
+                $.ajax({
+                    url: '/mail/sendEmail',
+                    type: "POST",
+                    dataType: "json",
+                    error: function ()
+                    {
+                        console.log("sendEmail error function!");
+                        toastr.error('出现错误！', '错误');
+                    },
+                    success: function (data)
+                    {
+                        if (data.codeBool){
+                            //刷新页面前，把提示信息存入cookie
+                            $.cookie("cookie-msg", data.message);
+                            //刷新页面
+                            location.reload();
+                        }else {
+                            toastr.error(data.message, '操作失败');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </html>

@@ -44,6 +44,12 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
         return adminDao.updateVerify(verify, adminId);
     }
 
+    @Transactional
+    @Override
+    public int updateVerifyCode(String verifyCode, String codeTime, Integer adminId) {
+        return adminDao.updateVerifyCode(verifyCode, codeTime, adminId);
+    }
+
     @Override
     public List<Admin> findAllByJobNumAndPassword(String jobNum, String password) {
         return adminDao.findAllByJobNumAndPassword(jobNum, password);

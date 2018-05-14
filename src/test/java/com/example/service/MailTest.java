@@ -45,7 +45,7 @@ public class MailTest {
         Map map = new HashMap();
         map.put("message","这是message");
         try {
-            mailService.sendMail("529055293@qq.com","测试邮件（邮件主题）", "mail/mailTemplate", map);
+//            mailService.sendMail("529055293@qq.com","测试邮件（邮件主题）", "mail/mailTemplate", map);
         } catch (Exception e) {
             e.printStackTrace();
         }

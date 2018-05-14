@@ -31,6 +31,11 @@ public interface AdminDao extends JpaRepository<Admin, Integer> {
     @Query("update Admin set verify=:verify where adminId=:adminId")
     int updateVerify(@Param("verify") Verify verify, @Param("adminId") Integer adminId);
 
+    /*根据adminId修改验证码和发送邮箱时间情况*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Admin set verifyCode=:verifyCode,codeTime=:codeTime where adminId=:adminId")
+    int updateVerifyCode(@Param("verifyCode") String verifyCode, @Param("codeTime") String codeTime, @Param("adminId") Integer adminId);
+
     /*根据工号查看管理员是否存在*/
     boolean existsByJobNum(String jobNum);
 

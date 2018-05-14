@@ -1,13 +1,16 @@
 package com.example.service;
 
-import java.util.Map;
+import com.example.domain.bean.Login;
+import com.example.domain.enums.Role;
 
 /**
  * Create by : Zhangxuemeng
  */
 public interface MailService {
 
-//    void prepareAndSend(String recipient, String message) throws Exception;
+    /*发送验证邮箱信息*/
+    void verifyEmail(Login login);
 
-    void sendMail(String recipient, String subject, String templateName, Map<String, Object> datas);
+    /*验证邮箱*/
+    boolean verify(Role role, String verifyCode);
 }

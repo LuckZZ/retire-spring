@@ -18,6 +18,8 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
     /*根据adminId修改验证情况*/
     int updateVerify(Verify verify, Integer adminId);
 
+    int updateVerifyCode(String verifyCode, String codeTime, Integer adminId);
+
     /*根据工号和密码查询所有管理员*/
     List<Admin> findAllByJobNumAndPassword(String jobNum, String password);
 

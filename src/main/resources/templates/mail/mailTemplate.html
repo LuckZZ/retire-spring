@@ -2,6 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head></head>
 <body>
-    <span th:text="${message}"></span>
+    <pre>
+亲爱的用户 <span th:text="${paramName}"></span>：您好！
+        <br/>
+    您收到这封这封电子邮件是因为您 (也可能是某人冒充您的名义) 申请验证邮箱。假如这不是您本人所申请, 请不用理会这封电子邮件。
+        <br/>
+    要验证邮箱, 请使用以下链接
+        <br/>
+        <span th:text="${paramUrl}"></span>
+        <br/>
+        <br/>
+    (如果无法点击该URL链接地址，请将它复制并粘帖到浏览器的地址输入框，然后单击回车即可。该链接使用后将立即失效。)
+        <br/>
+     注意:请您在收到邮件1小时内(<span th:text="${paramTime}"></span>前)使用，否则该链接将会失效。
+    </pre>
 </body>
 </html>

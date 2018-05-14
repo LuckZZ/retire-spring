@@ -112,7 +112,11 @@ public enum ExceptionMsg {
     FileUploadSuccess("图片上传成功",true),
 
     EmailUpdFailed("邮箱修改失败",false),
-    EmailUpdSuccess("邮箱修改成功",true);
+    EmailUpdSuccess("邮箱修改成功",true),
+
+    EmailSendFailed("发送邮件失败",false),
+    EmailSendForVerifyFailed("此用户已验证邮箱，请刷新页面",false),
+    EmailSendSuccess("发送邮件成功，请查收邮件",true);
 
     private String message;
     private boolean codeBool;
