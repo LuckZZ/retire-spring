@@ -69,7 +69,14 @@
                                         <td th:text="${grouper.user.name}">组长</td>
                                         <td th:text="${grouper.user.group.groupName}">组别一</td>
                                         <td th:text="${grouper.lastTime}">2016-09-26</td>
-                                        <td th:text="${grouper.email}">529055293@qq.com</td>
+                                        <td>
+                                            <span th:text="${grouper.email}">
+                                                529055293@qq.com
+                                            </span>
+                                            <span class="zz-task">
+                                                <span class="label label-sm" th:if="${(grouper.email != null)&&(grouper.email != '')}" th:text="${(grouper.verify != null)}?${grouper.verify.name}:''" th:classappend="(${grouper.verify.toString()} eq 'yes')?'label-success':'label-warning'">未验证</span>
+                                            </span>
+                                        </td>
                                         <td th:text="${grouper.canLogin.name}">是否允许登陆</td>
                                         <td>
                                             <div class="am-dropdown" data-am-dropdown>

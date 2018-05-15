@@ -3,6 +3,7 @@ package com.example.dao;
 import com.example.domain.entity.Grouper;
 import com.example.domain.enums.CanLogin;
 import com.example.domain.enums.Exist;
+import com.example.domain.enums.Verify;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -47,5 +48,20 @@ public interface GrouperDao extends JpaRepository<Grouper, Integer> {
 
     /*根据工号和密码查询*/
     List<Grouper> findAllByUser_JobNumAndPassword(String jobNum, String password);
+
+    /*根据grouperId修改邮箱和验证情况*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Grouper set email=:email,verify=:verify where grouperId=:grouperId")
+    int updateEmail(@Param("email") String email, @Param("verify") Verify verify, @Param("grouperId") Integer grouperId);
+
+    /*根据grouperId修改验证码和发送邮箱时间情况*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Grouper set verifyCode=:verifyCode,codeTime=:codeTime where grouperId=:grouperId")
+    int updateVerifyCode(@Param("verifyCode") String verifyCode, @Param("codeTime") String codeTime, @Param("grouperId") Integer grouperId);
+
+    /*根据grouperId修改邮箱验证情况*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Grouper set verify=:verify where grouperId=:grouperId")
+    int updateVerify(@Param("verify") Verify verify, @Param("grouperId") Integer grouperId);
 
 }

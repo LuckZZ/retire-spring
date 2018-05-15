@@ -32,24 +32,6 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
         return adminDao.updateImg(imgUrl, adminId);
     }
 
-    @Transactional
-    @Override
-    public int updateEmail(String email, Verify verify, Integer adminId) {
-        return adminDao.updateEmail(email, verify, adminId);
-    }
-
-    @Transactional
-    @Override
-    public int updateVerify(Verify verify, Integer adminId) {
-        return adminDao.updateVerify(verify, adminId);
-    }
-
-    @Transactional
-    @Override
-    public int updateVerifyCode(String verifyCode, String codeTime, Integer adminId) {
-        return adminDao.updateVerifyCode(verifyCode, codeTime, adminId);
-    }
-
     @Override
     public List<Admin> findAllByJobNumAndPassword(String jobNum, String password) {
         return adminDao.findAllByJobNumAndPassword(jobNum, password);
@@ -135,4 +117,23 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
         }
         return adminDao.save(admin);
     }
+
+    @Transactional
+    @Override
+    public int updateEmail(String email, Verify verify, Integer adminId) {
+        return adminDao.updateEmail(email, verify, adminId);
+    }
+
+    @Transactional
+    @Override
+    public int updateVerifyCode(String verifyCode, String codeTime, Integer adminId) {
+        return adminDao.updateVerifyCode(verifyCode, codeTime, adminId);
+    }
+
+    @Transactional
+    @Override
+    public int updateVerify(Verify verify, Integer adminId) {
+        return adminDao.updateVerify(verify, adminId);
+    }
+
 }

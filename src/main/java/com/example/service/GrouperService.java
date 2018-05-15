@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.domain.entity.Grouper;
+import com.example.domain.enums.Verify;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -17,11 +18,7 @@ public interface GrouperService extends BaseCrudService<Grouper,Integer>{
      */
     boolean notGrouper(Integer userId);
 
-    /**
-     *
-     * @param grouperId 组长id
-     * @return
-     */
+    /*根据grouperId切换登陆权限*/
     boolean notCanLogin(Integer grouperId);
 
     /*修改组长密码*/
@@ -39,5 +36,14 @@ public interface GrouperService extends BaseCrudService<Grouper,Integer>{
 
     /*根据工号和密码查询*/
     List<Grouper> findAllByJobNumAndPassword(String jobNum, String password);
+
+    /*根据grouperId修改邮箱和验证情况*/
+    int updateEmail(String email, Verify verify, Integer grouperId);
+
+    /*根据grouperId修改验证码和发送邮箱时间情况*/
+    int updateVerifyCode(String verifyCode, String codeTime, Integer grouperId);
+
+    /*根据grouperId修改验证情况*/
+    int updateVerify(Verify verify, Integer grouperId);
 
 }

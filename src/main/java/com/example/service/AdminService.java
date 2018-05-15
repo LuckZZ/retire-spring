@@ -12,14 +12,6 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
     /*根据adminId修改图片*/
     int updateImg(String imgUrl, Integer adminId);
 
-    /*根据adminId修改邮箱和验证情况*/
-    int updateEmail(String email, Verify verify, Integer adminId);
-
-    /*根据adminId修改验证情况*/
-    int updateVerify(Verify verify, Integer adminId);
-
-    int updateVerifyCode(String verifyCode, String codeTime, Integer adminId);
-
     /*根据工号和密码查询所有管理员*/
     List<Admin> findAllByJobNumAndPassword(String jobNum, String password);
 
@@ -37,11 +29,7 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
     /*批量删除管理员*/
     void delete(Integer[] adminIds);
 
-    /**
-     *
-     * @param adminId 管理员id
-     * @return
-     */
+    /*根据adminId切换登陆权限*/
     boolean notCanLogin(Integer adminId);
 
     /*根据工号查询管理员*/
@@ -52,5 +40,14 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
 
     /*修改管理员最近一次登陆*/
     int updateLastTime(String lastTime, Integer adminId);
+
+    /*根据adminId修改邮箱和验证情况*/
+    int updateEmail(String email, Verify verify, Integer adminId);
+
+    /*根据adminId修改验证码和发送邮箱时间情况*/
+    int updateVerifyCode(String verifyCode, String codeTime, Integer adminId);
+
+    /*根据adminId修改验证情况*/
+    int updateVerify(Verify verify, Integer adminId);
 
 }

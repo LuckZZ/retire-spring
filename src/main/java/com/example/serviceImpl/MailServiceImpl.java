@@ -55,8 +55,8 @@ public class MailServiceImpl implements MailService{
         String passVTime = DateUtils.timeStampToFormat(currentTime + 60*60*1000);
 //        8位随机验证码
         String strRandom = DataUtils.getStringRandom(8);
-//        链接
         if (login.getRole() == Role.admin){
+            //        链接
             String strUrl = "http://localhost:8080/mail/verify?type=0&verifyCode="+strRandom;
             Admin admin = adminService.findOne(login.getId());
 //           修改数据库验证码和时间
@@ -70,6 +70,8 @@ public class MailServiceImpl implements MailService{
         }else if(login.getRole() == Role.grouper){
             String strUrl = "http://localhost:8080/mail/verify?type=1&verifyCode="+strRandom;
             Grouper grouper = grouperService.findOne(login.getId());
+            //           修改数据库验证码和时间
+            grouperService.updateVerifyCode(strRandom, String.valueOf(currentTime), grouper.getGrouperId());
             Map map = new HashMap();
             map.put("paramName",grouper.getUser().getName());
             map.put("paramUrl",strUrl);
@@ -94,7 +96,14 @@ public class MailServiceImpl implements MailService{
             }
 
         }else if(role == Role.grouper){
-//            组长
+            //            组长
+            List<Grouper> groupers = grouperService.findAll();
+            for (Grouper grouper : groupers) {
+                if (verifyCode.equals(grouper.getVerifyCode())&&(Long.parseLong(grouper.getCodeTime())>currentTime)){
+                    grouperService.updateVerify(Verify.yes, grouper.getGrouperId());
+                    return true;
+                }
+            }
         }
         return false;
     }

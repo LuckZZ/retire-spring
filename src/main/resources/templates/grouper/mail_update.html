@@ -13,7 +13,7 @@
     <!-- 风格切换 -->
     <div th:replace="fragments/theme::theme_section"></div>
     <!-- 侧边导航栏 -->
-    <div th:replace="fragments/left_admin::left_section('emailUpdateView')"></div>
+    <div th:replace="fragments/left_grouper::left_section('emailUpdateView')"></div>
 
     <!-- 内容区域 -->
     <div class="tpl-content-wrapper">
@@ -21,7 +21,7 @@
         <div th:replace="fragments/header::welcome_section"></div>
 
         <ol class="zz-breadcrumb">
-            <li><a href="/admin/emailUpdateView" class="am-icon-bar-chart">修改邮箱</a></li>
+            <li><a href="/grouper/emailUpdateView" class="am-icon-bar-chart">修改邮箱</a></li>
         </ol>
 
         <div class="row-content am-cf">
@@ -41,15 +41,15 @@
                                 <div class="am-form-group">
                                     <label class="am-u-sm-3 am-form-label">邮箱:</label>
                                     <div class="am-u-sm-9 zz-task">
-                                       <input type="hidden" th:if="${(admin.email != null)&&(admin.email != '')}" th:value="${(admin.verify != null)}?${admin.verify.toString()}:''" id="verify-value" disabled/>
-                                        <span class="task-title-sp" th:text="${(admin.email != null) &&(admin.email != '')}?${admin.email}:'未绑定邮箱'"> 529055293@qq.com</span>
-                                        <a class="label label-sm" id="email-verify" th:if="${(admin.email != null)&&(admin.email != '')}" th:text="${(admin.verify != null)}?${admin.verify.name}:''" th:classappend="(${admin.verify.toString()} eq 'yes')?'label-success':'label-warning'">未验证</a>
+                                       <input type="hidden" th:if="${(grouper.email != null)&&(grouper.email != '')}" th:value="${(grouper.verify != null)}?${grouper.verify.toString()}:''" id="verify-value" disabled/>
+                                        <span class="task-title-sp" th:text="${(grouper.email != null) &&(grouper.email != '')}?${grouper.email}:'未绑定邮箱'"> 529055293@qq.com</span>
+                                        <a class="label label-sm" id="email-verify" th:if="${(grouper.email != null)&&(grouper.email != '')}" th:text="${(grouper.verify != null)}?${grouper.verify.name}:''" th:classappend="(${grouper.verify.toString()} eq 'yes')?'label-success':'label-warning'">未验证</a>
                                     </div>
                                 </div>
 
                                 <div class="am-form-group">
                                     <div class="am-u-sm-9 am-u-sm-push-3 zz-task error">
-                                        <span th:if="(${(admin.verify != null)&&(admin.verify.toString() eq 'no')})">此邮箱未验证，请点击未验证进行验证。如您忘记密码，通过验证成功的邮箱，可找回密码！</span>
+                                        <span th:if="(${(grouper.verify != null)&&(grouper.verify.toString() eq 'no')})">此邮箱未验证，请点击未验证进行验证。如您忘记密码，通过验证成功的邮箱，可找回密码！</span>
                                     </div>
                                 </div>
 
@@ -57,7 +57,7 @@
 
                                 <div class="am-form-group">
                                     <div class="am-u-sm-9 am-u-sm-push-3">
-                                        <a type="button" href="/admin/emailAddView" class="am-btn am-btn-primary tpl-btn-bg-color-success" th:text="${(admin.email != null) &&(admin.email != '')}?'修改邮箱':'增加邮箱'"></a>
+                                        <a type="button" href="/grouper/emailAddView" class="am-btn am-btn-primary tpl-btn-bg-color-success" th:text="${(grouper.email != null) &&(grouper.email != '')}?'修改邮箱':'增加邮箱'"></a>
                                     </div>
                                 </div>
                             </form>
@@ -74,7 +74,7 @@
 
     <!--alert-->
 
-    <div th:replace="fragments/footer::js"></div>
+    <div th:replace="fragments/footer_grouper::js"></div>
 </body>
     <script>
         $("#email-verify").on('click',function(){

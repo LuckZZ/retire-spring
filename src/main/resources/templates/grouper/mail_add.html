@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="fragments/head::head_section('修改邮箱')">
+<head th:include="fragments/head::head_section('新增邮箱')">
 </head>
 
 <body data-type="widgets">
@@ -13,7 +13,7 @@
     <!-- 风格切换 -->
     <div th:replace="fragments/theme::theme_section"></div>
     <!-- 侧边导航栏 -->
-    <div th:replace="fragments/left_admin::left_section('emailUpdateView')"></div>
+    <div th:replace="fragments/left_grouper::left_section('emailUpdateView')"></div>
 
     <!-- 内容区域 -->
     <div class="tpl-content-wrapper">
@@ -21,7 +21,7 @@
         <div th:replace="fragments/header::welcome_section"></div>
 
         <ol class="zz-breadcrumb">
-            <li><a href="/admin/emailUpdateView" class="am-icon-bar-chart">修改邮箱</a></li>
+            <li><a href="/grouper/emailUpdateView" class="am-icon-bar-chart">修改邮箱</a></li>
         </ol>
 
         <div class="row-content am-cf">
@@ -36,30 +36,29 @@
                         </div>
                         <div class="widget-body am-fr">
 
-                            <form class="am-form tpl-form-border-form tpl-form-border-br" id="#" action="#">
+                            <form class="am-form tpl-form-border-form tpl-form-border-br" id="emailUpdateForm" action="#">
 
                                 <div class="am-form-group">
-                                    <label class="am-u-sm-3 am-form-label">邮箱:</label>
-                                    <div class="am-u-sm-9 zz-task">
-                                       <input type="hidden" th:if="${(admin.email != null)&&(admin.email != '')}" th:value="${(admin.verify != null)}?${admin.verify.toString()}:''" id="verify-value" disabled/>
-                                        <span class="task-title-sp" th:text="${(admin.email != null) &&(admin.email != '')}?${admin.email}:'未绑定邮箱'"> 529055293@qq.com</span>
-                                        <a class="label label-sm" id="email-verify" th:if="${(admin.email != null)&&(admin.email != '')}" th:text="${(admin.verify != null)}?${admin.verify.name}:''" th:classappend="(${admin.verify.toString()} eq 'yes')?'label-success':'label-warning'">未验证</a>
+                                    <label for="email" class="am-u-sm-3 am-form-label">邮箱</label>
+                                    <div class="am-u-sm-9">
+                                        <input name="email" type="email" class="tpl-form-input" id="email" placeholder="输入邮箱">
                                     </div>
                                 </div>
 
                                 <div class="am-form-group">
-                                    <div class="am-u-sm-9 am-u-sm-push-3 zz-task error">
-                                        <span th:if="(${(admin.verify != null)&&(admin.verify.toString() eq 'no')})">此邮箱未验证，请点击未验证进行验证。如您忘记密码，通过验证成功的邮箱，可找回密码！</span>
+                                    <label for="emailCfm" class="am-u-sm-3 am-form-label">确认邮箱</label>
+                                    <!--data-equal-to密码验证-->
+                                    <div class="am-u-sm-9">
+                                        <input name="emailCfm" type="email" class="tpl-form-input" id="emailCfm" placeholder="再次输入邮箱">
                                     </div>
                                 </div>
-
-                                <br/>
 
                                 <div class="am-form-group">
                                     <div class="am-u-sm-9 am-u-sm-push-3">
-                                        <a type="button" href="/admin/emailAddView" class="am-btn am-btn-primary tpl-btn-bg-color-success" th:text="${(admin.email != null) &&(admin.email != '')}?'修改邮箱':'增加邮箱'"></a>
+                                        <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success">确定</button>
                                     </div>
                                 </div>
+
                             </form>
 
                         </div>
@@ -74,19 +73,33 @@
 
     <!--alert-->
 
-    <div th:replace="fragments/footer::js"></div>
+    <div th:replace="fragments/footer_grouper::js"></div>
+
+
 </body>
-    <script>
-        $("#email-verify").on('click',function(){
-            var verifyV = $("#verify-value").val();
-            if (verifyV == 'no'){
+
+<!--jquery验证-->
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/messages_zh.min.js}"></script>
+
+<script th:src="@{/js/l-validate.js}"></script>
+
+<script>
+    $(function () {
+        // 提交时验证表单，small元素包裹错误信息
+        $("#emailUpdateForm").validate({
+            submitHandler:function(form){
+                var myform = $("#emailUpdateForm");
+                //ajax提交form
+                // formAjaxNoReload(myform,"/grouper/emailUpdate");
                 $.ajax({
-                    url: '/mail/sendEmail',
+                    url: '/grouper/emailUpdate',
                     type: "POST",
+                    data: myform.serialize(),
                     dataType: "json",
                     error: function ()
                     {
-                        console.log("sendEmail error function!");
+                        console.log("emailUpdateForm error function!");
                         toastr.error('出现错误！', '错误');
                     },
                     success: function (data)
@@ -94,16 +107,14 @@
                         if (data.codeBool){
                             //刷新页面前，把提示信息存入cookie
                             $.cookie("cookie-msg", data.message);
-                            //刷新页面
-                            location.reload();
+                            location.href='/grouper/emailUpdateView';
                         }else {
                             toastr.error(data.message, '操作失败');
                         }
                     }
                 });
-            }else if(verifyV == 'yes'){
-                toastr.error('此账号已完成', '操作失败');
             }
         });
-    </script>
+    });
+</script>
 </html>

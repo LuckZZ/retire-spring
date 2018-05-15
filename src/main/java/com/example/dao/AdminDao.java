@@ -21,21 +21,6 @@ public interface AdminDao extends JpaRepository<Admin, Integer> {
     @Query("update Admin set imgUrl=:imgUrl where adminId=:adminId")
     int updateImg(@Param("imgUrl") String imgUrl, @Param("adminId") Integer adminId);
 
-    /*根据adminId修改邮箱和验证情况*/
-    @Modifying(clearAutomatically=true)
-    @Query("update Admin set email=:email,verify=:verify where adminId=:adminId")
-    int updateEmail(@Param("email") String email, @Param("verify") Verify verify, @Param("adminId") Integer adminId);
-
-    /*根据adminId修改邮箱验证情况*/
-    @Modifying(clearAutomatically=true)
-    @Query("update Admin set verify=:verify where adminId=:adminId")
-    int updateVerify(@Param("verify") Verify verify, @Param("adminId") Integer adminId);
-
-    /*根据adminId修改验证码和发送邮箱时间情况*/
-    @Modifying(clearAutomatically=true)
-    @Query("update Admin set verifyCode=:verifyCode,codeTime=:codeTime where adminId=:adminId")
-    int updateVerifyCode(@Param("verifyCode") String verifyCode, @Param("codeTime") String codeTime, @Param("adminId") Integer adminId);
-
     /*根据工号查看管理员是否存在*/
     boolean existsByJobNum(String jobNum);
 
@@ -67,5 +52,20 @@ public interface AdminDao extends JpaRepository<Admin, Integer> {
 
     /*根姓名查询管理员*/
     Page<Admin> findAllByName(String name, Pageable pageable);
+
+    /*根据adminId修改邮箱和验证情况*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Admin set email=:email,verify=:verify where adminId=:adminId")
+    int updateEmail(@Param("email") String email, @Param("verify") Verify verify, @Param("adminId") Integer adminId);
+
+    /*根据adminId修改验证码和发送邮箱时间情况*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Admin set verifyCode=:verifyCode,codeTime=:codeTime where adminId=:adminId")
+    int updateVerifyCode(@Param("verifyCode") String verifyCode, @Param("codeTime") String codeTime, @Param("adminId") Integer adminId);
+
+    /*根据adminId修改邮箱验证情况*/
+    @Modifying(clearAutomatically=true)
+    @Query("update Admin set verify=:verify where adminId=:adminId")
+    int updateVerify(@Param("verify") Verify verify, @Param("adminId") Integer adminId);
 
 }

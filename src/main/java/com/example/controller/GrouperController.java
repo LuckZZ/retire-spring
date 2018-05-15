@@ -9,6 +9,7 @@ import com.example.domain.bean.Login;
 import com.example.domain.entity.Grouper;
 import com.example.domain.entity.User;
 import com.example.domain.enums.Role;
+import com.example.domain.enums.Verify;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.GrouperService;
@@ -160,6 +161,37 @@ public class GrouperController extends BaseController{
         }
         grouperService.updatePassword(getPasswordMD5(password), grouperId);
         return result(ExceptionMsg.pwdUpdateSuccess);
+    }
+
+    @RequestMapping(value = "/emailUpdateView")
+    @LoggerManage(description = "修改邮箱界面")
+    @Access(roles = Role.grouper)
+    public String emailUpdateView(Model model, HttpSession session){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+        Grouper grouper = grouperService.findOne(login.getId());
+        model.addAttribute("grouper",grouper);
+        return "grouper/mail_update";
+    }
+
+    @RequestMapping(value = "/emailAddView")
+    @LoggerManage(description = "新增邮箱界面")
+    @Access(roles = Role.grouper)
+    public String emailAddView(){
+        return "grouper/mail_add";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/emailUpdate")
+    @LoggerManage(description = "修改邮箱")
+    @Access(roles = Role.grouper)
+    public Response emailUpdate(HttpServletRequest request){
+        String email = request.getParameter("email");
+        HttpSession session = request.getSession();
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+        Integer adminId = login.getId();
+
+        grouperService.updateEmail(email, Verify.no, adminId);
+        return result(ExceptionMsg.EmailUpdSuccess);
     }
 
     /**

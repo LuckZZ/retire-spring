@@ -7,6 +7,7 @@ import com.example.domain.entity.Grouper;
 import com.example.domain.entity.User;
 import com.example.domain.enums.CanLogin;
 import com.example.domain.enums.Rank;
+import com.example.domain.enums.Verify;
 import com.example.service.GrouperService;
 import com.example.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +129,24 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
     private String getPasswordMD5(String password){
         String str = MD5Util.encrypt(password+ Constant.PASSWORD_SALT);
         return str;
+    }
+
+    @Transactional
+    @Override
+    public int updateEmail(String email, Verify verify, Integer grouperId) {
+        return grouperDao.updateEmail(email, verify, grouperId);
+    }
+
+    @Transactional
+    @Override
+    public int updateVerifyCode(String verifyCode, String codeTime, Integer grouperId) {
+        return grouperDao.updateVerifyCode(verifyCode, codeTime, grouperId);
+    }
+
+    @Transactional
+    @Override
+    public int updateVerify(Verify verify, Integer grouperId) {
+        return grouperDao.updateVerify(verify, grouperId);
     }
 
 }

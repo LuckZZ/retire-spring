@@ -59,10 +59,26 @@
         </li>
 
         <li class="sidebar-nav-link">
-            <a href="/grouper/pwdUpdateView" id="pwdUpdateView" th:class="(${activeId} eq 'pwdUpdateView')?'active':''">
-                <i class="am-icon-wrench sidebar-nav-link-logo"></i>修改密码
+            <a href="javascript:;" class="sidebar-nav-sub-title">
+                <i class="am-icon-wpforms sidebar-nav-link-logo"></i> 账号设置
+                <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
             </a>
+            <ul class="sidebar-nav sidebar-nav-sub">
+                <li class="sidebar-nav-link">
+                    <a href="/grouper/pwdUpdateView" id="pwdUpdateView" th:class="(${activeId} eq 'pwdUpdateView')?'active':''">
+                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 修改密码
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-link">
+                    <a href="/grouper/emailUpdateView" id="emailUpdateView" th:class="(${activeId} eq 'emailUpdateView')?'active':''">
+                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 修改邮箱
+                    </a>
+                </li>
+
+            </ul>
         </li>
+
 
     </ul>
     </div>

@@ -68,7 +68,14 @@
                                                 <td th:text="${admin.jobNum}">123456</td>
                                                 <td th:text="${admin.name}">测试管理员一</td>
                                                 <td th:text="${admin.lastTime}">2016-09-26</td>
-                                                <td th:text="${admin.email}">529055293@qq.com</td>
+                                                <td>
+                                                    <span th:text="${admin.email}">
+                                                    529055293@qq.com
+                                                    </span>
+                                                    <span class="zz-task">
+                                                        <span class="label label-sm" th:if="${(admin.email != null)&&(admin.email != '')}" th:text="${(admin.verify != null)}?${admin.verify.name}:''" th:classappend="(${admin.verify.toString()} eq 'yes')?'label-success':'label-warning'">未验证</span>
+                                                    </span>
+                                                </td>
                                                 <td th:text="${admin.canLogin.name}">是否允许登陆</td>
                                                 <td>
                                                     <div class="am-dropdown" data-am-dropdown>

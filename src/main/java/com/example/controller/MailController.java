@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
 import com.example.comm.config.WebSecurityConfig;
 import com.example.domain.bean.Login;
@@ -27,7 +28,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/mail")
-@Access(roles = Role.admin)
+@Access(roles = {Role.admin, Role.grouper})
 public class MailController extends BaseController {
     @Autowired
     private MailService mailService;
@@ -45,6 +46,7 @@ public class MailController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/sendEmail")
+    @LoggerManage(description = "发送邮件")
     public Response sendEmail(HttpSession session) {
         Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         if (login.getRole() == Role.admin){
@@ -65,7 +67,14 @@ public class MailController extends BaseController {
         return result(ExceptionMsg.EmailSendSuccess);
     }
 
+    /**
+     *
+     * @param request
+     * @param model
+     * @return
+     */
     @RequestMapping("/verify")
+    @LoggerManage(description = "验证邮箱界面")
     public String verify(HttpServletRequest request, Model model) {
         Integer type = Integer.parseInt(request.getParameter("type"));
         String verifyCode = request.getParameter("verifyCode");
@@ -82,5 +91,4 @@ public class MailController extends BaseController {
         model.addAttribute("message","邮箱验证失败");
         return "mail/verifyStatus";
     }
-
 }

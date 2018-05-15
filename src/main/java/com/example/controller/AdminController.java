@@ -139,24 +139,6 @@ public class AdminController extends BaseController{
         return result(ExceptionMsg.pwdUpdateSuccess);
     }
 
-    @RequestMapping(value = "/emailUpdateView")
-    @LoggerManage(description = "修改邮箱界面")
-    public String emailUpdateView(Model model, HttpSession session){
-        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
-        Admin admin = adminService.findOne(login.getId());
-        model.addAttribute("admin",admin);
-        return "admin/mail_update";
-    }
-
-    @RequestMapping(value = "/emailAddView")
-    @LoggerManage(description = "新增邮箱界面")
-    public String emailAddView(Model model, HttpSession session){
-        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
-        Admin admin = adminService.findOne(login.getId());
-        model.addAttribute("admin",admin);
-        return "admin/mail_add";
-    }
-
     @ResponseBody
     @RequestMapping(value = "/delete")
     @LoggerManage(description = "删除管理员")
@@ -174,6 +156,21 @@ public class AdminController extends BaseController{
        }catch (Exception e){
            return result(ExceptionMsg.AdminDelFailed);
        }
+    }
+
+    @RequestMapping(value = "/emailUpdateView")
+    @LoggerManage(description = "修改邮箱界面")
+    public String emailUpdateView(Model model, HttpSession session){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+        Admin admin = adminService.findOne(login.getId());
+        model.addAttribute("admin",admin);
+        return "admin/mail_update";
+    }
+
+    @RequestMapping(value = "/emailAddView")
+    @LoggerManage(description = "新增邮箱界面")
+    public String emailAddView(){
+        return "admin/mail_add";
     }
 
     @ResponseBody
