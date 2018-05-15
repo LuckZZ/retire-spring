@@ -106,6 +106,11 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
     }
 
     @Override
+    public List<Grouper> findAllByJobNum(String jobNum) {
+        return grouperDao.findAllByUser_JobNum(jobNum);
+    }
+
+    @Override
     public Page<Grouper> findAllByName(String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return grouperDao.findAllByUser_Name(name, pageable);

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="fragments/head::head_section('忘记密码')">
+</head>
+
+<body data-type="index">
+    <!--theme.js放到这，快速获得缓存的主题-->
+    <script th:src="@{/assets/js/theme.js}"></script>
+    <div class="am-g tpl-g">
+    <!-- 头部 -->
+    <div th:replace="fragments/header::header_section"></div>
+
+    <!-- 内容区域 -->
+    <div>
+
+        <ol class="zz-breadcrumb">
+            <li><a href="/" class="am-icon-user">返回登陆</a></li>
+        </ol>
+
+        <div class="row-content am-cf">
+            <div class="row">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div class="widget am-cf">
+
+                        <div class="widget-head am-cf">
+                            <div class="widget-title am-fl">忘记密码</div>
+                            <div class="widget-function am-fr">
+                                <!--<a href="javascript:;" class="am-icon-cog"></a>-->
+                            </div>
+                        </div>
+                        <div class="widget-body am-fr">
+
+                            <form class="am-form tpl-form-border-form tpl-form-border-br" id="pwdEmailForm" action="#">
+
+                                <div class="am-form-group">
+                                    <label for="jobNum" class="am-u-sm-3 am-form-label">工号：</label>
+                                    <div class="am-u-sm-9">
+                                        <input name="jobNum" type="number" class="tpl-form-input" id="jobNum" placeholder="输入工号(6位)"/>
+                                    </div>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label for="email" class="am-u-sm-3 am-form-label">邮箱：</label>
+                                    <div class="am-u-sm-9">
+                                        <input name="email" type="email" class="tpl-form-input" id="email" placeholder="输入邮箱">
+                                    </div>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <label class="am-u-sm-3 am-form-label">类别：</label>
+                                    <div class="am-u-sm-9">
+                                        <label class="am-radio-inline">
+                                            <input type="radio" value="admin" name="role" checked required> 管理员
+                                        </label>
+                                        <label class="am-radio-inline">
+                                            <input type="radio" value="grouper" name="role"> 组长
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="am-form-group">
+                                    <div class="am-u-sm-9 am-u-sm-push-3">
+                                        <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success">发送重置密码邮件</button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <!--alert-->
+    <div th:replace="fragments/alert::alert_section"></div>
+
+    <div th:replace="fragments/footer::js"></div>
+</body>
+
+<!--jquery验证-->
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/messages_zh.min.js}"></script>
+
+<script th:src="@{/js/l-validate.js}"></script>
+
+<script>
+    $(function () {
+        // 提交时验证表单，small元素包裹错误信息
+        $("#pwdEmailForm").validate({
+            submitHandler:function(form){
+                var myform = $("#pwdEmailForm");
+                //ajax提交form
+                $.ajax({
+                    url: '/mail/sendPwdEmail',
+                    type: "POST",
+                    data: myform.serialize(),
+                    dataType: "json",
+                    error: function ()
+                    {
+                        console.log("sendEmail error function!");
+                        toastr.error('出现错误！', '错误');
+                    },
+                    success: function (data)
+                    {
+                        if (data.codeBool){
+                            //刷新页面前，把提示信息存入cookie
+                            $.cookie("cookie-msg", data.message);
+                            //刷新页面
+                            location.reload();
+                        }else {
+                            toastr.error(data.message, '操作失败');
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</html>

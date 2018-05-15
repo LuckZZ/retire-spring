@@ -132,10 +132,10 @@ public class AdminController extends BaseController{
         Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         Integer adminId = login.getId();
         Admin admin = adminService.findOne(adminId);
-        if (!admin.getPassword().equals(getPasswordMD5(oldPassword))){
+        if (!admin.getPassword().equals(DataUtils.getPasswordMD5(oldPassword))){
             return result(ExceptionMsg.LoginPasswordFailed);
         }
-        adminService.updatePassword(getPasswordMD5(password), adminId);
+        adminService.updatePassword(DataUtils.getPasswordMD5(password), adminId);
         return result(ExceptionMsg.pwdUpdateSuccess);
     }
 
@@ -243,7 +243,7 @@ public class AdminController extends BaseController{
 //            修改密码
             logger.info("修改密码");
             String password = request.getParameter("password");
-            adminService.updatePassword(getPasswordMD5(password),Integer.parseInt(adminId));
+            adminService.updatePassword(DataUtils.getPasswordMD5(password),Integer.parseInt(adminId));
             return result(ExceptionMsg.ResetPwdSuccess);
         }
         return result(ExceptionMsg.FAILED);
@@ -292,16 +292,6 @@ public class AdminController extends BaseController{
         }
 
         return result(ExceptionMsg.FileUploadSuccess);
-    }
-
-    /**
-     * 密码加密后，字符串
-     * @param password
-     * @return
-     */
-    private String getPasswordMD5(String password){
-        String str = MD5Util.encrypt(password+ Constant.PASSWORD_SALT);
-        return str;
     }
 
 }

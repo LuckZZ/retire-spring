@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = RetireSpringApplication.class,webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class AdminServiceTest {
@@ -31,5 +33,11 @@ public class AdminServiceTest {
     @Test
     public void testFindByLoginType(){
         //adminService.findByLoginType(Role.Zuzhang);
+    }
+
+    @Test
+    public void testFindAllByJobNum(){
+        List<Admin> admins = adminService.findAllByJobNum("789789");
+        System.out.println("size:"+admins.size());
     }
 }

@@ -57,6 +57,12 @@ public class IndexController extends BaseController{
         return "login";
     }
 
+    @RequestMapping("/forgetView")
+    @LoggerManage(description = "忘记密码界面")
+    public String forgetView(){
+        return "forgetView";
+    }
+
     /**
      * 登陆验证
      * @param session

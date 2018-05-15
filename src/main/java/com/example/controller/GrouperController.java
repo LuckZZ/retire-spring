@@ -118,7 +118,7 @@ public class GrouperController extends BaseController{
     @LoggerManage(description = "重置组长密码")
     public Response updatePwd(@RequestParam(value = "grouperId") String grouperId,@RequestParam(value = "password") String password){
         Integer id = Integer.parseInt(grouperId);
-        grouperService.updatePassword(getPasswordMD5(password),id);
+        grouperService.updatePassword(DataUtils.getPasswordMD5(password),id);
         return result(ExceptionMsg.ResetPwdSuccess);
     }
 
@@ -156,10 +156,10 @@ public class GrouperController extends BaseController{
         Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         Integer grouperId = login.getId();
         Grouper grouper = grouperService.findOne(grouperId);
-        if (!grouper.getPassword().equals(getPasswordMD5(oldPassword))){
+        if (!grouper.getPassword().equals(DataUtils.getPasswordMD5(oldPassword))){
             return result(ExceptionMsg.LoginPasswordFailed);
         }
-        grouperService.updatePassword(getPasswordMD5(password), grouperId);
+        grouperService.updatePassword(DataUtils.getPasswordMD5(password), grouperId);
         return result(ExceptionMsg.pwdUpdateSuccess);
     }
 
@@ -192,16 +192,6 @@ public class GrouperController extends BaseController{
 
         grouperService.updateEmail(email, Verify.no, adminId);
         return result(ExceptionMsg.EmailUpdSuccess);
-    }
-
-    /**
-     * 密码加密后，字符串
-     * @param password
-     * @return
-     */
-    private String getPasswordMD5(String password){
-        String str = MD5Util.encrypt(password+ Constant.PASSWORD_SALT);
-        return str;
     }
 
 }

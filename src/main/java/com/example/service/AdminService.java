@@ -35,6 +35,8 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
     /*根据工号查询管理员*/
     Page<Admin> findAllByJobNum(String jobNum, Integer page);
 
+    List<Admin> findAllByJobNum(String jobNum);
+
     /*根姓名查询管理员*/
     Page<Admin> findAllByName(String name, Integer page);
 
@@ -45,7 +47,7 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
     int updateEmail(String email, Verify verify, Integer adminId);
 
     /*根据adminId修改验证码和发送邮箱时间情况*/
-    int updateVerifyCode(String verifyCode, String codeTime, Integer adminId);
+    int updateVerifyCode(String verifyCode, String verifyTime, Integer adminId);
 
     /*根据adminId修改验证情况*/
     int updateVerify(Verify verify, Integer adminId);

@@ -116,7 +116,13 @@ public enum ExceptionMsg {
 
     EmailSendFailed("发送邮件失败",false),
     EmailSendForVerifyFailed("此用户已验证邮箱，请刷新页面",false),
-    EmailSendSuccess("发送邮件成功，请查收邮件",true);
+    EmailSendSuccess("发送邮件成功，请查收邮件",true),
+
+    JobNumRetPwdFailed("工号不存在",false),
+    JobNumRetPwdSuccess("工号存在",true),
+
+    EmailRetPwdFailed("邮箱与工号不一致，或邮箱未验证",false),
+    EmailRetPwdSuccess("邮箱与工号一致",true);
 
     private String message;
     private boolean codeBool;

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Create by : Zhangxuemeng
@@ -46,7 +47,7 @@ public class MailController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/sendEmail")
-    @LoggerManage(description = "发送邮件")
+    @LoggerManage(description = "发送验证邮箱邮件")
     public Response sendEmail(HttpSession session) {
         Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
         if (login.getRole() == Role.admin){
@@ -63,7 +64,7 @@ public class MailController extends BaseController {
                 return result(ExceptionMsg.EmailSendForVerifyFailed);
             }
         }
-        mailService.verifyEmail(login);
+        mailService.sendVerifyEmail(login);
         return result(ExceptionMsg.EmailSendSuccess);
     }
 
@@ -90,5 +91,55 @@ public class MailController extends BaseController {
         }
         model.addAttribute("message","邮箱验证失败");
         return "mail/verifyStatus";
+    }
+
+    /**
+     * 发送重置密码邮件邮件
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/sendPwdEmail")
+    @LoggerManage(description = "发送重置密码邮件邮件")
+    public Response sendPwdEmail(HttpServletRequest request) {
+        String jobNum = request.getParameter("jobNum");
+        String email = request.getParameter("email");
+        String role = request.getParameter("role");
+        if ("admin".equals(role)){
+            List<Admin> admins = adminService.findAllByJobNum(jobNum);
+            if (admins.size()==0){
+//                工号不存在
+                return result(ExceptionMsg.JobNumRetPwdFailed);
+            }
+//            工号存在
+            Admin admin = admins.get(0);
+            if ((admin.getEmail() == null)||(!email.equals(admin.getEmail()))){
+//                邮箱不符
+                return result(ExceptionMsg.EmailRetPwdFailed);
+            }
+            if (admin.getVerify() != Verify.yes){
+                return result(ExceptionMsg.EmailRetPwdFailed);
+            }
+            mailService.sendPwdEmail(admin);
+            return result(ExceptionMsg.EmailSendSuccess);
+        }else if("grouper".equals(role)){
+            List<Grouper> groupers = grouperService.findAllByJobNum(jobNum);
+            if (groupers.size()==0){
+//                工号不存在
+                return result(ExceptionMsg.JobNumRetPwdFailed);
+            }
+//            工号存在
+            Grouper grouper = groupers.get(0);
+            if ((grouper.getEmail() == null)||(!email.equals(grouper.getEmail()))){
+//                邮箱不符
+                return result(ExceptionMsg.EmailRetPwdFailed);
+            }
+            if (grouper.getVerify() != Verify.yes){
+                return result(ExceptionMsg.EmailRetPwdFailed);
+            }
+            mailService.sendPwdEmail(grouper);
+            return result(ExceptionMsg.EmailSendSuccess);
+        }
+        return result(ExceptionMsg.FAILED);
     }
 }

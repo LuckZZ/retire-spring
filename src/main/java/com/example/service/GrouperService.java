@@ -27,8 +27,12 @@ public interface GrouperService extends BaseCrudService<Grouper,Integer>{
      /*从组长表中删除组长，并设置用户表用户的rank值*/
     void remove(Integer[] grouperIds);
 
+    /*根据工号，查询组长*/
     Page<Grouper> findAllByJobNum(String jobNum, Integer page);
 
+    List<Grouper> findAllByJobNum(String jobNum);
+
+    /*根据姓名，查询组长*/
     Page<Grouper> findAllByName(String name, Integer page);
 
     /*组长表工号是否存在*/

@@ -30,6 +30,8 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter {
         addInterceptor.excludePathPatterns("/login**");
         addInterceptor.excludePathPatterns("/logout");
         addInterceptor.excludePathPatterns("/mail/verify**");
+        addInterceptor.excludePathPatterns("/mail/sendPwdEmail");
+        addInterceptor.excludePathPatterns("/forgetView");
         addInterceptor.excludePathPatterns("/");
 
 //      拦截配置

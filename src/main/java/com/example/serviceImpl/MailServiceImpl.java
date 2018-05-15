@@ -48,7 +48,7 @@ public class MailServiceImpl implements MailService{
     private GrouperService grouperService;
 
     @Override
-    public void verifyEmail(Login login) {
+    public void sendVerifyEmail(Login login) {
         //        当前时间
         long currentTime = DateUtils.getCurrentTime();
 //        当前时间加一个小时
@@ -66,7 +66,7 @@ public class MailServiceImpl implements MailService{
             map.put("paramUrl",strUrl);
             map.put("paramTime",String.valueOf(passVTime));
 //            发送验证邮件
-            sendMail(admin.getEmail(), "[离退休部]验证邮箱通知！","mail/mailTemplate",map);
+            sendMail(admin.getEmail(), "[离退休部]验证邮箱通知！","mail/mailVerifyTemplate",map);
         }else if(login.getRole() == Role.grouper){
             String strUrl = "http://localhost:8080/mail/verify?type=1&verifyCode="+strRandom;
             Grouper grouper = grouperService.findOne(login.getId());
@@ -76,7 +76,7 @@ public class MailServiceImpl implements MailService{
             map.put("paramName",grouper.getUser().getName());
             map.put("paramUrl",strUrl);
             map.put("paramTime",passVTime);
-            sendMail(grouper.getEmail(), "[离退休部]验证邮箱通知！","mail/mailTemplate",map);
+            sendMail(grouper.getEmail(), "[离退休部]验证邮箱通知！","mail/mailVerifyTemplate",map);
         }
     }
 
@@ -89,7 +89,7 @@ public class MailServiceImpl implements MailService{
 //            管理员
             List<Admin> admins = adminService.findAll();
             for (Admin admin : admins) {
-                if (verifyCode.equals(admin.getVerifyCode())&&(Long.parseLong(admin.getCodeTime())>currentTime)){
+                if (verifyCode.equals(admin.getVerifyCode())&&(Long.parseLong(admin.getVerifyTime())>currentTime)){
                     adminService.updateVerify(Verify.yes, admin.getAdminId());
                     return true;
                 }
@@ -106,6 +106,32 @@ public class MailServiceImpl implements MailService{
             }
         }
         return false;
+    }
+
+    @Override
+    public void sendPwdEmail(Admin admin) {
+//        6位随机验证码
+        String strRandom = DataUtils.getNumberRandom(6);
+//           修改密码
+        adminService.updatePassword(DataUtils.getPasswordMD5(strRandom), admin.getAdminId());
+        Map map = new HashMap();
+        map.put("paramName",admin.getName());
+        map.put("paramPwd",strRandom);
+//            发送验证邮件
+        sendMail(admin.getEmail(), "[离退休部]重置密码通知！","mail/mailPwdTemplate",map);
+    }
+
+    @Override
+    public void sendPwdEmail(Grouper grouper) {
+//        6位随机验证码
+        String strRandom = DataUtils.getNumberRandom(6);
+//           修改密码
+        grouperService.updatePassword(DataUtils.getPasswordMD5(strRandom), grouper.getGrouperId());
+        Map map = new HashMap();
+        map.put("paramName",grouper.getUser().getName());
+        map.put("paramPwd",strRandom);
+//            发送验证邮件
+        sendMail(grouper.getEmail(), "[离退休部]重置密码通知！","mail/mailPwdTemplate",map);
     }
 
     private void sendMail(String recipient, String subject, String templateName, Map<String, Object> datas){

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+    <pre>
+亲爱的用户 <span th:text="${paramName}"></span>：您好！
+        <br/>
+    您收到这封这封电子邮件是因为您 (也可能是某人冒充您的名义) 申请重置密码。假如这不是您本人所申请, 请不用理会这封电子邮件。
+        <br/>
+    已重置密码，新密码为：
+        <br/>
+        <span th:text="${paramPwd}"></span>
+        <br/>
+    </pre>
+</body>
+</html>

@@ -50,6 +50,8 @@ public interface AdminDao extends JpaRepository<Admin, Integer> {
     /*根据工号查询管理员*/
     Page<Admin> findAllByJobNum(String jobNum, Pageable pageable);
 
+    List<Admin> findAllByJobNum(String jobNum);
+
     /*根姓名查询管理员*/
     Page<Admin> findAllByName(String name, Pageable pageable);
 
@@ -60,8 +62,8 @@ public interface AdminDao extends JpaRepository<Admin, Integer> {
 
     /*根据adminId修改验证码和发送邮箱时间情况*/
     @Modifying(clearAutomatically=true)
-    @Query("update Admin set verifyCode=:verifyCode,codeTime=:codeTime where adminId=:adminId")
-    int updateVerifyCode(@Param("verifyCode") String verifyCode, @Param("codeTime") String codeTime, @Param("adminId") Integer adminId);
+    @Query("update Admin set verifyCode=:verifyCode,verifyTime=:verifyTime where adminId=:adminId")
+    int updateVerifyCode(@Param("verifyCode") String verifyCode, @Param("verifyTime") String verifyTime, @Param("adminId") Integer adminId);
 
     /*根据adminId修改邮箱验证情况*/
     @Modifying(clearAutomatically=true)

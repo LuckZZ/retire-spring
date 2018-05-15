@@ -97,6 +97,11 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
     }
 
     @Override
+    public List<Admin> findAllByJobNum(String jobNum) {
+        return adminDao.findAllByJobNum(jobNum);
+    }
+
+    @Override
     public Page<Admin> findAllByName(String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         return adminDao.findAllByName(name, pageable);
@@ -126,8 +131,8 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
 
     @Transactional
     @Override
-    public int updateVerifyCode(String verifyCode, String codeTime, Integer adminId) {
-        return adminDao.updateVerifyCode(verifyCode, codeTime, adminId);
+    public int updateVerifyCode(String verifyCode, String verifyTime, Integer adminId) {
+        return adminDao.updateVerifyCode(verifyCode, verifyTime, adminId);
     }
 
     @Transactional

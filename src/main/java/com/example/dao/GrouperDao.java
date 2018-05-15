@@ -37,6 +37,8 @@ public interface GrouperDao extends JpaRepository<Grouper, Integer> {
     /*根据工号查询组长*/
     Page<Grouper> findAllByUser_JobNum(String jobNum, Pageable pageable);
 
+    List<Grouper> findAllByUser_JobNum(String jobNum);
+
     /*根据姓名查询组长*/
     Page<Grouper> findAllByUser_Name(String name, Pageable pageable);
 
