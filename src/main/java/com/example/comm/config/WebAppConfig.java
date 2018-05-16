@@ -12,23 +12,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class WebAppConfig extends WebMvcConfigurerAdapter {
 
-    @Value("${file.pictures.url}")
-    private String filePicturesUrl;
+    @Value("${file.pictures.res.url}")
+    private String filePicturesResUrl;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
- /*       if(filePicturesUrl.equals("") || filePicturesUrl.equals("/usr/local/staticfile/pictures/")){
-            String imagesPath = WebAppConfig.class.getClassLoader().getResource("").getPath();
-            if(imagesPath.indexOf(".jar")>0){
-                imagesPath = imagesPath.substring(0, imagesPath.indexOf(".jar"));
-            }else if(imagesPath.indexOf("classes")>0){
-                imagesPath = "file:"+imagesPath.substring(0, imagesPath.indexOf("classes"));
-            }
-            imagesPath = imagesPath.substring(0, imagesPath.lastIndexOf("/"))+"/images/";
-            filePicturesUrl = imagesPath;
-        }*/
-        LoggerFactory.getLogger(WebAppConfig.class).info("imagesPath="+ filePicturesUrl);
-        registry.addResourceHandler("/images/**").addResourceLocations("file:D:/"+filePicturesUrl);
+        LoggerFactory.getLogger(WebAppConfig.class).info("imagesPath="+ filePicturesResUrl);
+        registry.addResourceHandler("/images/**").addResourceLocations(filePicturesResUrl);
         super.addResourceHandlers(registry);
     }
 
