@@ -99,7 +99,7 @@ public class MailServiceImpl implements MailService{
             //            组长
             List<Grouper> groupers = grouperService.findAll();
             for (Grouper grouper : groupers) {
-                if (verifyCode.equals(grouper.getVerifyCode())&&(Long.parseLong(grouper.getCodeTime())>currentTime)){
+                if (verifyCode.equals(grouper.getVerifyCode())&&(Long.parseLong(grouper.getVerifyTime())>currentTime)){
                     grouperService.updateVerify(Verify.yes, grouper.getGrouperId());
                     return true;
                 }

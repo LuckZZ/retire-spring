@@ -45,7 +45,7 @@ public interface GrouperService extends BaseCrudService<Grouper,Integer>{
     int updateEmail(String email, Verify verify, Integer grouperId);
 
     /*根据grouperId修改验证码和发送邮箱时间情况*/
-    int updateVerifyCode(String verifyCode, String codeTime, Integer grouperId);
+    int updateVerifyCode(String verifyCode, String verifyTime, Integer grouperId);
 
     /*根据grouperId修改验证情况*/
     int updateVerify(Verify verify, Integer grouperId);

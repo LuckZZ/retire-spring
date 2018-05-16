@@ -144,8 +144,8 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
 
     @Transactional
     @Override
-    public int updateVerifyCode(String verifyCode, String codeTime, Integer grouperId) {
-        return grouperDao.updateVerifyCode(verifyCode, codeTime, grouperId);
+    public int updateVerifyCode(String verifyCode, String verifyTime, Integer grouperId) {
+        return grouperDao.updateVerifyCode(verifyCode, verifyTime, grouperId);
     }
 
     @Transactional

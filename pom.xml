@@ -6,7 +6,7 @@
 	<groupId>com.example</groupId>
 	<artifactId>retire-spring</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>retire-spring</name>
 	<description>Demo project for Spring Boot</description>
@@ -42,7 +42,22 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<!-- 移除嵌入式tomcat插件 -->
+	<!--		<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>-->
 		</dependency>
+
+		<!--servlet依赖-->
+<!--		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>-->
 
 		<!--mysql-->
 		<dependency>
@@ -102,6 +117,21 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+
+		<!-- maven打包的时候告诉maven不需要web.xml,否刚会报找不到web.xml错误 -->
+<!--		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+		</plugins>-->
+
+		<!--项目名称-->
+		<finalName>retire-spring</finalName>
 	</build>
 
 </project>

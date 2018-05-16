@@ -58,8 +58,8 @@ public interface GrouperDao extends JpaRepository<Grouper, Integer> {
 
     /*根据grouperId修改验证码和发送邮箱时间情况*/
     @Modifying(clearAutomatically=true)
-    @Query("update Grouper set verifyCode=:verifyCode,codeTime=:codeTime where grouperId=:grouperId")
-    int updateVerifyCode(@Param("verifyCode") String verifyCode, @Param("codeTime") String codeTime, @Param("grouperId") Integer grouperId);
+    @Query("update Grouper set verifyCode=:verifyCode,verifyTime=:verifyTime where grouperId=:grouperId")
+    int updateVerifyCode(@Param("verifyCode") String verifyCode, @Param("verifyTime") String verifyTime, @Param("grouperId") Integer grouperId);
 
     /*根据grouperId修改邮箱验证情况*/
     @Modifying(clearAutomatically=true)
