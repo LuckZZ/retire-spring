@@ -38,8 +38,11 @@ public class MailServiceImpl implements MailService{
     @Autowired
     private MailContentBuilder contentBuilder;
 
-    @Value("${mail.from}")
-    private String from;
+    @Value("${retire.mail.from}")
+    private String mailFrom;
+
+    @Value("${retire.base.url}")
+    private String baseUrl;
 
     @Autowired
     private AdminService adminService;
@@ -56,9 +59,13 @@ public class MailServiceImpl implements MailService{
 //        8位随机验证码
         String strRandom = DataUtils.getStringRandom(8);
         if (login.getRole() == Role.admin){
-            //        链接
-            String strUrl = "http://localhost:8080/mail/verify?type=0&verifyCode="+strRandom;
             Admin admin = adminService.findOne(login.getId());
+//           如果数据verifyTime加上一个小时大于当前时间，表示在验证时间内，数据库验证码不变，验证时间改变
+            if ((admin.getVerifyTime() != null)&&(Long.parseLong(admin.getVerifyTime())+60*60*1000)>currentTime){
+                strRandom = admin.getVerifyCode();
+            }
+            //        链接
+            String strUrl = baseUrl+"/mail/verify?type=0&verifyCode="+strRandom;
 //           修改数据库验证码和时间
             adminService.updateVerifyCode(strRandom, String.valueOf(currentTime), admin.getAdminId());
             Map map = new HashMap();
@@ -68,8 +75,12 @@ public class MailServiceImpl implements MailService{
 //            发送验证邮件
             sendMail(admin.getEmail(), "[离退休部]验证邮箱通知！","mail/mailVerifyTemplate",map);
         }else if(login.getRole() == Role.grouper){
-            String strUrl = "http://localhost:8080/mail/verify?type=1&verifyCode="+strRandom;
             Grouper grouper = grouperService.findOne(login.getId());
+            //           如果数据verifyTime加上一个小时大于当前时间，表示在验证时间内，数据库验证码不变，验证时间改变
+            if ((grouper.getVerifyTime() != null)&&(Long.parseLong(grouper.getVerifyTime())+60*60*1000)>currentTime){
+                strRandom = grouper.getVerifyCode();
+            }
+            String strUrl = baseUrl+"/mail/verify?type=1&verifyCode="+strRandom;
             //           修改数据库验证码和时间
             grouperService.updateVerifyCode(strRandom, String.valueOf(currentTime), grouper.getGrouperId());
             Map map = new HashMap();
@@ -140,7 +151,7 @@ public class MailServiceImpl implements MailService{
             @Override
             public void prepare(MimeMessage mimeMessage) throws Exception {
                 MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, encoding);
-                messageHelper.setFrom(from);
+                messageHelper.setFrom(mailFrom);
                 messageHelper.setTo(recipient);
                 messageHelper.setSubject(subject);
                 messageHelper.setText(contentBuilder.buildMessage(templateName, datas), ISHTML);

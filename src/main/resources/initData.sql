@@ -1,5 +1,5 @@
 
-/*1.先在创建ufg8编码的retire-spring数据库 2.运行程序，自动在此数据库生成表结构 3.运行initDate脚本，初始化基本数据 */
+/*1.先在创建ufg8编码的retire_spring数据库 2.运行程序，自动在此数据库生成表结构 3.运行initDate脚本，初始化基本数据 */
 
 /*Data for the table `tb_nation` */
 
