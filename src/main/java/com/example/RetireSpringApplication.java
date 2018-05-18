@@ -12,15 +12,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement // 启注解事务管理，等同于xml配置方式的 <tx:annotation-driven />
 @SpringBootApplication
 //@ServletComponentScan
-
-/*public class RetireSpringApplication {
+public class RetireSpringApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(RetireSpringApplication.class, args);
 	}
 
-}*/
-public class RetireSpringApplication  extends SpringBootServletInitializer {
+}
+/*public class RetireSpringApplication  extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -31,4 +30,4 @@ public class RetireSpringApplication  extends SpringBootServletInitializer {
 		SpringApplication.run(RetireSpringApplication.class, args);
 	}
 
-}
+}*/
