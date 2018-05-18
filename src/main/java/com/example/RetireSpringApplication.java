@@ -13,14 +13,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 //@ServletComponentScan
 
-public class RetireSpringApplication {
+/*public class RetireSpringApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(RetireSpringApplication.class, args);
 	}
 
-}
-/*public class RetireSpringApplication  extends SpringBootServletInitializer {
+}*/
+public class RetireSpringApplication  extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -31,4 +31,4 @@ public class RetireSpringApplication {
 		SpringApplication.run(RetireSpringApplication.class, args);
 	}
 
-}*/
+}
