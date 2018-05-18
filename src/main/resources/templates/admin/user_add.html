@@ -41,7 +41,7 @@
                                 <form class="am-form tpl-form-border-form tpl-form-border-br" id="addUserForm" action="#" th:object="${user}">
 
                                     <div class="am-form-group">
-                                        <label for="jobNum" class="am-u-sm-3 am-form-label">工号</label>
+                                        <label for="jobNum" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>工号</label>
                                         <div class="am-u-sm-9">
                                             <!--本地验证和ajax验证-->
                                             <input name="jobNum" type="number" class="tpl-form-input" id="jobNum" placeholder="输入工号(6位)"/>
@@ -49,7 +49,7 @@
                                     </div>
 
                                     <div class="am-form-group">
-                                        <label for="name" class="am-u-sm-3 am-form-label">姓名</label>
+                                        <label for="name" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>姓名</label>
                                         <div class="am-u-sm-9">
                                             <input name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名">
                                         </div>
@@ -142,21 +142,21 @@
                                       </div>
 
                                       <div class="am-form-group">
-                                          <label for="birth" class="am-u-sm-3 am-form-label">出生日期</label>
+                                          <label for="birth" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>出生日期</label>
                                           <div class="am-u-sm-9">
                                               <input name="birth" id="birth" type="text" class="tpl-form-input" placeholder="出生日期" data-am-datepicker="" readonly="">
                                           </div>
                                       </div>
 
                                       <div class="am-form-group">
-                                          <label for="workTime" class="am-u-sm-3 am-form-label">工作时间</label>
+                                          <label for="workTime" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>工作时间</label>
                                           <div class="am-u-sm-9">
                                               <input name="workTime" id="workTime"  type="text" class="tpl-form-input" placeholder="工作时间" data-am-datepicker="" readonly="">
                                           </div>
                                       </div>
 
                                       <div class="am-form-group">
-                                          <label for="retireTime" class="am-u-sm-3 am-form-label">退休时间</label>
+                                          <label for="retireTime" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>退休时间</label>
                                           <div class="am-u-sm-9">
                                               <input name="retireTime" id="retireTime" type="text" class="tpl-form-input"  placeholder="退休时间" data-am-datepicker="" readonly="">
                                           </div>

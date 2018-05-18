@@ -2,6 +2,12 @@
 .error{
     color:red;
 }
+
+.txt-impt{
+    margin-right: 4px;
+    color:#C00;
+}
+
 /*去世用户行的颜色*/
 .pass-user{
     color:red;

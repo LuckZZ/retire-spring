@@ -48,7 +48,7 @@
 
                                             <form class="am-form tpl-form-border-form tpl-form-border-br" id="updateOneForm" action="#" th:object="${admin}">
                                                 <div class="am-form-group">
-                                                    <label for="jobNum" class="am-u-sm-3 am-form-label">工号</label>
+                                                    <label for="jobNum" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>工号</label>
                                                     <div class="am-u-sm-9">
                                                         <input name="adminId" th:field="*{adminId}" type="hidden" id="adminId"/>
                                                         <input name="jobNum" type="number" class="tpl-form-field" id="jobNum" placeholder="输入工号(6位)" th:field="*{jobNum}" disabled/>
@@ -56,7 +56,7 @@
                                                 </div>
 
                                                 <div class="am-form-group">
-                                                    <label for="name" class="am-u-sm-3 am-form-label">姓名</label>
+                                                    <label for="name" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>姓名</label>
                                                     <div class="am-u-sm-9">
                                                         <input name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名" th:field="*{name}">
                                                     </div>

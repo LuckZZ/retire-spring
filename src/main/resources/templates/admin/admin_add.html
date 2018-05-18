@@ -40,7 +40,7 @@
                                 <form class="am-form tpl-form-border-form tpl-form-border-br" id="addAdminForm" action="#" th:object="${admin}">
 
                                     <div class="am-form-group">
-                                        <label for="jobNum" class="am-u-sm-3 am-form-label">工号</label>
+                                        <label for="jobNum" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>工号</label>
                                         <div class="am-u-sm-9">
                                             <!--本地验证和ajax验证-->
                                             <input name="jobNum" type="number" class="tpl-form-input" id="jobNum" placeholder="输入工号(6位)"/>
@@ -48,21 +48,21 @@
                                     </div>
 
                                     <div class="am-form-group">
-                                        <label for="name" class="am-u-sm-3 am-form-label">姓名</label>
+                                        <label for="name" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>姓名</label>
                                         <div class="am-u-sm-9">
                                             <input name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名">
                                         </div>
                                     </div>
 
                                     <div class="am-form-group">
-                                        <label for="password" class="am-u-sm-3 am-form-label">密码</label>
+                                        <label for="password" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>密码</label>
                                         <div class="am-u-sm-9">
                                             <input name="password" type="password" class="tpl-form-input" id="password" placeholder="输入密码(6-10位)">
                                         </div>
                                     </div>
 
                                     <div class="am-form-group">
-                                        <label for="passwordCfm" class="am-u-sm-3 am-form-label">确认密码</label>
+                                        <label for="passwordCfm" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>确认密码</label>
                                         <!--data-equal-to密码验证-->
                                         <div class="am-u-sm-9">
                                             <input name="passwordCfm" type="password" class="tpl-form-input" id="passwordCfm" placeholder="再次输入密码">

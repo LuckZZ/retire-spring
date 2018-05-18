@@ -49,7 +49,7 @@
                                             <form class="am-form tpl-form-border-form tpl-form-border-br" id="updateOneForm" action="#" th:object="${user}">
 
                                                 <div class="am-form-group">
-                                                    <label for="jobNum" class="am-u-sm-3 am-form-label">工号</label>
+                                                    <label for="jobNum" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>工号</label>
                                                     <div class="am-u-sm-9">
                                                         <input name="userId" th:field="*{userId}" type="hidden" id="userId"/>
                                                         <input name="jobNum" th:field="*{jobNum}" type="hidden"/>
@@ -58,7 +58,7 @@
                                                 </div>
 
                                                 <div class="am-form-group">
-                                                    <label for="name" class="am-u-sm-3 am-form-label">姓名</label>
+                                                    <label for="name" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>姓名</label>
                                                     <div class="am-u-sm-9">
                                                         <input th:field="*{name}" name="name"type="text" class="tpl-form-input" id="name" placeholder="输入姓名">
                                                     </div>
@@ -151,21 +151,21 @@
                                                 </div>
 
                                                 <div class="am-form-group">
-                                                    <label for="birth" class="am-u-sm-3 am-form-label">出生日期</label>
+                                                    <label for="birth" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>出生日期</label>
                                                     <div class="am-u-sm-9">
                                                         <input th:field="*{birth}" name="birth" id="birth" type="text" class="tpl-form-input" placeholder="出生日期" data-am-datepicker="" readonly="" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="am-form-group">
-                                                    <label for="workTime" class="am-u-sm-3 am-form-label">工作时间</label>
+                                                    <label for="workTime" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>工作时间</label>
                                                     <div class="am-u-sm-9">
                                                         <input th:field="*{workTime}" name="workTime" id="workTime"  type="text" class="tpl-form-input" placeholder="工作时间" data-am-datepicker="" readonly="" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="am-form-group">
-                                                    <label for="retireTime" class="am-u-sm-3 am-form-label">退休时间</label>
+                                                    <label for="retireTime" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>退休时间</label>
                                                     <div class="am-u-sm-9">
                                                         <input th:field="*{retireTime}" name="retireTime" id="retireTime" type="text" class="tpl-form-input"  placeholder="退休时间" data-am-datepicker="" readonly="" required>
                                                     </div>

@@ -43,7 +43,7 @@
                                     <div id="activityContent">
 
                                     <div class="am-form-group">
-                                        <label for="activityName" class="am-u-sm-3 am-form-label">活动名称</label>
+                                        <label for="activityName" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>活动名称</label>
                                         <div class="am-u-sm-7">
                                             <input name="activityName"type="text" class="tpl-form-input" id="activityName" placeholder="输入活动名称">
                                         </div>
@@ -59,8 +59,11 @@
                                             <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success">提交</button>
                                         </div>
                                     </div>
-
                                 </form>
+
+                                <br/>
+                                <small class="am-u-sm-9 am-u-sm-push-3" style="font-weight: inherit;"><span class="txt-impt">提示：</span>除活动名称外，若输入涉及多个值，用"；"分割</small>
+
                             </div>
                         </div>
                     </div>
@@ -180,7 +183,7 @@
             var $group="                  <div class=\"am-form-group\" onmouseover='showPencil(this)' onmouseout='hidePencil(this)'>\n" +
                 "                                            <div class=\"am-u-sm-3 am-form-label\">\n" +
                 "                                                <div class=\"am-dropdown doc-dropdown-js\">\n" +
-                "                                                    <span class=\"am-icon-pencil\" style='display: none' onclick=\"dropdownToggle(this)\"></span><label class=\"am-form-label my-label\">未定义</label>\n" +
+                "                                                    <span class=\"am-icon-pencil\" style='display: none' onclick=\"dropdownToggle(this)\"></span><label class=\"am-form-label my-label\"><span class=\"txt-impt\">*</span>未定义</label>\n" +
                 "                                                    <div class=\"am-dropdown-content\">\n" +
                 "                                                        <li class=\"am-text-sm\">编辑</li>\n" +
                 "                                                        <li>\n" +
