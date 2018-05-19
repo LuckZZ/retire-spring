@@ -7,6 +7,9 @@ import java.io.Serializable;
  * 用于民族
  * Nation实体类有属性：
  * nationId、nationName
+ *
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 @Entity
 @Table(name = "tb_nation")

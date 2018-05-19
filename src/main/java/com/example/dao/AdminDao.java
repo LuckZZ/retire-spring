@@ -13,6 +13,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 @Repository
 public interface AdminDao extends JpaRepository<Admin, Integer> {
 

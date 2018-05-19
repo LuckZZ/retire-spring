@@ -10,6 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 @Repository
 public interface ActivityDao extends JpaRepository<Activity,Integer> {
 

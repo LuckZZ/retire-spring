@@ -1,8 +1,8 @@
 package com.example.comm;
 
 /**
- * 常量
- * Create by : zhangxuemeng
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 public class Constant {
     public static int PAGESIZE = 10;

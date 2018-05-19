@@ -1,5 +1,9 @@
 package com.example.domain.result;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 public class Response {
     /** 返回数据*/
     private Object data;

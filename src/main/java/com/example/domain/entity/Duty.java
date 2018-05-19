@@ -7,6 +7,9 @@ import java.io.Serializable;
  * 职称
  * Duty实体类有属性:
  * dutyId、dutyName
+ *
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 @Entity
 @Table(name = "tb_duty")

@@ -7,6 +7,9 @@ import java.io.Serializable;
  * 部门
  * Department实体类有属性:
  * departmentId、departmentName
+ *
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 @Entity
 @Table(name = "tb_department")

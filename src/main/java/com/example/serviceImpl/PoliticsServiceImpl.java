@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 @Service
 public class PoliticsServiceImpl extends BaseCrudServiceImpl<Politics,Integer,PoliticsDao> implements PoliticsService{
 

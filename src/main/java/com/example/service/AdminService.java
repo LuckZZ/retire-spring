@@ -7,6 +7,10 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 public interface AdminService extends BaseCrudService<Admin,Integer>{
 
     /*根据adminId修改图片*/

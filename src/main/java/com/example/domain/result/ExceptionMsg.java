@@ -1,5 +1,9 @@
 package com.example.domain.result;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 public enum ExceptionMsg {
     SUCCESS("操作成功",true),
     FAILED("操作失败",false),

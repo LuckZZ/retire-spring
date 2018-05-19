@@ -7,6 +7,9 @@ import java.io.Serializable;
  * 用于年龄统计
  * AgeRange实体类有属性:
  * ageRangeId、ageRangeName
+ *
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 @Entity
 @Table(name = "tb_age_range")

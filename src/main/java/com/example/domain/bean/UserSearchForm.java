@@ -1,8 +1,10 @@
 package com.example.domain.bean;
 
+
 /**
  * 用于用户高级搜索表单
  * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 public class UserSearchForm {
 //    组别

@@ -6,6 +6,10 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 public interface UserService extends BaseCrudService<User,Integer>{
 
     /*是否存在此工号*/

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 /**
  * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 public interface ActivityDefDao extends JpaRepository<ActivityDef,Integer> {
 

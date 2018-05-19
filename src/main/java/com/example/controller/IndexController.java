@@ -23,6 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 @Controller
 public class IndexController extends BaseController{
 
@@ -36,14 +40,16 @@ public class IndexController extends BaseController{
     @Access(roles = {Role.admin})
     @LoggerManage(description = "管理员首页")
     public String indexAdmin(){
-        return "admin/index";
+//        return "admin/index";
+        return "redirect:/admin/adminList";
     }
 
     @RequestMapping("/grouper/index")
     @LoggerManage(description = "组长首页")
     @Access(roles = {Role.grouper})
     public String indexGrouper(){
-        return "grouper/index";
+//        return "grouper/index";
+        return "redirect:/user/userList";
     }
 
     @RequestMapping("/")

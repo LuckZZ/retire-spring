@@ -7,6 +7,9 @@ import java.io.Serializable;
  * 政治面貌
  * Politics实体类有属性：
  * politicsId、politicsName
+ *
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 @Entity
 @Table(name = "tb_politics")

@@ -8,6 +8,9 @@ import java.io.Serializable;
 
 /**
  * 组长表
+ *
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 @Entity
 @Table(name = "tb_grouper")

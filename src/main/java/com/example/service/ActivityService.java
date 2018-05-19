@@ -3,6 +3,10 @@ package com.example.service;
 import com.example.domain.entity.Activity;
 import org.springframework.data.domain.Page;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 public interface ActivityService extends BaseCrudService<Activity,Integer>{
 
     Activity save(String activityName, String[] labels, String[] inputs);

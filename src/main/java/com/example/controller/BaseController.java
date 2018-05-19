@@ -5,6 +5,10 @@ import com.example.domain.result.Response;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 @Controller
 public class BaseController {
     protected Logger logger = Logger.getLogger(this.getClass());

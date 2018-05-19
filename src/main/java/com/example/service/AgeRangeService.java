@@ -4,6 +4,10 @@ import com.example.domain.entity.AgeRange;
 import com.example.domain.enums.Exist;
 import com.example.utils.UserAgePage;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 public interface AgeRangeService extends BaseCrudService<AgeRange,Integer>{
 
     /*保存*/

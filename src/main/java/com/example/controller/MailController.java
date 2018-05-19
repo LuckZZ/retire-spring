@@ -25,8 +25,8 @@ import java.util.List;
 
 /**
  * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
-
 @Controller
 @RequestMapping("/mail")
 @Access(roles = {Role.admin, Role.grouper})

@@ -6,6 +6,10 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 public interface GrouperService extends BaseCrudService<Grouper,Integer>{
 
     /*修改组长最近一次登陆时间*/

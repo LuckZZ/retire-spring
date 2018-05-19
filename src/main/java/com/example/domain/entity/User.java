@@ -14,6 +14,9 @@ import java.io.Serializable;
  * mate、address、department、duties、work_time、
  * retire_time、birth、nation、exist、photo、
  * pass_time、politics、createTinme
+ *
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 @Entity
 @Table(name="tb_user")

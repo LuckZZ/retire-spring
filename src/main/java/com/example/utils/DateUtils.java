@@ -3,6 +3,10 @@ package com.example.utils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 public class DateUtils {
 
     private final static long minute = 60 * 1000;// 1分钟

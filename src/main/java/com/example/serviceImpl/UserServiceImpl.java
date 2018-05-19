@@ -30,6 +30,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 @Service
 public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao> implements UserService{
 

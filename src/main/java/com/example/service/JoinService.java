@@ -6,6 +6,10 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 public interface JoinService extends BaseCrudService<Join,Integer>{
 
     /*根据activityId和userId，查看Join是否存在此条数据*/

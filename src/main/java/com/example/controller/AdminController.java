@@ -1,6 +1,5 @@
 package com.example.controller;
 
-import com.example.comm.Constant;
 import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
 import com.example.comm.config.WebSecurityConfig;
@@ -15,7 +14,6 @@ import com.example.domain.result.Response;
 import com.example.service.AdminService;
 import com.example.utils.DataUtils;
 import com.example.utils.FileUtils;
-import com.example.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -29,6 +27,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 @RequestMapping("/admin")
 @Controller
 @Access(roles = Role.admin)

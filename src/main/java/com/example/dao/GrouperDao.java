@@ -13,6 +13,10 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 public interface GrouperDao extends JpaRepository<Grouper, Integer> {
 
     @Modifying(clearAutomatically=true)

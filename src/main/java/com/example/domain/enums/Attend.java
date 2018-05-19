@@ -2,6 +2,9 @@ package com.example.domain.enums;
 
 /**
  * 是否参加活动
+ *
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 public enum Attend {
     yes("参加"),no("不参加");

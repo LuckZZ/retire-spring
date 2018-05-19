@@ -10,6 +10,7 @@ import java.util.Map;
 
 /**
  * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 @Service
 public class MailContentBuilderImpl implements MailContentBuilder{

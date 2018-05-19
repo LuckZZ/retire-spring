@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 @Entity
 @Table(name = "tb_activity_def")

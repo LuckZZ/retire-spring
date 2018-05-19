@@ -20,6 +20,9 @@ import java.util.List;
  * @param <T>
  * @param <ID>
  * @param <D>
+ *
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 public class BaseCrudServiceImpl<T, ID extends Serializable, D extends JpaRepository<T,ID>> implements BaseCrudService<T,ID> {
     @Autowired

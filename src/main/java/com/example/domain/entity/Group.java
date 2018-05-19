@@ -8,6 +8,9 @@ import java.util.List;
 /**
  * Group实体类有属性：
  * group_id、group_name
+ *
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 @Entity
 @Table(name = "tb_group")

@@ -10,6 +10,9 @@ import java.util.List;
  * 此接口为基础接口，增、删、改、查方法
  * @param <T>
  * @param <ID>
+ *
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 public interface BaseCrudService<T, ID extends Serializable>{
 

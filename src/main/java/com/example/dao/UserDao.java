@@ -14,6 +14,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
+ */
 @Repository
 public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationExecutor<User> {
 

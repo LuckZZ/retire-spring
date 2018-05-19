@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 
 /**
  * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 public class MD5Util {
 

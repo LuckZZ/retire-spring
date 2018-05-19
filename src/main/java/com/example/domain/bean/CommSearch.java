@@ -2,6 +2,7 @@ package com.example.domain.bean;
 
 /**
  * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 public class CommSearch {
     private int type;

@@ -5,6 +5,7 @@ import com.example.domain.enums.Role;
 
 /**
  * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 public class Login {
     private Integer id;

@@ -4,6 +4,7 @@ import com.example.domain.entity.ActivityDef;
 
 /**
  * Create by : Zhangxuemeng
+ * csdn：https://blog.csdn.net/Luck_ZZ
  */
 public class ActivityDefSearch extends ActivityDef{
 
