@@ -112,6 +112,7 @@
                         {
                             console.log("sendEmail error function!");
                             toastr.error('出现错误！', '错误');
+                            $("#email-verify").text('发送出现错误');
                         },
                         success: function (data)
                         {
@@ -121,12 +122,13 @@
                                 //刷新页面
                                 location.reload();
                             }else {
+                                $("#email-verify").text('发送失败');
                                 toastr.error(data.message, '操作失败');
                             }
                         }
                     });
                 }else if(verifyV == 'yes'){
-                    toastr.error('此账号已完成', '操作失败');
+                    toastr.error('此账号已完成验证', '操作失败');
                 }
             });
 
