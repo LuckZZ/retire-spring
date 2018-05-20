@@ -79,7 +79,7 @@
                                         <div class="am-u-sm-9">
                                             <div class="am-form-group am-form-file">
                                                 <div class="tpl-form-file-img">
-                                                    <img id="avatarPreview" th:src="*{imgUrl}" alt="" style="width: 100px; height: 100px" onerror="this.src='/img/user.jpg'">
+                                                    <img id="avatarPreview" th:src="${admin.imgUrl == null?'/img/user.jpg':'/images/'+admin.imgUrl}" alt="" style="width: 100px; height: 100px" onerror="this.src='/img/user.jpg'">
                                                 </div>
                                             </div>
                                         </div>
