@@ -15,7 +15,8 @@ insert  into `tb_department`(`department_id`,`department_name`) values (1,'校�
 
 /*Data for the table `tb_politics` */
 
-insert  into `tb_politics`(`politics_id`,`politics_name`) values (1,'群众'),(2,'共青团员'),(3,'中共党员');
+/*insert  into `tb_politics`(`politics_id`,`politics_name`) values (1,'群众'),(2,'共青团员'),(3,'中共党员');*/
+insert  into `tb_politics`(`politics_id`,`politics_name`) values (1,'群众'),(2,'共青团员'),(3,'中共党员'),(4,'民革'),(5,'民进'),(6,'民建'),(7,'民促'),(8,'九三学社');
 
 /*Data for the table `tb_admin` */
 
