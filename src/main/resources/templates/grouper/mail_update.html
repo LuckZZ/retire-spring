@@ -43,7 +43,7 @@
                                     <div class="am-u-sm-9 zz-task">
                                        <input type="hidden" th:if="${(grouper.email != null)&&(grouper.email != '')}" th:value="${(grouper.verify != null)}?${grouper.verify.toString()}:''" id="verify-value" disabled/>
                                         <span class="task-title-sp" th:text="${(grouper.email != null) &&(grouper.email != '')}?${grouper.email}:'未绑定邮箱'"> 529055293@qq.com</span>
-                                        <a class="label label-sm" id="email-verify" th:if="${(grouper.email != null)&&(grouper.email != '')}" th:text="${(grouper.verify != null)}?${grouper.verify.name}:''" th:classappend="(${grouper.verify.toString()} eq 'yes')?'label-success':'label-warning'">未验证</a>
+                                        <a class="am-btn am-btn-default label label-sm" id="email-verify" th:if="${(grouper.email != null)&&(grouper.email != '')}" th:text="${(grouper.verify != null)}?${grouper.verify.name}:''" th:classappend="(${grouper.verify.toString()} eq 'yes')?'label-success':'label-warning'">未验证</a>
                                     </div>
                                 </div>
 
@@ -73,37 +73,62 @@
     </div>
 
     <!--alert-->
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="send-mail-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">发送
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd">
+                发送验证邮件？
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+            </div>
+        </div>
+    </div>
 
     <div th:replace="fragments/footer_grouper::js"></div>
 </body>
     <script>
-        $("#email-verify").on('click',function(){
-            var verifyV = $("#verify-value").val();
-            if (verifyV == 'no'){
-                $.ajax({
-                    url: '/mail/sendEmail',
-                    type: "POST",
-                    dataType: "json",
-                    error: function ()
-                    {
-                        console.log("sendEmail error function!");
-                        toastr.error('出现错误！', '错误');
-                    },
-                    success: function (data)
-                    {
-                        if (data.codeBool){
-                            //刷新页面前，把提示信息存入cookie
-                            $.cookie("cookie-msg", data.message);
-                            //刷新页面
-                            location.reload();
-                        }else {
-                            toastr.error(data.message, '操作失败');
+        $(function () {
+            $("#email-verify").on('click',function(){
+                //    打开模态框
+                $('#send-mail-modal').modal();
+            });
+
+            //重写模态框的确认方法
+            $("#send-mail-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function(){
+                var verifyV = $("#verify-value").val();
+                if (verifyV == 'no'){
+                    //设置btn不可点击
+                    $("#email-verify").attr("disabled", true);
+                    $("#email-verify").text('正在发送');
+                    $.ajax({
+                        url: '/mail/sendEmail',
+                        type: "POST",
+                        dataType: "json",
+                        error: function ()
+                        {
+                            console.log("sendEmail error function!");
+                            toastr.error('出现错误！', '错误');
+                        },
+                        success: function (data)
+                        {
+                            if (data.codeBool){
+                                //刷新页面前，把提示信息存入cookie
+                                $.cookie("cookie-msg", data.message);
+                                //刷新页面
+                                location.reload();
+                            }else {
+                                toastr.error(data.message, '操作失败');
+                            }
                         }
-                    }
-                });
-            }else if(verifyV == 'yes'){
-                toastr.error('此账号已完成', '操作失败');
-            }
+                    });
+                }else if(verifyV == 'yes'){
+                    toastr.error('此账号已完成', '操作失败');
+                }
+            });
         });
     </script>
 </html>
