@@ -76,7 +76,7 @@
                                         <td th:text="${iterStat.count}+${datas.number*10}">序号1</td>
                                         <td th:text="${activity.activityName}">活动一</td>
                                         <td th:each="activityDef:${activity.activityDefs}">
-                                            <select data-am-selected="{btnSize: 'sm'}">
+                                            <select data-am-selected="{btnSize: 'sm',maxHeight: 200}">
                                                 <option th:each="inp:${activityDef.inputs}" th:value="${inp}" th:text="${inp}">自定义列 </option>
                                             </select>
                                         </td>

@@ -146,6 +146,13 @@
                                           </div>
                                       </div>
 
+                                    <div class="am-form-group" th:if="${user.exist.toString()} eq 'no'">
+                                        <label class="am-u-sm-3 am-form-label" style="color: red;">离世时间</label>
+                                        <div class="am-u-sm-9">
+                                            <input th:field="*{passTime}" style="color: red;" type="text" disabled/>
+                                        </div>
+                                    </div>
+
                                       <div class="am-form-group">
                                           <label class="am-u-sm-3 am-form-label">备注</label>
                                           <div class="am-u-sm-9">

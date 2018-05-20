@@ -88,7 +88,7 @@
                                         <td th:text="${activity.activityName}">测试活动</td>
                                         <td th:each="activityDef:${activity.activityDefs}">
                                             <div class="tr-select">
-                                                <select data-am-selected="{btnSize: 'sm'}" name="inputDefs">
+                                                <select data-am-selected="{btnSize: 'sm',maxHeight: 200}" name="inputDefs">
                                                     <option th:each="inp:${activityDef.inputs}" th:value="${inp}" th:text="${inp}">自定义列 </option>
                                                 </select>
                                             </div>
