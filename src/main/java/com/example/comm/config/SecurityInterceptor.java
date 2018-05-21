@@ -3,7 +3,8 @@ package com.example.comm.config;
 import com.example.comm.Constant;
 import com.example.domain.bean.Login;
 import com.example.domain.enums.Role;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -19,8 +20,7 @@ import java.util.Set;
  * csdn：https://blog.csdn.net/Luck_ZZ
  */
 public class SecurityInterceptor extends HandlerInterceptorAdapter{
-    private Logger logger = Logger.getLogger(this.getClass());
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //     取出session

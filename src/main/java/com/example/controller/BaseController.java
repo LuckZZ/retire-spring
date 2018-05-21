@@ -2,7 +2,8 @@ package com.example.controller;
 
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -11,8 +12,8 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class BaseController {
-    protected Logger logger = Logger.getLogger(this.getClass());
 
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 返回操作状态
      * @param msg

@@ -1,5 +1,6 @@
 package com.example.comm.config;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +17,11 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     @Value("${file.pictures.res.url}")
     private String filePicturesResUrl;
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        LoggerFactory.getLogger(WebAppConfig.class).info("imagesPath="+ filePicturesResUrl);
+        logger.info("imagesPath="+ filePicturesResUrl);
         registry.addResourceHandler("/images/**").addResourceLocations(filePicturesResUrl);
         super.addResourceHandlers(registry);
     }
