@@ -68,8 +68,12 @@ function formAjaxNoReload(paramForm,paramUrl) {
         success: function (data)
         {
             if (data.codeBool){
-                toastr.success(data.message, '操作成功');
-                paramForm[0].reset();
+                // toastr.success(data.message, '操作成功');
+                // paramForm[0].reset();
+                //刷新页面前，把提示信息存入cookie
+                $.cookie("cookie-msg", data.message);
+                //刷新页面
+                location.reload();
             }else {
                 toastr.error(data.message, '操作失败');
             }
