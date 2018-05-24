@@ -193,6 +193,8 @@
 
         //先复制一份form表单，为高级搜索后，点击分页并提交上次表单使用
         var $userSearchFormClone = $('#user-search-form').clone();
+        //Chrome56之后需要，把form加入document
+        $(document).append($userSearchFormClone);
 
         var keyClone = $("#head-select-key").clone();
         var inputClone = $("#head-select-input").clone();
