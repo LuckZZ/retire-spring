@@ -261,7 +261,6 @@ public class JoinController extends BaseController{
             String[] inputDefs = request.getParameterValues("inputDefs");
             String attend = request.getParameter("attend");
             String other = request.getParameter("other");
-            System.out.println("other:"+other);
 
 //        如果是组长身份，先判断用户id是否在对应的组中
             if (login.getRole() == Role.grouper){
@@ -278,7 +277,7 @@ public class JoinController extends BaseController{
                 return result(ExceptionMsg.JoinAlreadyFailed);
             }
 
-            joinService.save(userId,activityId,inputDefs,attend);
+            joinService.save(userId,activityId,inputDefs,attend, other);
 
             return result(ExceptionMsg.JoinSuccess);
         }catch (Exception e){

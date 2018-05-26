@@ -312,6 +312,7 @@ public class ExcelController extends BaseController{
         }
 
         beanList.add(new ExcelExportEntity("是否参加", "attend"));
+        beanList.add(new ExcelExportEntity("备注", "joinOther"));
         beanList.add(new ExcelExportEntity("提交时间", "creatTime"));
         beanList.add(new ExcelExportEntity("状态", "status"));
 
@@ -323,6 +324,7 @@ public class ExcelController extends BaseController{
                 row.put("label"+i,join.getJoinDefs().get(i).getInput());
             }
             row.put("attend",join.getAttend().getName());
+            row.put("joinOther",join.getOther());
             row.put("creatTime", DateUtils.timeStampToFormat(join.getCreateTime()));
             row.put("status","报名成功");
             list.add(row);
@@ -384,6 +386,7 @@ public class ExcelController extends BaseController{
         }
 
         beanList.add(new ExcelExportEntity("是否参加", "attend"));
+        beanList.add(new ExcelExportEntity("备注", "joinOther"));
         beanList.add(new ExcelExportEntity("提交时间", "creatTime"));
         beanList.add(new ExcelExportEntity("状态", "status"));
 
@@ -395,6 +398,7 @@ public class ExcelController extends BaseController{
                 row.put("label"+i,join.getJoinDefs().get(i).getInput());
             }
             row.put("attend",join.getAttend().getName());
+            row.put("joinOther",join.getOther());
             row.put("creatTime", DateUtils.timeStampToFormat(join.getCreateTime()));
             row.put("status","报名成功");
             list.add(row);

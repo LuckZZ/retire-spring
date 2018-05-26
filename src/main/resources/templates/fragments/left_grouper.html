@@ -13,7 +13,7 @@
             </div>
             <span class="user-panel-logged-in-text">
               <i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>
-             <span th:text="|${session.login_user.role.name}|"></span>
+             <span th:text="|${session.login_user.group.groupName} : ${session.login_user.role.name}|"></span>
           </span>
         </div>
     </div>

@@ -45,11 +45,12 @@ public class Join extends BaseEntity implements Serializable {
     public Join() {
     }
 
-    public Join(User user, Activity activity, List<JoinDef> joinDefs, Attend attend) {
+    public Join(User user, Activity activity, List<JoinDef> joinDefs, Attend attend, String other) {
         this.user = user;
         this.activity = activity;
         this.attend = attend;
         this.joinDefs = joinDefs;
+        this.other = other;
     }
 
     //set、get方法

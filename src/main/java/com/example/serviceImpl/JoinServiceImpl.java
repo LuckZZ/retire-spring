@@ -63,7 +63,7 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     }
 
     @Override
-    public Join save(Integer userId, Integer activityId, String[] inputDefs, String attend) {
+    public Join save(Integer userId, Integer activityId, String[] inputDefs, String attend, String other) {
         User user = userDao.findOne(userId);
         Activity activity = activityService.findOne(activityId);
         List<ActivityDef> activityDefs = activity.getActivityDefs();
@@ -75,7 +75,7 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
                 ActivityDef activityDef = it.next();
                 joinDefs.add(new JoinDef(activityDef,"无"));
             }
-            Join join = new Join(user, activity, joinDefs, Attend.no);
+            Join join = new Join(user, activity, joinDefs, Attend.no, other);
             return joinDao.save(join);
         }
 //        如果参加
@@ -85,7 +85,7 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
             joinDefs.add(new JoinDef(activityDef, inputDefs[i]));
         }
 
-        Join join = new Join(user, activity, joinDefs,Attend.yes);
+        Join join = new Join(user, activity, joinDefs,Attend.yes, other);
         return joinDao.save(join);
     }
 

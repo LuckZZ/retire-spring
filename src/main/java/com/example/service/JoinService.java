@@ -18,7 +18,7 @@ public interface JoinService extends BaseCrudService<Join,Integer>{
     /*根据joinId和groupId，查看Join是否存在此条数据*/
     boolean existsByJoinIdAndGroupId(Integer[] joinIds, Integer groupId);
 
-    Join save(Integer userId, Integer activityId, String[] inputDefs, String attend);
+    Join save(Integer userId, Integer activityId, String[] inputDefs, String attend, String other);
 
     void delete(Integer[] joinIds);
 

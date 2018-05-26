@@ -39,7 +39,8 @@
                                 <div class="am-form-group">
                                     <div class="am-btn-toolbar">
                                         <div class="am-btn-group am-btn-group-xs">
-                                            <!--<a type="button" class="am-btn am-btn-default am-btn-success" href="/activity/addActivityView"><span class="am-icon-plus"></span> 新增</a>-->
+                                            <a type="button" class="am-btn am-btn-default am-btn-warning" href="#"><span class="am-icon-save"></span> 保存</a>
+                                            <a type="button" class="am-btn am-btn-default am-btn-success" href="#"><span class="am-icon-pencil"></span> 提交</a>
                                         </div>
                                     </div>
                                 </div>
@@ -73,6 +74,7 @@
                                         <th>活动名称</th>
                                         <th th:each="activityDef:${activity.activityDefs}" th:text="${activityDef.label}">labelDefs</th>
                                         <th>是否参加</th>
+                                        <th>备注</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -104,7 +106,14 @@
                                         </td>
 
                                         <td>
+                                            <input name="other" class="other" type="text"/>
+                                        </td>
+
+                                        <td>
                                             <div class="tpl-table-black-operation">
+                                                <a th:attr="data-id=${user.userId}" href="javascript:;" class="tpl-table-black-operation-save one-submit">
+                                                    <i class="am-icon-save"></i> 保存
+                                                </a>
                                                 <a th:attr="data-id=${user.userId}" href="javascript:;" class="one-submit">
                                                     <i class="am-icon-pencil"></i> 提交
                                                 </a>
@@ -225,7 +234,7 @@
         var userId;
         var inputDefs;
         var attendVal;
-
+        var other;
         //提交事件
         $(".one-submit").on('click',function () {
 
@@ -243,6 +252,8 @@
             var name = $tr.find('td').eq(3).html();
             //是否参加
             var attend = $tr.find('.attend option:selected').text();
+
+            other = $tr.find('.other').val();
 
             var $oneSubmit= $('#oneSubmit-modal');
 
@@ -276,7 +287,8 @@
                     userId:userId,
                     activityId:activityId,
                     inputDefs:inputDefs,
-                    attend:attendVal
+                    attend:attendVal,
+                    other:other
                 },
                 url: '/join/joinActivity',
                 error : function(XMLHttpRequest, textStatus, errorThrown) {
