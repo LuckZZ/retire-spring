@@ -34,6 +34,10 @@ public class Join extends BaseEntity implements Serializable {
     @Column
     private Attend attend;
 
+    // 备注
+    @Column
+    private String other;
+
     @OneToMany(fetch = FetchType.EAGER ,cascade = CascadeType.ALL)
     @JoinColumn(name = "join_id")
     private List<JoinDef> joinDefs = new ArrayList<>();
@@ -88,5 +92,13 @@ public class Join extends BaseEntity implements Serializable {
 
     public void setJoinDefs(List<JoinDef> joinDefs) {
         this.joinDefs = joinDefs;
+    }
+
+    public String getOther() {
+        return other;
+    }
+
+    public void setOther(String other) {
+        this.other = other;
     }
 }

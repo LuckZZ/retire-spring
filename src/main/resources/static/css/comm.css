@@ -93,5 +93,13 @@ ol.zz-breadcrumb{
 .zz-task .label-warning {
     background-color: #F1C40F!important;
 }
-
+/*table中保存按钮css*/
+.theme-white .tpl-table-black-operation a.tpl-table-black-operation-save {
+    border: 1px solid #F37B1D;
+    color: #F37B1D;
+}
+.theme-white .tpl-table-black-operation a.tpl-table-black-operation-save:hover {
+    background: #F37B1D;
+    color: #fff;
+}
 

@@ -53,7 +53,7 @@
                                         <input name="activityId" th:field="*{activityId}" type="hidden" id="activityId"/>
 
                                     <div class="am-form-group">
-                                        <label for="activityName" class="am-u-sm-3 am-form-label">活动名称</label>
+                                        <label for="activityName" class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>活动名称</label>
                                         <div class="am-u-sm-7">
                                             <!--diable不能传递数据-->
                                             <input th:field="*{activityName}" name="activityName" type="hidden" id="activityName">
@@ -64,6 +64,24 @@
                                         </div>
                                     </div>
 
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>是否参加</label>
+                                        <div class="am-u-sm-7">
+                                            <input type="text" class="tpl-form-input" placeholder="参加；不参加" disabled/>
+                                        </div>
+                                        <div class="am-u-sm-2">
+                                        </div>
+                                    </div>
+
+                                    <div class="am-form-group">
+                                        <label class="am-u-sm-3 am-form-label"><span class="txt-impt">*</span>备注</label>
+                                        <div class="am-u-sm-7">
+                                            <input type="text" class="tpl-form-input" disabled/>
+                                        </div>
+                                        <div class="am-u-sm-2">
+                                        </div>
                                     </div>
 
                                     <div class="am-form-group">
@@ -198,7 +216,7 @@
         var $group="                  <div class=\"am-form-group\" onmouseover='showPencil(this)' onmouseout='hidePencil(this)'>\n" +
             "                                            <div class=\"am-u-sm-3 am-form-label\">\n" +
             "                                                <div class=\"am-dropdown doc-dropdown-js\">\n" +
-            "                                                    <span class=\"am-icon-pencil\" style='display: none' onclick=\"dropdownToggle(this)\"></span><label class=\"am-form-label my-label\">"+rowName+"</label>\n" +
+            "                                                    <span class=\"am-icon-pencil\" style='display: none' onclick=\"dropdownToggle(this)\"></span><label class=\"am-form-label my-label\"><span class=\"txt-impt\">*</span>"+rowName+"</label>\n" +
             "                                                    <div class=\"am-dropdown-content\">\n" +
             "                                                        <li class=\"am-text-sm\">编辑</li>\n" +
             "                                                        <li>\n" +
