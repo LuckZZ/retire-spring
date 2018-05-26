@@ -98,6 +98,9 @@ public class User extends BaseEntity implements Serializable,Cloneable{
     @Transient
     private String age; //年龄不生成列
 
+    @Transient
+    private Join join; //活动报名
+
     //set、get方法
 
     public Integer getUserId() {
@@ -282,6 +285,14 @@ public class User extends BaseEntity implements Serializable,Cloneable{
 
     public void setAge(String age) {
         this.age = age;
+    }
+
+    public Join getJoin() {
+        return join;
+    }
+
+    public void setJoin(Join join) {
+        this.join = join;
     }
 
     /**

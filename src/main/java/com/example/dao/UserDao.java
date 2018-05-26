@@ -2,6 +2,7 @@ package com.example.dao;
 
 import com.example.domain.entity.User;
 import com.example.domain.enums.Exist;
+import com.example.domain.enums.JoinStatus;
 import com.example.domain.enums.Rank;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,30 +74,30 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     List<User> findAllByName(String name);
 
     /*根据工号查询未报名用户*/
-    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
-    Page<User> findAllNoJoinByJobNum(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum, Pageable pageable);
+    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId and j.joinStatus=:joinStatus) and u.jobNum=:jobNum")
+    Page<User> findAllNoJoinByJobNum(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum,@Param("joinStatus")JoinStatus joinStatus, Pageable pageable);
 
-    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
-    List<User> findAllNoJoinByJobNum(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
+    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId and j.joinStatus=:joinStatus) and u.jobNum=:jobNum")
+    List<User> findAllNoJoinByJobNum(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum, @Param("joinStatus")JoinStatus joinStatus);
 
     /*根据用户名查询未报名用户*/
-    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.name=:name")
-    Page<User> findAllNoJoinByName(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("name")String name, Pageable pageable);
+    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId and j.joinStatus=:joinStatus) and u.name=:name")
+    Page<User> findAllNoJoinByName(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("name")String name,@Param("joinStatus")JoinStatus joinStatus, Pageable pageable);
 
-    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
-    List<User> findAllNoJoinByName(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
+    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId and j.joinStatus=:joinStatus) and u.jobNum=:jobNum")
+    List<User> findAllNoJoinByName(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum, @Param("joinStatus")JoinStatus joinStatus);
 
     /*根据组id，工号查询未报名用户*/
-    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
-    Page<User> findAllNoJoinByJobNumWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum, Pageable pageable);
+    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId and j.joinStatus=:joinStatus) and u.jobNum=:jobNum")
+    Page<User> findAllNoJoinByJobNumWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum, @Param("joinStatus")JoinStatus joinStatus, Pageable pageable);
 
-    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
-    List<User> findAllNoJoinByJobNumWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
+    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId and j.joinStatus=:joinStatus) and u.jobNum=:jobNum")
+    List<User> findAllNoJoinByJobNumWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum, @Param("joinStatus")JoinStatus joinStatus);
 
     /*根据组id，姓名查询未报名用户*/
-    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.name=:name")
-    Page<User> findAllNoJoinByNameWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("name")String name, Pageable pageable);
+    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId and j.joinStatus=:joinStatus) and u.name=:name")
+    Page<User> findAllNoJoinByNameWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("name")String name, @Param("joinStatus")JoinStatus joinStatus, Pageable pageable);
 
-    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
-    List<User> findAllNoJoinByNameWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
+    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId and j.joinStatus=:joinStatus) and u.jobNum=:jobNum")
+    List<User> findAllNoJoinByNameWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum, @Param("joinStatus")JoinStatus joinStatus);
 }

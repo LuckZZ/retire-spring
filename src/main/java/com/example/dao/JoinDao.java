@@ -2,6 +2,7 @@ package com.example.dao;
 
 import com.example.domain.entity.Join;
 import com.example.domain.enums.Exist;
+import com.example.domain.enums.JoinStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,43 +17,49 @@ import java.util.List;
 public interface JoinDao extends JpaRepository<Join,Integer>,JpaSpecificationExecutor<Join> {
 
     /*根据activityId和userId，查看Join是否存在此条数据*/
-    boolean existsByActivity_ActivityIdAndUser_UserId(Integer activityId, Integer userId);
+    boolean existsByActivity_ActivityIdAndUser_UserIdAndJoinStatus(Integer activityId, Integer userId, JoinStatus joinStatus);
 
     /*根据joinId和groupId，查看Join是否存在此条数据*/
-    boolean existsByJoinIdAndUser_Group_GroupId(Integer joinId, Integer groupId);
+    boolean existsByJoinIdAndUser_Group_GroupIdAndJoinStatus(Integer joinId, Integer groupId, JoinStatus joinStatus);
 
     /*查询报名用户*/
-    Page<Join> findAllByActivity_ActivityIdAndUser_Exist(Integer activityId, Exist exist, Pageable pageable);
+    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndJoinStatus(Integer activityId, Exist exist, JoinStatus joinStatus, Pageable pageable);
 
-    List<Join> findAllByActivity_ActivityIdAndUser_Exist(Integer activityId, Exist exist);
+    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndJoinStatus(Integer activityId, Exist exist, JoinStatus joinStatus);
 
     /*根据工号查询报名用户*/
-    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNum(Integer activityId, Exist exist, String jobNum, Pageable pageable);
+    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndJoinStatus(Integer activityId, Exist exist, String jobNum, JoinStatus joinStatus, Pageable pageable);
 
-    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNum(Integer activityId, Exist exist, String jobNum);
+    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndJoinStatus(Integer activityId, Exist exist, String jobNum, JoinStatus joinStatus);
 
     /*根据姓名查询报名用户*/
-    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_Name(Integer activityId, Exist exist, String name, Pageable pageable);
+    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndJoinStatus(Integer activityId, Exist exist, String name, JoinStatus joinStatus, Pageable pageable);
 
-    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_Name(Integer activityId, Exist exist, String name);
+    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndJoinStatus(Integer activityId, Exist exist, String name, JoinStatus joinStatus);
 
     /*根据工号、组Id查询报名用户*/
-    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupId(Integer activityId, Exist exist, String jobNum, Integer groupId, Pageable pageable);
+    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupIdAndJoinStatus(Integer activityId, Exist exist, String jobNum, Integer groupId, JoinStatus joinStatus, Pageable pageable);
 
-    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupId(Integer activityId, Exist exist, String jobNum, Integer groupId);
+    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupIdAndJoinStatus(Integer activityId, Exist exist, String jobNum, Integer groupId, JoinStatus joinStatus);
 
     /*根据姓名、组Id查询报名用户*/
-    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupId(Integer activityId, Exist exist, String name, Integer groupId, Pageable pageable);
+    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupIdAndJoinStatus(Integer activityId, Exist exist, String name, Integer groupId, JoinStatus joinStatus, Pageable pageable);
 
-    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupId(Integer activityId, Exist exist, String name, Integer groupId);
+    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupIdAndJoinStatus(Integer activityId, Exist exist, String name, Integer groupId, JoinStatus joinStatus);
 
     /*根据活动Id查询已报活动人数*/
-    long countByActivity_ActivityIdAndUser_Exist(Integer activityId, Exist exist);
+    long countByActivity_ActivityIdAndUser_ExistAndJoinStatus(Integer activityId, Exist exist, JoinStatus joinStatus);
 
-    long countByUser_Group_GroupIdAndActivity_ActivityIdAndUser_Exist(Integer groupId, Integer activityId, Exist exist);
+    long countByUser_Group_GroupIdAndActivity_ActivityIdAndUser_ExistAndJoinStatus(Integer groupId, Integer activityId, Exist exist, JoinStatus joinStatus);
+
+    /*根据活动id，用户id，活动状态查询*/
+    List<Join> findAllByActivity_ActivityIdAndUser_UserIdAndJoinStatus(Integer activityId, Integer userId, JoinStatus joinStatus);
 
     /*根据activityId删除*/
     void deleteAllByActivity_ActivityId(Integer activityId);
+
+    /*根据activityId和userId删除*/
+    void deleteAllByActivity_ActivityIdAndUser_UserId(Integer activityId, Integer userId);
 
     /*根据userId删除*/
     void deleteAllByUser_UserId(Integer userId);

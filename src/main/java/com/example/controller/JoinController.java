@@ -9,6 +9,7 @@ import com.example.domain.bean.CommSearch;
 import com.example.domain.bean.JoinUserSearch;
 import com.example.domain.bean.Login;
 import com.example.domain.entity.*;
+import com.example.domain.enums.JoinStatus;
 import com.example.domain.enums.Role;
 import com.example.domain.enums.SearchType;
 import com.example.domain.result.ExceptionMsg;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,13 +68,17 @@ public class JoinController extends BaseController{
         Activity activity = activityService.findOne(activityId);
         if (login.getRole() == Role.admin){
             Page<User> datas = userService.findAllNoJoinCriteria(activityId, new JoinUserSearch(), page);
+            List<User> userList = assignJoinDraft(activityId, datas);
             assignModel(model, activity);
             model.addAttribute("datas", datas);
+            model.addAttribute("userList", userList);
             return "admin/join_no";
         }else if(login.getRole() == Role.grouper){
             Page<User> datas = userService.findAllNoJoinCriteria(activityId, new JoinUserSearch(String.valueOf(login.getGroup().getGroupId())), page);
+            List<User> userList = assignJoinDraft(activityId, datas);
             assignModel(model, activity);
             model.addAttribute("datas", datas);
+            model.addAttribute("userList", userList);
             return "grouper/join_no";
         }
         return Constant.NO_ACCESS_PAGE;
@@ -87,14 +93,18 @@ public class JoinController extends BaseController{
         assignModel(model, activity);
         if (login.getRole() == Role.admin){
             Page<User> datas = userService.findAllNoJoinCriteria(activityId, joinUserSearch, page);
+            List<User> userList = assignJoinDraft(activityId, datas);
             model.addAttribute("datas",datas);
+            model.addAttribute("userList",userList);
 //        搜索表单的值，再传入页面
             model.addAttribute("joinUserSearch",joinUserSearch);
             return "admin/join_no";
         }else if(login.getRole() == Role.grouper){
             joinUserSearch.setGroup(String.valueOf(login.getGroup().getGroupId()));
             Page<User> datas = userService.findAllNoJoinCriteria(activityId, joinUserSearch, page);
+            List<User> userList = assignJoinDraft(activityId, datas);
             model.addAttribute("datas",datas);
+            model.addAttribute("userList",userList);
 //        搜索表单的值，再传入页面
             model.addAttribute("joinUserSearch",joinUserSearch);
             return "grouper/join_no";
@@ -115,12 +125,16 @@ public class JoinController extends BaseController{
             if (type == 1 && value != null){
 //        根据工号
                 Page<User> datas = userService.findAllNoJoinByJobNum(activityId, value, page);
+                List<User> userList = assignJoinDraft(activityId, datas);
                 model.addAttribute("datas",datas);
+                model.addAttribute("userList",userList);
                 return "admin/join_no";
             }else if (type == 2 && value != null){
 //        根据姓名
                 Page<User> datas = userService.findAllNoJoinByName(activityId, value, page);
+                List<User> userList = assignJoinDraft(activityId, datas);
                 model.addAttribute("datas",datas);
+                model.addAttribute("userList",userList);
                 return "admin/join_no";
             }
         }else if(login.getRole() == Role.grouper){
@@ -128,12 +142,16 @@ public class JoinController extends BaseController{
             if (type == 1 && value != null){
 //        根据工号
                 Page<User> datas = userService.findAllNoJoinByJobNumWithGroupId(login.getGroup().getGroupId(),activityId, value, page);
+                List<User> userList = assignJoinDraft(activityId, datas);
                 model.addAttribute("datas",datas);
+                model.addAttribute("userList",userList);
                 return "grouper/join_no";
             }else if (type == 2 && value != null){
 //        根据姓名
                 Page<User> datas = userService.findAllNoJoinByNameWithGroupId(login.getGroup().getGroupId(), activityId, value, page);
+                List<User> userList = assignJoinDraft(activityId, datas);
                 model.addAttribute("datas",datas);
+                model.addAttribute("userList",userList);
                 return "grouper/join_no";
             }
         }
@@ -248,10 +266,10 @@ public class JoinController extends BaseController{
     }
 
     @ResponseBody
-    @RequestMapping(value = "/joinActivity")
-    @LoggerManage(description = "活动报名")
+    @RequestMapping(value = "/joinDraft")
+    @LoggerManage(description = "活动报名到草稿")
     @Access(roles = Role.grouper)
-    public Response joinActivity(HttpSession session, HttpServletRequest request){
+    public Response joinDraft(HttpSession session, HttpServletRequest request){
 
         Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
 
@@ -273,11 +291,12 @@ public class JoinController extends BaseController{
                 return result(ExceptionMsg.JoinForCloseFailed);
             }
 
+            //            如果已经提交
             if (joinService.existsByActivityIdAndUserId(activityId, userId)){
                 return result(ExceptionMsg.JoinAlreadyFailed);
             }
 
-            joinService.save(userId,activityId,inputDefs,attend, other);
+            joinService.saveDraft(userId,activityId,inputDefs,attend, other);
 
             return result(ExceptionMsg.JoinSuccess);
         }catch (Exception e){
@@ -285,6 +304,47 @@ public class JoinController extends BaseController{
             return result(ExceptionMsg.JoinFailed);
         }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/joinUltima")
+    @LoggerManage(description = "活动报名到提交")
+    @Access(roles = Role.grouper)
+    public Response joinUltima(HttpSession session, HttpServletRequest request){
+
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+
+        try {
+            Integer userId = Integer.parseInt(request.getParameter("userId"));
+            Integer activityId = Integer.parseInt(request.getParameter("activityId"));
+            String[] inputDefs = request.getParameterValues("inputDefs");
+            String attend = request.getParameter("attend");
+            String other = request.getParameter("other");
+
+//        如果是组长身份，先判断用户id是否在对应的组中
+            if (login.getRole() == Role.grouper){
+                if (!userService.existsByUserIdAndGroupId(userId, login.getGroup().getGroupId())){
+                    return result(ExceptionMsg.RoleNoAccess);
+                }
+            }
+
+            if (!activityService.canJoin(activityId)){
+                return result(ExceptionMsg.JoinForCloseFailed);
+            }
+
+//            如果已经提交
+            if (joinService.existsByActivityIdAndUserId(activityId, userId)){
+                return result(ExceptionMsg.JoinAlreadyFailed);
+            }
+
+            joinService.saveUltima(userId,activityId,inputDefs,attend, other);
+
+            return result(ExceptionMsg.JoinSuccess);
+        }catch (Exception e){
+            e.printStackTrace();
+            return result(ExceptionMsg.JoinFailed);
+        }
+    }
+
 
     @ResponseBody
     @RequestMapping(value = "/delete/{activityId}")
@@ -359,6 +419,26 @@ public class JoinController extends BaseController{
         model.addAttribute("searchType", SearchType.allOrSuper);
 
         return model;
+    }
+
+    /**
+     * 草稿报名Join赋值给User
+     * @param activityId
+     * @param page
+     * @return
+     */
+    private List<User> assignJoinDraft(Integer activityId, Page<User> page){
+        List<User> users = new ArrayList<>();
+        for (User u : page) {
+            List<Join> joins = joinService.findAllByActivityIdAndUserIdAndJoinStatus(activityId, u.getUserId(), JoinStatus.draft);
+            if (joins.size() > 0){
+                u.setJoin(joins.get(0));
+            }else {
+                u.setJoin(null);
+            }
+            users.add(u);
+        }
+        return users;
     }
 
     /**

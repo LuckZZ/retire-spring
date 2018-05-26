@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.Join;
+import com.example.domain.enums.JoinStatus;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -18,7 +19,11 @@ public interface JoinService extends BaseCrudService<Join,Integer>{
     /*根据joinId和groupId，查看Join是否存在此条数据*/
     boolean existsByJoinIdAndGroupId(Integer[] joinIds, Integer groupId);
 
-    Join save(Integer userId, Integer activityId, String[] inputDefs, String attend, String other);
+    /*保存为草稿*/
+    Join saveDraft(Integer userId, Integer activityId, String[] inputDefs, String attend, String other);
+
+    /*保存为提交*/
+    Join saveUltima(Integer userId, Integer activityId, String[] inputDefs, String attend, String other);
 
     void delete(Integer[] joinIds);
 
@@ -46,6 +51,9 @@ public interface JoinService extends BaseCrudService<Join,Integer>{
     Page<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm, Integer page);
 
     List<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm);
+
+    /*根据活动id，用户id，活动状态查询*/
+    List<Join> findAllByActivityIdAndUserIdAndJoinStatus(Integer activityId, Integer userId, JoinStatus joinStatus);
 
     /*根据joinIds数组查询*/
     List<Join> findAllByJoinIds(Integer[] joinIds);

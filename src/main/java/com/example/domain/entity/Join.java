@@ -1,6 +1,7 @@
 package com.example.domain.entity;
 
 import com.example.domain.enums.Attend;
+import com.example.domain.enums.JoinStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -38,6 +39,10 @@ public class Join extends BaseEntity implements Serializable {
     @Column
     private String other;
 
+    // 报名状态
+    @Column
+    private JoinStatus joinStatus;
+
     @OneToMany(fetch = FetchType.EAGER ,cascade = CascadeType.ALL)
     @JoinColumn(name = "join_id")
     private List<JoinDef> joinDefs = new ArrayList<>();
@@ -45,12 +50,13 @@ public class Join extends BaseEntity implements Serializable {
     public Join() {
     }
 
-    public Join(User user, Activity activity, List<JoinDef> joinDefs, Attend attend, String other) {
+    public Join(User user, Activity activity, List<JoinDef> joinDefs, Attend attend, String other, JoinStatus joinStatus) {
         this.user = user;
         this.activity = activity;
         this.attend = attend;
         this.joinDefs = joinDefs;
         this.other = other;
+        this.joinStatus = joinStatus;
     }
 
     //set、get方法
@@ -101,5 +107,13 @@ public class Join extends BaseEntity implements Serializable {
 
     public void setOther(String other) {
         this.other = other;
+    }
+
+    public JoinStatus getJoinStatus() {
+        return joinStatus;
+    }
+
+    public void setJoinStatus(JoinStatus joinStatus) {
+        this.joinStatus = joinStatus;
     }
 }

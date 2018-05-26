@@ -90,7 +90,7 @@
                                         <td th:text="${activity.activityName}">测试活动</td>
                                         <td th:each="activityDef:${activity.activityDefs}">
                                             <div class="tr-select">
-                                                <select data-am-selected="{btnSize: 'sm',maxHeight: 200}" name="inputDefs">
+                                                <select data-am-selected="{btnWidth: '120px',btnSize: 'sm',maxHeight: 200}" name="inputDefs">
                                                     <option th:each="inp:${activityDef.inputs}" th:value="${inp}" th:text="${inp}">自定义列 </option>
                                                 </select>
                                             </div>
@@ -99,14 +99,14 @@
                                         <td>
                                             <input name="userId" th:value="${user.userId}" type="hidden"/>
 
-                                            <select data-am-selected="{btnSize: 'sm'}" name="attend" class="attend">
+                                            <select data-am-selected="{btnWidth: '120px',btnSize: 'sm'}" name="attend" class="attend">
                                                 <option value="yes" th:text="参加"></option>
                                                 <option value="no" th:text="不参加"></option>
                                             </select>
                                         </td>
 
                                         <td>
-                                            <input name="other" class="other" type="text"/>
+                                            <input name="other" class="am-form-field other" type="text"/>
                                         </td>
 
                                         <td>

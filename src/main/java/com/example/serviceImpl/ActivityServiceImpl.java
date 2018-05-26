@@ -9,6 +9,7 @@ import com.example.domain.entity.Activity;
 import com.example.domain.entity.ActivityDef;
 import com.example.domain.enums.ActivityStatus;
 import com.example.domain.enums.Exist;
+import com.example.domain.enums.JoinStatus;
 import com.example.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -177,7 +178,7 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     }
 
     private Activity assignActivity(Activity activity){
-        long joinOkSize = joinDao.countByActivity_ActivityIdAndUser_Exist(activity.getActivityId(), Exist.yes);
+        long joinOkSize = joinDao.countByActivity_ActivityIdAndUser_ExistAndJoinStatus(activity.getActivityId(), Exist.yes, JoinStatus.ultima);
         long userCount = userDao.countByExist(Exist.yes);
         activity.setJoinOkCount(joinOkSize);
         activity.setUserCount(userCount);
@@ -185,7 +186,7 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     }
 
     private Activity assignActivityWithGroupId(Integer groupId, Activity activity){
-        long joinOkSize = joinDao.countByUser_Group_GroupIdAndActivity_ActivityIdAndUser_Exist(groupId, activity.getActivityId(), Exist.yes);
+        long joinOkSize = joinDao.countByUser_Group_GroupIdAndActivity_ActivityIdAndUser_ExistAndJoinStatus(groupId, activity.getActivityId(), Exist.yes, JoinStatus.ultima);
         long userCount = userDao.countByGroup_GroupIdAndExist(groupId, Exist.yes);
         activity.setJoinOkCount(joinOkSize);
         activity.setUserCount(userCount);
