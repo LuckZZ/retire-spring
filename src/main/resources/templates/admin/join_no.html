@@ -39,8 +39,8 @@
                                 <div class="am-form-group">
                                     <div class="am-btn-toolbar">
                                         <div class="am-btn-group am-btn-group-xs">
-                                            <a type="button" class="am-btn am-btn-default am-btn-warning" href="#"><span class="am-icon-save"></span> 保存</a>
-                                            <a type="button" class="am-btn am-btn-default am-btn-success" href="#"><span class="am-icon-pencil"></span> 提交</a>
+                                            <a type="button" class="am-btn am-btn-default am-btn-warning" href="javascript:;" id="checked-save"><span class="am-icon-save"></span> 保存</a>
+                                            <a type="button" class="am-btn am-btn-default am-btn-success" href="javascript:;" id="checked-submit"><span class="am-icon-pencil"></span> 提交</a>
                                         </div>
                                     </div>
                                 </div>
@@ -101,7 +101,7 @@
                                         </td>
 
                                         <td>
-                                            <input name="userId" th:value="${user.userId}" type="hidden"/>
+                                            <input name="userId" class="userId" th:value="${user.userId}" type="hidden"/>
                                             <select data-am-selected="{btnWidth: '120px',btnSize: 'sm'}" name="attend" class="attend">
                                                 <option th:selected="${(user.join != null) && (user.join.attend.toString() eq 'yes')}" value="yes" th:text="参加"></option>
                                                 <option th:selected="${(user.join != null) && (user.join.attend.toString() eq 'no')}" value="no" th:text="不参加"></option>
@@ -234,11 +234,64 @@
             }
         });*/
 
+
         var userId;
         var activityId;
         var inputDefs;
         var attendVal;
         var other;
+
+        //批量保存
+        $("#checked-save").on('click',function () {
+            //打开模态框
+            $('#mulSave-modal').modal();
+        });
+
+        $("#mulSave-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            var params  = [];
+            var cTrs = checkedTrs();
+            for (var i=0;i<cTrs.length;i++){
+                var $tr = cTrs[i];
+                assignJoinData($tr, $tr.find('.userId').val());
+                params .push({"userId":userId, "activityId":activityId, "inputDefs":inputDefs, "attend":attendVal, "other":other});
+            }
+            //json数据
+            var joinList = JSON.stringify(params);
+
+            $.ajax({
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                contentType : "application/json;charset=UTF-8",
+                data: joinList,
+                url: '/join/joinDraftList',
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    toastr.error('出现错误！', '错误');
+                },
+                success: function(data){
+                    if (data.codeBool){
+                        toastr.success(data.message,'操作成功')
+                        //刷新页面前，把提示信息存入cookie
+                        // $.cookie("cookie-msg", data.message);
+                        //刷新页面
+                        // location.reload();
+                    }else {
+                        toastr.error(data.message, '操作失败');
+                    }
+                }
+            });
+
+        });
+
+        //批量提交
+        $("#checked-submit").on('click',function () {
+            //打开模态框
+           $('#mulSubmit-modal').modal();
+        });
+
+        $("#mulSubmit-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+
+        });
 
         //保存事件
         $(".one-save").on('click',function () {

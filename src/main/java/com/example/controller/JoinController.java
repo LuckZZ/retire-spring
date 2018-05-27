@@ -4,10 +4,7 @@ import com.example.comm.Constant;
 import com.example.comm.aop.LoggerManage;
 import com.example.comm.config.Access;
 import com.example.comm.config.WebSecurityConfig;
-import com.example.domain.bean.ActivityDefSearch;
-import com.example.domain.bean.CommSearch;
-import com.example.domain.bean.JoinUserSearch;
-import com.example.domain.bean.Login;
+import com.example.domain.bean.*;
 import com.example.domain.entity.*;
 import com.example.domain.enums.JoinStatus;
 import com.example.domain.enums.Role;
@@ -16,6 +13,8 @@ import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.*;
 import com.example.utils.DataUtils;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -303,6 +303,65 @@ public class JoinController extends BaseController{
             e.printStackTrace();
             return result(ExceptionMsg.JoinDraftFailed);
         }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/joinDraftList", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @LoggerManage(description = "批量活动报名到草稿")
+    @Access(roles = Role.grouper)
+    public Response joinDraftList(HttpSession session, @RequestBody String joinList) throws IOException {
+
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, JoinBean.class);
+
+        List<JoinBean> list = objectMapper.readValue(joinList, javaType);
+
+        Integer[] userId;
+
+/*        for (JoinBean joinBean : list){
+            System.out.println("- - - - - - - -");
+            System.out.println("joinBean userId:"+joinBean.getUserId());
+            System.out.println("joinBean activityId:"+joinBean.getActivityId());
+            for (int i = 0; i < joinBean.getInputDefs().length; i++) {
+                System.out.println("joinBean input:"+joinBean.getInputDefs()[i]);
+            }
+            System.out.println("joinBean attend:"+joinBean.getAttend());
+            System.out.println("joinBean other:"+joinBean.getOther());
+        }*/
+
+        return result(ExceptionMsg.SUCCESS);
+/*        try {
+            Integer userId = Integer.parseInt(request.getParameter("userId"));
+            Integer activityId = Integer.parseInt(request.getParameter("activityId"));
+            String[] inputDefs = request.getParameterValues("inputDefs");
+            String attend = request.getParameter("attend");
+            String other = request.getParameter("other");
+
+//        如果是组长身份，先判断用户id是否在对应的组中
+            if (login.getRole() == Role.grouper){
+                if (!userService.existsByUserIdAndGroupId(userId, login.getGroup().getGroupId())){
+                    return result(ExceptionMsg.RoleNoAccess);
+                }
+            }
+
+            if (!activityService.canJoin(activityId)){
+                return result(ExceptionMsg.JoinForCloseFailed);
+            }
+
+            //            如果已经提交
+            if (joinService.existsByActivityIdAndUserId(activityId, userId)){
+                return result(ExceptionMsg.JoinAlreadyFailed);
+            }
+
+            joinService.saveDraft(userId,activityId,inputDefs,attend, other);
+
+            return result(ExceptionMsg.JoinDraftSuccess);
+        }catch (Exception e){
+            e.printStackTrace();
+            return result(ExceptionMsg.JoinDraftFailed);
+        }*/
     }
 
     @ResponseBody
