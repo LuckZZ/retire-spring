@@ -298,10 +298,10 @@ public class JoinController extends BaseController{
 
             joinService.saveDraft(userId,activityId,inputDefs,attend, other);
 
-            return result(ExceptionMsg.JoinSuccess);
+            return result(ExceptionMsg.JoinDraftSuccess);
         }catch (Exception e){
             e.printStackTrace();
-            return result(ExceptionMsg.JoinFailed);
+            return result(ExceptionMsg.JoinDraftFailed);
         }
     }
 

@@ -88,6 +88,9 @@ public enum ExceptionMsg {
     JoinSuccess("活动报名成功",true),
     JoinFailed("活动报名失败",false),
 
+    JoinDraftSuccess("活动报名保存成功",true),
+    JoinDraftFailed("活动报名保存失败",false),
+
     JoinDelSuccess("活动删除成功",true),
     JoinDelFailed("活动删除失败",false),
 

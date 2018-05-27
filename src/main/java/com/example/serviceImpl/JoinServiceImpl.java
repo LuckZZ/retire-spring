@@ -91,8 +91,13 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
         return joinDao.save(join);
     }
 
+    @Transactional
     @Override
     public Join saveUltima(Integer userId, Integer activityId, String[] inputDefs, String attend, String other) {
+
+        //        删除草稿数据
+        joinDao.deleteAllByActivity_ActivityIdAndUser_UserId(activityId, userId);
+
         User user = userDao.findOne(userId);
         Activity activity = activityService.findOne(activityId);
         List<ActivityDef> activityDefs = activity.getActivityDefs();
@@ -257,6 +262,8 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
                 if (!"-1".equals(userSearchForm.getPolitics())){
                     list.add(cb.equal(root.join("user").join("politics").get("politicsId").as(Integer.class), Integer.parseInt(userSearchForm.getPolitics())));
                 }
+//              活动状态
+                list.add(cb.equal(root.get("joinStatus").as(JoinStatus.class), JoinStatus.ultima));
 //                根据活动id筛选
                 list.add(cb.equal(root.join("activity").get("activityId").as(Integer.class), activityId));
 //                根据已报属性筛选
