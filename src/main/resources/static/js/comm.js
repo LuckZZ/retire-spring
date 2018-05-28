@@ -117,6 +117,10 @@ function formAjaxReload(paramForm,paramUrl) {
  * @param paramId 传递id
  */
 function idAjaxReload(paramUrl,paramId) {
+    if (paramId.length == 0){
+        toastr.error('请选择数据!', '操作提示');
+        return;
+    }
     $.ajaxSettings.traditional=true;
     $.ajax({
         url: paramUrl,

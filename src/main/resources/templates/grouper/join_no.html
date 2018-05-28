@@ -39,8 +39,8 @@
                                 <div class="am-form-group">
                                     <div class="am-btn-toolbar">
                                         <div class="am-btn-group am-btn-group-xs">
-                                            <a type="button" class="am-btn am-btn-default am-btn-warning" href="#"><span class="am-icon-save"></span> 保存</a>
-                                            <a type="button" class="am-btn am-btn-default am-btn-success" href="#"><span class="am-icon-pencil"></span> 提交</a>
+                                            <a type="button" class="am-btn am-btn-default am-btn-warning" href="javascript:;" id="checked-save"><span class="am-icon-save"></span> 保存</a>
+                                            <a type="button" class="am-btn am-btn-default am-btn-success" href="javascript:;" id="checked-submit"><span class="am-icon-pencil"></span> 提交</a>
                                         </div>
                                     </div>
                                 </div>
@@ -79,7 +79,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user,iterStat:${datas}">
+                                    <tr th:each="user,iterStat:${userList}">
                                         <td><input type="checkbox" th:value="${user.userId}"/></td>
                                         <!--<td th:text="${user.userId}">序号1</td>-->
                                         <td th:text="${iterStat.count}+${datas.number*10}">序号1</td>
@@ -88,30 +88,32 @@
                                    <!--     <td th:text="${user.group.groupName}">组别组一</td>-->
                                         <td th:text="${user.rank.name}">组长或组员</td>
                                         <td th:text="${activity.activityName}">测试活动</td>
-                                        <td th:each="activityDef:${activity.activityDefs}">
+                                        <td th:each="aDef:${(user.join == null) ? activity.activityDefs :user.join.joinDefs}">
                                             <div class="tr-select">
-                                                <select data-am-selected="{btnWidth: '120px',btnSize: 'sm',maxHeight: 200}" name="inputDefs">
-                                                    <option th:each="inp:${activityDef.inputs}" th:value="${inp}" th:text="${inp}">自定义列 </option>
+                                                <select th:if="${(user.join == null)}" data-am-selected="{btnWidth: '120px',btnSize: 'sm',maxHeight: 200}" name="inputDefs">
+                                                    <option th:each="inp:${aDef.inputs}" th:value="${inp}" th:text="${inp}">自定义列 </option>
+                                                </select>
+                                                <select th:if="${(user.join != null)}" data-am-selected="{btnWidth: '120px',btnSize: 'sm',maxHeight: 200}" name="inputDefs">
+                                                    <option th:selected="${inp == aDef.input}" th:each="inp:${aDef.activityDef.inputs}" th:value="${inp}" th:text="${inp}">自定义列 </option>
                                                 </select>
                                             </div>
                                         </td>
 
                                         <td>
-                                            <input name="userId" th:value="${user.userId}" type="hidden"/>
-
+                                            <input name="userId" class="userId" th:value="${user.userId}" type="hidden"/>
                                             <select data-am-selected="{btnWidth: '120px',btnSize: 'sm'}" name="attend" class="attend">
-                                                <option value="yes" th:text="参加"></option>
-                                                <option value="no" th:text="不参加"></option>
+                                                <option th:selected="${(user.join != null) && (user.join.attend.toString() eq 'yes')}" value="yes" th:text="参加"></option>
+                                                <option th:selected="${(user.join != null) && (user.join.attend.toString() eq 'no')}" value="no" th:text="不参加"></option>
                                             </select>
                                         </td>
 
                                         <td>
-                                            <input name="other" class="am-form-field other" type="text"/>
+                                            <input name="other" class="am-form-field other" th:value="${user.join == null}?'':${user.join.other}" type="text"/>
                                         </td>
 
                                         <td>
                                             <div class="tpl-table-black-operation">
-                                                <a th:attr="data-id=${user.userId}" href="javascript:;" class="tpl-table-black-operation-save one-submit">
+                                                <a th:attr="data-id=${user.userId}" href="javascript:;" class="tpl-table-black-operation-save one-save">
                                                     <i class="am-icon-save"></i> 保存
                                                 </a>
                                                 <a th:attr="data-id=${user.userId}" href="javascript:;" class="one-submit">
@@ -221,7 +223,7 @@
         });
 
         //是否参加change事件
-        $(".attend").on('change',function(){
+/*        $(".attend").on('change',function(){
             var $tr = $(this).closest('tr');
             var $div =  $tr.find('.tr-select');
             if ($(this).val() == 'no'){
@@ -229,68 +231,88 @@
             }else {
                 $div.show();
             }
-        });
+        });*/
 
         var userId;
+        var activityId;
         var inputDefs;
         var attendVal;
         var other;
-        //提交事件
-        $(".one-submit").on('click',function () {
 
-            //当前元素查找父级元素
-            var $tr = $(this).closest('tr');
-
-            // 不支持 MutationObserver 的浏览器使用 JS 操作 select 以后需要手动触发 `changed.selected.amui` 事件
-            $tr.find('select').each(function () {
-                $(this).trigger('changed.selected.amui');
-            });
-
-            //工号
-            var jobNum = $tr.find('td').eq(2).html();
-            //姓名
-            var name = $tr.find('td').eq(3).html();
-            //是否参加
-            var attend = $tr.find('.attend option:selected').text();
-
-            other = $tr.find('.other').val();
-
-            var $oneSubmit= $('#oneSubmit-modal');
-
-            $oneSubmit.find("#submit-jobNum").text(jobNum);
-            $oneSubmit.find("#submit-name").text(name);
-            $oneSubmit.find("#submit-attend").text(attend);
-
-            userId = $(this).data('id');
-
-            inputDefs = new Array();
-
-            $tr.find('select[name="inputDefs"]').each(function () {
-                inputDefs.push($(this).val());
-            });
-
-            attendVal = $tr.find('.attend option:selected').val();
-
-            $oneSubmit.modal();
+        //批量保存
+        $("#checked-save").on('click',function () {
+            //打开模态框
+            $('#mulSave-modal').modal();
         });
 
-        $("#oneSubmit-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+        $("#mulSave-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            var params  = [];
+            var cTrs = checkedTrs();
+            if (cTrs.length == 0){
+                toastr.error('请选择数据!', '操作提示');
+                return;
+            }
+            for (var i=0;i<cTrs.length;i++){
+                var $tr = cTrs[i];
+                assignJoinData($tr, $tr.find('.userId').val());
+                params .push({"userId":userId, "activityId":activityId, "inputDefs":inputDefs, "attend":attendVal, "other":other});
+            }
+            //json数据
+            var joinList = JSON.stringify(params);
 
-            var activityId = $("#activityId").val();
-
-            $.ajaxSettings.traditional=true;
             $.ajax({
                 async: false,
                 type: 'POST',
                 dataType: 'json',
-                data:{
-                    userId:userId,
-                    activityId:activityId,
-                    inputDefs:inputDefs,
-                    attend:attendVal,
-                    other:other
+                contentType : "application/json;charset=UTF-8",
+                data: joinList,
+                url: '/join/joinDraftList',
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    toastr.error('出现错误！', '错误');
                 },
-                url: '/join/joinActivity',
+                success: function(data){
+                    if (data.codeBool){
+                        toastr.success(data.message,'操作成功')
+                        //刷新页面前，把提示信息存入cookie
+                        // $.cookie("cookie-msg", data.message);
+                        //刷新页面
+                        // location.reload();
+                    }else {
+                        toastr.error(data.message, '操作失败');
+                    }
+                }
+            });
+
+        });
+
+        //批量提交
+        $("#checked-submit").on('click',function () {
+            //打开模态框
+            $('#mulSubmit-modal').modal();
+        });
+
+        $("#mulSubmit-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            var params  = [];
+            var cTrs = checkedTrs();
+            if (cTrs.length == 0){
+                toastr.error('请选择数据!', '操作提示');
+                return;
+            }
+            for (var i=0;i<cTrs.length;i++){
+                var $tr = cTrs[i];
+                assignJoinData($tr, $tr.find('.userId').val());
+                params .push({"userId":userId, "activityId":activityId, "inputDefs":inputDefs, "attend":attendVal, "other":other});
+            }
+            //json数据
+            var joinList = JSON.stringify(params);
+
+            $.ajax({
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                contentType : "application/json;charset=UTF-8",
+                data: joinList,
+                url: '/join/joinUltimaList',
                 error : function(XMLHttpRequest, textStatus, errorThrown) {
                     toastr.error('出现错误！', '错误');
                 },
@@ -306,6 +328,123 @@
                 }
             });
         });
+
+        //保存事件
+        $(".one-save").on('click',function () {
+            //当前元素查找父级元素
+            var $tr = $(this).closest('tr');
+
+            // 不支持 MutationObserver 的浏览器使用 JS 操作 select 以后需要手动触发 `changed.selected.amui` 事件
+            $tr.find('select').each(function () {
+                $(this).trigger('changed.selected.amui');
+            });
+
+            assignJoinData($tr, $(this).data('id'));
+
+            $.ajaxSettings.traditional=true;
+            $.ajax({
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                data:{
+                    userId:userId,
+                    activityId:activityId,
+                    inputDefs:inputDefs,
+                    attend:attendVal,
+                    other:other
+                },
+                url: '/join/joinDraft',
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    toastr.error('出现错误！', '错误');
+                },
+                success: function(data){
+                    if (data.codeBool){
+                        toastr.success(data.message,'操作成功')
+                        //刷新页面前，把提示信息存入cookie
+                        // $.cookie("cookie-msg", data.message);
+                        //刷新页面
+                        // location.reload();
+                    }else {
+                        toastr.error(data.message, '操作失败');
+                    }
+                }
+            });
+        });
+
+        //提交事件
+        $(".one-submit").on('click',function () {
+
+            //当前元素查找父级元素
+            var $tr = $(this).closest('tr');
+
+            // 不支持 MutationObserver 的浏览器使用 JS 操作 select 以后需要手动触发 `changed.selected.amui` 事件
+            $tr.find('select').each(function () {
+                $(this).trigger('changed.selected.amui');
+            });
+
+            assignJoinData($tr, $(this).data('id'));
+
+            //工号
+            var jobNum = $tr.find('td').eq(2).html();
+            //姓名
+            var name = $tr.find('td').eq(3).html();
+            //是否参加
+            var attend = $tr.find('.attend option:selected').text();
+
+            var $oneSubmit= $('#oneSubmit-modal');
+
+            $oneSubmit.find("#submit-jobNum").text(jobNum);
+            $oneSubmit.find("#submit-name").text(name);
+            $oneSubmit.find("#submit-attend").text(attend);
+
+            $oneSubmit.modal();
+        });
+
+        $("#oneSubmit-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+
+            $.ajaxSettings.traditional=true;
+            $.ajax({
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                data:{
+                    userId:userId,
+                    activityId:activityId,
+                    inputDefs:inputDefs,
+                    attend:attendVal,
+                    other:other
+                },
+                url: '/join/joinUltima',
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    toastr.error('出现错误！', '错误');
+                },
+                success: function(data){
+                    if (data.codeBool){
+                        //刷新页面前，把提示信息存入cookie
+                        $.cookie("cookie-msg", data.message);
+                        //刷新页面
+                        location.reload();
+                    }else {
+                        toastr.error(data.message, '操作失败');
+                    }
+                }
+            });
+        });
+        //userId、activityId、inputDefs、attendVal、other
+        function assignJoinData($tr, uId) {
+            userId = uId;
+
+            activityId = $("#activityId").val();
+
+            inputDefs = new Array();
+            $tr.find('select[name="inputDefs"]').each(function () {
+                inputDefs.push($(this).val());
+            });
+
+            attendVal = $tr.find('.attend option:selected').val();
+
+            other = $tr.find('.other').val();
+        }
 
     });
 </script>

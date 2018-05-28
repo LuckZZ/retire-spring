@@ -65,6 +65,8 @@
                                         <th>序号</th>
                                         <th>活动名称</th>
                                         <th th:each="activityDef:${activity.activityDefs}" th:text="${activityDef.label}">labelDefs</th>
+                                        <th>是否参加</th>
+                                        <th>备注</th>
                                         <th>已报/总数</th>
                                         <th>状态</th>
                                         <th>操作</th>
@@ -79,6 +81,14 @@
                                             <select data-am-selected="{btnSize: 'sm',maxHeight: 200}">
                                                 <option th:each="inp:${activityDef.inputs}" th:value="${inp}" th:text="${inp}">自定义列 </option>
                                             </select>
+                                        </td>
+                                        <td>
+                                            <select data-am-selected="{btnWidth: '120px',btnSize: 'sm',maxHeight: 200}">
+                                                <option>参加</option>
+                                                <option>不参加</option>
+                                            </select>
+                                        </td>
+                                        <td>
                                         </td>
                                         <td th:text="${activity.joinOkCount} + '/' + ${activity.userCount}">已报/总数</td>
                                         <td th:text="${activity.activityStatus.name}">草稿活动</td>

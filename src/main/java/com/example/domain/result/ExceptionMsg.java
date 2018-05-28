@@ -91,8 +91,8 @@ public enum ExceptionMsg {
     JoinDraftSuccess("活动报名保存成功",true),
     JoinDraftFailed("活动报名保存失败",false),
 
-    JoinDelSuccess("活动删除成功",true),
-    JoinDelFailed("活动删除失败",false),
+    JoinDelSuccess("活动报名删除成功",true),
+    JoinDelFailed("活动报名删除失败",false),
 
     JoinForCloseFailed("活动已关闭不能报名",false),
     JoinDelForCloseFailed("活动已关闭不能删除",false),

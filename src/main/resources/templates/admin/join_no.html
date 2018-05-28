@@ -250,6 +250,12 @@
         $("#mulSave-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
             var params  = [];
             var cTrs = checkedTrs();
+
+            if (cTrs.length == 0){
+                toastr.error('请选择数据!', '操作提示');
+                return;
+            }
+
             for (var i=0;i<cTrs.length;i++){
                 var $tr = cTrs[i];
                 assignJoinData($tr, $tr.find('.userId').val());
@@ -292,6 +298,12 @@
         $("#mulSubmit-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
             var params  = [];
             var cTrs = checkedTrs();
+
+            if (cTrs.length == 0){
+                toastr.error('请选择数据!', '操作提示');
+                return;
+            }
+
             for (var i=0;i<cTrs.length;i++){
                 var $tr = cTrs[i];
                 assignJoinData($tr, $tr.find('.userId').val());
