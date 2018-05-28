@@ -28,6 +28,9 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     /*根据userId和groupId查询是否有对应的数据*/
     boolean existsByUserIdAndGroup_GroupId(Integer userId, Integer groupId);
 
+    /*在userIds集合中查询组为goupId的个数，可以用于判断userIds集合是否是整个集合的子集*/
+    long countByUserIdInAndGroup_GroupId(Integer[] userIds, Integer groupId);
+
     /*根据userId修改图片*/
     @Modifying(clearAutomatically=true)
     @Query("update User set imgUrl=:imgUrl where userId=:userId")

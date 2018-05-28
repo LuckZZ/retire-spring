@@ -59,6 +59,15 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
         return userDao.existsByUserIdAndGroup_GroupId(userId, groupId);
     }
 
+    @Override
+    public boolean existsByUserIdAndGroupId(Integer[] userIds, Integer groupId) {
+        long count = userDao.countByUserIdInAndGroup_GroupId(userIds, groupId);
+        if (count == userIds.length){
+            return true;
+        }
+        return false;
+    }
+
     @Transactional
     @Override
     public int updateImg(String imgUrl, Integer userId) {

@@ -310,58 +310,47 @@ public class JoinController extends BaseController{
     @LoggerManage(description = "批量活动报名到草稿")
     @Access(roles = Role.grouper)
     public Response joinDraftList(HttpSession session, @RequestBody String joinList) throws IOException {
-
+//      session
         Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
 
+//      传来的json
         ObjectMapper objectMapper = new ObjectMapper();
         JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, JoinBean.class);
-
         List<JoinBean> list = objectMapper.readValue(joinList, javaType);
 
-        Integer[] userId;
+        List<Integer> userIdList = new ArrayList<>();
 
-/*        for (JoinBean joinBean : list){
-            System.out.println("- - - - - - - -");
-            System.out.println("joinBean userId:"+joinBean.getUserId());
-            System.out.println("joinBean activityId:"+joinBean.getActivityId());
-            for (int i = 0; i < joinBean.getInputDefs().length; i++) {
-                System.out.println("joinBean input:"+joinBean.getInputDefs()[i]);
-            }
-            System.out.println("joinBean attend:"+joinBean.getAttend());
-            System.out.println("joinBean other:"+joinBean.getOther());
-        }*/
+        list.forEach(item-> userIdList.add(item.getUserId()));
 
-        return result(ExceptionMsg.SUCCESS);
-/*        try {
-            Integer userId = Integer.parseInt(request.getParameter("userId"));
-            Integer activityId = Integer.parseInt(request.getParameter("activityId"));
-            String[] inputDefs = request.getParameterValues("inputDefs");
-            String attend = request.getParameter("attend");
-            String other = request.getParameter("other");
+        //            list转化数组
+        Integer[] users = new Integer[userIdList.size()];
+        userIdList.toArray(users);
 
 //        如果是组长身份，先判断用户id是否在对应的组中
-            if (login.getRole() == Role.grouper){
-                if (!userService.existsByUserIdAndGroupId(userId, login.getGroup().getGroupId())){
-                    return result(ExceptionMsg.RoleNoAccess);
-                }
+        if (login.getRole() == Role.grouper){
+            if (!userService.existsByUserIdAndGroupId(users, login.getGroup().getGroupId())){
+                return result(ExceptionMsg.RoleNoAccess);
             }
+        }
 
-            if (!activityService.canJoin(activityId)){
-                return result(ExceptionMsg.JoinForCloseFailed);
-            }
+//        活动是否开启
+        if (!activityService.canJoin(list.get(0).getActivityId())){
+            return result(ExceptionMsg.JoinForCloseFailed);
+        }
 
-            //            如果已经提交
-            if (joinService.existsByActivityIdAndUserId(activityId, userId)){
-                return result(ExceptionMsg.JoinAlreadyFailed);
-            }
+        //            如果已经提交
+        if (joinService.existsByActivityIdAndUserId(list.get(0).getActivityId(), users)){
+            return result(ExceptionMsg.JoinAlreadyFailed);
+        }
 
-            joinService.saveDraft(userId,activityId,inputDefs,attend, other);
-
+//        保存
+        try {
+            joinService.saveDraft(list);
             return result(ExceptionMsg.JoinDraftSuccess);
         }catch (Exception e){
             e.printStackTrace();
             return result(ExceptionMsg.JoinDraftFailed);
-        }*/
+        }
     }
 
     @ResponseBody
@@ -406,10 +395,58 @@ public class JoinController extends BaseController{
 
 
     @ResponseBody
+    @RequestMapping(value = "/joinUltimaList", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @LoggerManage(description = "批量活动报名到提交")
+    @Access(roles = Role.grouper)
+    public Response joinUltimaList(HttpSession session, @RequestBody String joinList) throws IOException {
+//      session
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+
+//      传来的json
+        ObjectMapper objectMapper = new ObjectMapper();
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, JoinBean.class);
+        List<JoinBean> list = objectMapper.readValue(joinList, javaType);
+
+        List<Integer> userIdList = new ArrayList<>();
+
+        list.forEach(item-> userIdList.add(item.getUserId()));
+
+        //            list转化数组
+        Integer[] users = new Integer[userIdList.size()];
+        userIdList.toArray(users);
+
+//        如果是组长身份，先判断用户id是否在对应的组中
+        if (login.getRole() == Role.grouper){
+            if (!userService.existsByUserIdAndGroupId(users, login.getGroup().getGroupId())){
+                return result(ExceptionMsg.RoleNoAccess);
+            }
+        }
+
+//        活动是否开启
+        if (!activityService.canJoin(list.get(0).getActivityId())){
+            return result(ExceptionMsg.JoinForCloseFailed);
+        }
+
+        //            如果已经提交
+        if (joinService.existsByActivityIdAndUserId(list.get(0).getActivityId(), users)){
+            return result(ExceptionMsg.JoinAlreadyFailed);
+        }
+
+//        保存
+        try {
+            joinService.saveUltima(list);
+            return result(ExceptionMsg.JoinSuccess);
+        }catch (Exception e){
+            e.printStackTrace();
+            return result(ExceptionMsg.JoinFailed);
+        }
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/delete/{activityId}")
     @LoggerManage(description = "删除报名")
     @Access(roles = Role.grouper)
-    public Response delete(HttpSession session, @PathVariable String activityId, HttpServletRequest request){
+    public Response delete(HttpSession session, @PathVariable Integer activityId, HttpServletRequest request){
         Login login = (Login)session.getAttribute(WebSecurityConfig.SESSION_KEY);
         String[] joinIds = request.getParameterValues("id");
         Integer[] ids = DataUtils.turn(joinIds);
@@ -419,7 +456,7 @@ public class JoinController extends BaseController{
                 return result(ExceptionMsg.FAILED);
             }
 //            活动关闭，不能删除
-            if (!activityService.canJoin(Integer.parseInt(activityId))){
+            if (!activityService.canJoin(activityId)){
                 return result(ExceptionMsg.JoinDelForCloseFailed);
             }
 

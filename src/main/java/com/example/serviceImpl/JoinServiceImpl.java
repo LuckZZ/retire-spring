@@ -3,6 +3,7 @@ package com.example.serviceImpl;
 import com.example.comm.Constant;
 import com.example.dao.JoinDao;
 import com.example.dao.UserDao;
+import com.example.domain.bean.JoinBean;
 import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.*;
 import com.example.domain.entity.Join;
@@ -50,13 +51,22 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     }
 
     @Override
-    public boolean existsByJoinIdAndGroupId(Integer[] joinIds, Integer groupId) {
-        for (Integer jId : joinIds) {
-            if (!joinDao.existsByJoinIdAndUser_Group_GroupIdAndJoinStatus(jId, groupId, JoinStatus.ultima)){
-                return false;
-            }
+    public boolean existsByActivityIdAndUserId(Integer activityId, Integer[] userIds) {
+        long count = joinDao.countByActivity_ActivityIdAndUser_UserIdInAndJoinStatus(activityId, userIds, JoinStatus.ultima);
+//        count不为0，表示已经有数据在数据库中
+        if (count > 0){
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    @Override
+    public boolean existsByJoinIdAndGroupId(Integer[] joinIds, Integer groupId) {
+        long count = joinDao.countByJoinIdInAndUser_Group_GroupIdAndJoinStatus(joinIds, groupId, JoinStatus.ultima);
+        if (count == joinIds.length){
+            return true;
+        }
+        return false;
     }
 
     @Transactional
@@ -93,6 +103,15 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
 
     @Transactional
     @Override
+    public boolean saveDraft(List<JoinBean> joinBeansList) {
+        joinBeansList.forEach(item->{
+            saveDraft(item.getUserId(), item.getActivityId(), item.getInputDefs(), item.getAttend(), item.getOther());
+        });
+        return true;
+    }
+
+    @Transactional
+    @Override
     public Join saveUltima(Integer userId, Integer activityId, String[] inputDefs, String attend, String other) {
 
         //        删除草稿数据
@@ -121,6 +140,15 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
 
         Join join = new Join(user, activity, joinDefs,Attend.yes, other, JoinStatus.ultima);
         return joinDao.save(join);
+    }
+
+    @Transactional
+    @Override
+    public boolean saveUltima(List<JoinBean> joinBeansList) {
+        joinBeansList.forEach(item->{
+            saveUltima(item.getUserId(), item.getActivityId(), item.getInputDefs(), item.getAttend(), item.getOther());
+        });
+        return true;
     }
 
 

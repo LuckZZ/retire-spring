@@ -290,7 +290,37 @@
         });
 
         $("#mulSubmit-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            var params  = [];
+            var cTrs = checkedTrs();
+            for (var i=0;i<cTrs.length;i++){
+                var $tr = cTrs[i];
+                assignJoinData($tr, $tr.find('.userId').val());
+                params .push({"userId":userId, "activityId":activityId, "inputDefs":inputDefs, "attend":attendVal, "other":other});
+            }
+            //json数据
+            var joinList = JSON.stringify(params);
 
+            $.ajax({
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                contentType : "application/json;charset=UTF-8",
+                data: joinList,
+                url: '/join/joinUltimaList',
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    toastr.error('出现错误！', '错误');
+                },
+                success: function(data){
+                    if (data.codeBool){
+                        //刷新页面前，把提示信息存入cookie
+                        $.cookie("cookie-msg", data.message);
+                        //刷新页面
+                        location.reload();
+                    }else {
+                        toastr.error(data.message, '操作失败');
+                    }
+                }
+            });
         });
 
         //保存事件

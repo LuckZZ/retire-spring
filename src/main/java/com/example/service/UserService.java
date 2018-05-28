@@ -18,6 +18,9 @@ public interface UserService extends BaseCrudService<User,Integer>{
     /*根据userId和groupId查询是否有对应的数据*/
     boolean existsByUserIdAndGroupId(Integer userId, Integer groupId);
 
+    /*根据userIds和groupId查询是否有对应的数据*/
+    boolean existsByUserIdAndGroupId(Integer[] userIds, Integer groupId);
+
     /*根据userId修改图片*/
     int updateImg(String imgUrl, Integer userId);
 

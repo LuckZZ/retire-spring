@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.domain.bean.JoinBean;
 import com.example.domain.bean.UserSearchForm;
 import com.example.domain.entity.Join;
 import com.example.domain.enums.JoinStatus;
@@ -16,14 +17,23 @@ public interface JoinService extends BaseCrudService<Join,Integer>{
     /*根据activityId和userId，查看Join是否存在此条数据*/
     boolean existsByActivityIdAndUserId(Integer activityId, Integer userId);
 
+    /*根据activityId和userIds，查看userIds是否都在join表中*/
+    boolean existsByActivityIdAndUserId(Integer activityId, Integer[] userIds);
+
     /*根据joinId和groupId，查看Join是否存在此条数据*/
     boolean existsByJoinIdAndGroupId(Integer[] joinIds, Integer groupId);
 
     /*保存为草稿*/
     Join saveDraft(Integer userId, Integer activityId, String[] inputDefs, String attend, String other);
 
+    /*批量保存为草稿*/
+    boolean saveDraft(List<JoinBean> joinBeansList);
+
     /*保存为提交*/
     Join saveUltima(Integer userId, Integer activityId, String[] inputDefs, String attend, String other);
+
+    /*批量保存为提交*/
+    boolean saveUltima(List<JoinBean> joinBeansList);
 
     void delete(Integer[] joinIds);
 

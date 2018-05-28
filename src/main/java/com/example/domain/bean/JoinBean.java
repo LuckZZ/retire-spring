@@ -5,25 +5,25 @@ package com.example.domain.bean;
  * Csdn blog：https://blog.csdn.net/Luck_ZZ
  */
 public class JoinBean {
-    private String userId;
-    private String activityId;
+    private Integer userId;
+    private Integer activityId;
     private String[] inputDefs;
     private String attend;
     private String other;
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public String getActivityId() {
+    public Integer getActivityId() {
         return activityId;
     }
 
-    public void setActivityId(String activityId) {
+    public void setActivityId(Integer activityId) {
         this.activityId = activityId;
     }
 
