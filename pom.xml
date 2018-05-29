@@ -108,6 +108,15 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+
+		<!--msm-kryo-serializer memcached共享需要的jar会报错，不用此依赖。改为lib加入6个jar包-->
+<!--		<dependency>
+			<groupId>de.javakaffee.msm</groupId>
+			<artifactId>msm-kryo-serializer</artifactId>
+			<version>1.9.7</version>
+			<scope>runtime</scope>
+		</dependency>-->
+
 	</dependencies>
 
 	<build>

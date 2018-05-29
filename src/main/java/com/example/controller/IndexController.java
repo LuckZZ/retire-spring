@@ -17,6 +17,7 @@ import com.example.utils.DateUtils;
 import com.example.utils.NetworkUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -180,6 +181,14 @@ public class IndexController extends BaseController{
     @Access(roles = {Role.admin})
     public String hello(){
         return "this is hello";
+    }
+
+    @RequestMapping("/session/{value}")
+    public String sessionDisplay(HttpServletRequest request, HttpSession session, @PathVariable String value, Model model){
+        session.setAttribute("display",value);
+        model.addAttribute("addr",request.getLocalAddr());
+        model.addAttribute("port",request.getLocalPort());
+        return "session_display";
     }
 
 }
