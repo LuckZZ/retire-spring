@@ -82,11 +82,20 @@ public class IndexController extends BaseController{
         String jobNum = request.getParameter("jobNum");
         String password = request.getParameter("password");
         String loginType = request.getParameter("loginType");
-//        加密后，密码
-        password = DataUtils.getPasswordMD5(password);
+
         logger.info("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-        logger.info("正在登陆... JobNum："+jobNum+" Role："+Role.values()[Integer.parseInt(loginType)].getName());
         logger.info("登陆IP："+NetworkUtil.getIpAddr(request)+"    登陆系统："+NetworkUtil.getOsAndBrowserInfo(request));
+
+        if (jobNum == null || loginType == null){
+            System.out.println();
+            logger.warn("正在登陆.. JobNum: null Role： null");
+            return result(ExceptionMsg.FAILED);
+        }
+
+        logger.info("正在登陆... JobNum："+jobNum+" Role："+Role.values()[Integer.parseInt(loginType)].getName());
+
+        //        加密后，密码
+        password = DataUtils.getPasswordMD5(password);
         if ("0".equals(loginType)){
 //        管理员 工号是否存在
             boolean exists = adminService.existsByJobNum(jobNum);
@@ -184,6 +193,7 @@ public class IndexController extends BaseController{
     }
 
     @RequestMapping("/session/{value}")
+    @LoggerManage(description = "测试session")
     public String sessionDisplay(HttpServletRequest request, HttpSession session, @PathVariable String value, Model model){
         session.setAttribute("display",value);
         model.addAttribute("addr",request.getLocalAddr());

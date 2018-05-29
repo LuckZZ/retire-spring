@@ -2,9 +2,9 @@ var gGroups;
 
 $(function () {
     //打印主机名和端口号
-    var hostname = location.hostname;
-    var port = location.port;
-    console.log("hostname:"+hostname+"  port:"+port);
+    // var hostname = location.hostname;
+    // var port = location.port;
+    // console.log("hostname:"+hostname+"  port:"+port);
 
     toastrOpt();
 
