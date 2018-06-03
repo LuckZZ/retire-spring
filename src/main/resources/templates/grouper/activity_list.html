@@ -93,15 +93,30 @@
                                         <td th:text="${activity.joinOkCount} + '/' + ${activity.userCount}">已报/总数</td>
                                         <td th:text="${activity.activityStatus.name}">草稿活动</td>
                                         <td>
+                                            <div class="am-dropdown" data-am-dropdown>
+                                                <div class="tpl-table-black-operation">
+                                                    <a href="javascript:;" class="am-dropdown-toggle" data-am-dropdown-toggle>
+                                                        <i class="am-icon-pencil"></i> 编辑
+                                                    </a>
+                                                </div>
+                                                <ul class="am-dropdown-content">
+                                                    <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-join-no" >报名</a></li>
+                                                    <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-join-save" >已保存</a></li>
+                                                    <li ><a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-join-ok" >已报名</a></li>
+                                                </ul>
+                                            </div>
 
-                                            <div class="tpl-table-black-operation">
+                               <!--             <div class="tpl-table-black-operation">
                                                 <a th:attr="data-id=${activity.activityId}" href="javascript:;" class="one-join-no" >
                                                     <i class="am-icon-pencil"></i> 报名
+                                                </a>
+                                                <a th:attr="data-id=${activity.activityId}" href="javascript:;" class="tpl-table-black-operation-save one-join-save">
+                                                    <i class="am-icon-save"></i> 已保存
                                                 </a>
                                                 <a th:attr="data-id=${activity.activityId}" href="javascript:;" class="tpl-table-black-operation-del one-join-ok" >
                                                     <i class="am-icon-trash"></i> 已报
                                                 </a>
-                                            </div>
+                                            </div>-->
 
                                         </td>
                                     </tr>
@@ -148,6 +163,13 @@
             var v = $(this).data('id');
             window.location.href="/join/joinNoView/"+v;
         });
+
+        //保存界面
+        $(".one-join-save").on('click',function () {
+            var v = $(this).data('id');
+            window.location.href="/join/joinDraftView/"+v;
+        });
+
         //已经报名界面
         $(".one-join-ok").on('click',function () {
             var v = $(this).data('id');

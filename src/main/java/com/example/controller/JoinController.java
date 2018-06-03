@@ -156,7 +156,7 @@ public class JoinController extends BaseController{
             model.addAttribute("datas", datas);
             return "admin/join_draft";
         }else if(login.getRole() == Role.grouper){
-            Page<Join> datas = joinService.findAllCriteria(activityId, getDefaultInputs(activity.getActivityDefs().size()), "-1", JoinStatus.draft, new JoinUserSearch(), page);
+            Page<Join> datas = joinService.findAllCriteria(activityId, getDefaultInputs(activity.getActivityDefs().size()), "-1", JoinStatus.draft, new JoinUserSearch(String.valueOf(login.getGroup().getGroupId())), page);
             model.addAttribute("datas", datas);
             return "grouper/join_draft";
         }
@@ -345,12 +345,12 @@ public class JoinController extends BaseController{
 //        根据工号
                 Page<Join> datas = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId(), page);
                 model.addAttribute("datas",datas);
-                return "admin/join_ok";
+                return "grouper/join_ok";
             }else if (type == 2 && value != null){
 //        根据姓名
                 Page<Join> datas = joinService.findAllByActivityIdAndNameWithGroupId(activityId, value, login.getGroup().getGroupId(), page);
                 model.addAttribute("datas",datas);
-                return "admin/join_ok";
+                return "grouper/join_ok";
             }
         }
 //        重定向

@@ -169,7 +169,9 @@
         // pageDiv 分页a标签
         $("#pageDiv a").on('click',function () {
             //Chrome56之后需要，把form加入document
-            $(document).append($userSearchFormClone);
+            // $(document).append($userSearchFormClone);
+            $("body").append($userSearchFormClone);
+            $userSearchFormClone.hide();
             var href = $(this).attr('href');
             $userSearchFormClone.attr("action",href);
             $userSearchFormClone.submit();

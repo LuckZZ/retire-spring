@@ -23,7 +23,7 @@
         <ol class="zz-breadcrumb">
             <li><a href="/activity/activityList" class="am-icon-wpforms">活动管理</a></li>
             <li><a href="/activity/activityList">活动列表</a></li>
-            <li class="zz-active">活动报名</li>
+            <li class="zz-active">已保存</li>
         </ol>
 
         <div class="row-content am-cf">
@@ -31,7 +31,7 @@
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
                         <div class="widget-head am-cf">
-                            <div class="widget-title am-cf" th:text="'活动报名：'+${activity.activityName}">活动报名</div>
+                            <div class="widget-title am-cf" th:text="|已保存：${activity.activityName}|">保存报名</div>
                             <input type="hidden" id="activityId" th:field="${activity.activityId}">
                         </div>
                         <div class="widget-body am-fr">
@@ -56,7 +56,7 @@
                             </div>
 
                             <div class="am-u-sm-12" id="super-search-content" style="display:none;">
-                                <div th:replace="fragments/join_search_grouper::content(${activity.activityId})"></div>
+                                <div th:replace="fragments/join_draft_search::content(${activity.activityId})"></div>
                             </div>
 
                             <input type="hidden" th:value="${searchType.toString()}" id="searchType"/>
@@ -69,7 +69,7 @@
                                         <th>序号</th>
                                         <th>工号</th>
                                         <th>姓名</th>
-                                  <!--      <th>组别</th>-->
+                                        <th>组别</th>
                                         <th>类型</th>
                                         <th>活动名称</th>
                                         <th th:each="activityDef:${activity.activityDefs}" th:text="${activityDef.label}">labelDefs</th>
@@ -79,41 +79,42 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user,iterStat:${datas}">
-                                        <td><input type="checkbox" th:value="${user.userId}"/></td>
+                                    <!--<tr th:each="user,iterStat:${datas}">-->
+                                    <tr th:each="join,iterStat:${datas}">
+                                        <td><input type="checkbox" th:value="${join.joinId}"/></td>
                                         <!--<td th:text="${user.userId}">序号1</td>-->
                                         <td th:text="${iterStat.count}+${datas.number*10}">序号1</td>
-                                        <td th:text="${user.jobNum}">工号123456</td>
-                                        <td th:text="${user.name}">姓名张三</td>
-                                   <!--     <td th:text="${user.group.groupName}">组别组一</td>-->
-                                        <td th:text="${user.rank.name}">组长或组员</td>
+                                        <td th:text="${join.user.jobNum}">工号123456</td>
+                                        <td th:text="${join.user.name}">姓名张三</td>
+                                        <td th:text="${join.user.group.groupName}">组别组一</td>
+                                        <td th:text="${join.user.rank.name}">组长或组员</td>
                                         <td th:text="${activity.activityName}">测试活动</td>
-                                        <td th:each="aDef:${activity.activityDefs}">
+                                        <td th:each="aDef:${join.joinDefs}">
                                             <!--<div class="tr-select">-->
                                                 <select data-am-selected="{btnWidth: '120px',btnSize: 'sm',maxHeight: 200}" name="inputDefs">
-                                                    <option th:each="inp:${aDef.inputs}" th:value="${inp}" th:text="${inp}">自定义列 </option>
+                                                    <option th:selected="${inp == aDef.input}" th:each="inp:${aDef.activityDef.inputs}" th:value="${inp}" th:text="${inp}">自定义列 </option>
                                                 </select>
                                             <!--</div>-->
                                         </td>
 
                                         <td>
-                                            <input name="userId" class="userId" th:value="${user.userId}" type="hidden"/>
+                                            <input name="userId" class="userId" th:value="${join.user.userId}" type="hidden"/>
                                             <select data-am-selected="{btnWidth: '120px',btnSize: 'sm'}" name="attend" class="attend">
-                                                <option value="yes" th:text="参加"></option>
-                                                <option value="no" th:text="不参加"></option>
+                                                <option th:selected="${(join.attend.toString() eq 'yes')}" value="yes" th:text="参加"></option>
+                                                <option th:selected="${(join.attend.toString() eq 'no')}" value="no" th:text="不参加"></option>
                                             </select>
                                         </td>
 
                                         <td>
-                                            <input name="other" class="am-form-field other" type="text"/>
+                                            <input name="other" class="am-form-field other" th:value="${join.other}" type="text"/>
                                         </td>
 
                                         <td>
                                             <div class="tpl-table-black-operation">
-                                                <a th:attr="data-id=${user.userId}" href="javascript:;" class="tpl-table-black-operation-save one-save">
+                                                <a th:attr="data-id=${join.user.userId}" href="javascript:;" class="tpl-table-black-operation-save one-save">
                                                     <i class="am-icon-save"></i> 保存
                                                 </a>
-                                                <a th:attr="data-id=${user.userId}" href="javascript:;" class="one-submit">
+                                                <a th:attr="data-id=${join.user.userId}" href="javascript:;" class="one-submit">
                                                     <i class="am-icon-pencil"></i> 提交
                                                 </a>
                                             </div>
@@ -170,14 +171,14 @@
             }
             var inp = inputClone.val().trim();
             if(searchType == 'search' && inp != ''){
-                $form.attr('action','/excel/exportNoJoinUserBy/'+activityId+"/"+keyClone.val()+"/"+inp);
+                $form.attr('action','/excel/exportJoinDraftUserBy/'+activityId+"/"+keyClone.val()+"/"+inp);
             }else {
                 var $searchForm = $userSearchFormClone.clone();
                 $searchForm.find("select").each(function () {
                     // 添加元素
                     $hideForm.append(this);
                 });
-                $form.attr('action','/excel/exportNoJoinUser/'+activityId);
+                $form.attr('action','/excel/exportJoinDraftUser/'+activityId);
             }
             $form.submit();
             //清除添加的元素
@@ -202,10 +203,10 @@
             var key = $("#head-select-key").val();
             var input = $("#head-select-input").val().trim();
             if (input != ''){
-                window.location.href="/join/joinNoView/"+activityId+"/"+key+"/"+input;
+                window.location.href="/join/joinDraftView/"+activityId+"/"+key+"/"+input;
             }
             if(input == ''){
-                window.location.href="/join/joinNoView/"+activityId;
+                window.location.href="/join/joinDraftView/"+activityId;
             }
         });
 
@@ -222,7 +223,7 @@
         });
 
         //是否参加change事件
-/*        $(".attend").on('change',function(){
+    /*    $(".attend").on('change',function(){
             var $tr = $(this).closest('tr');
             var $div =  $tr.find('.tr-select');
             if ($(this).val() == 'no'){
@@ -231,6 +232,7 @@
                 $div.show();
             }
         });*/
+
 
         var userId;
         var activityId;
@@ -247,10 +249,12 @@
         $("#mulSave-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
             var params  = [];
             var cTrs = checkedTrs();
+
             if (cTrs.length == 0){
                 toastr.error('请选择数据!', '操作提示');
                 return;
             }
+
             for (var i=0;i<cTrs.length;i++){
                 var $tr = cTrs[i];
                 assignJoinData($tr, $tr.find('.userId').val());
@@ -271,11 +275,11 @@
                 },
                 success: function(data){
                     if (data.codeBool){
-                        //toastr.success(data.message,'操作成功')
+                        toastr.success(data.message,'操作成功')
                         //刷新页面前，把提示信息存入cookie
-                         $.cookie("cookie-msg", data.message);
+                        // $.cookie("cookie-msg", data.message);
                         //刷新页面
-                         location.reload();
+                        // location.reload();
                     }else {
                         toastr.error(data.message, '操作失败');
                     }
@@ -287,16 +291,18 @@
         //批量提交
         $("#checked-submit").on('click',function () {
             //打开模态框
-            $('#mulSubmit-modal').modal();
+           $('#mulSubmit-modal').modal();
         });
 
         $("#mulSubmit-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
             var params  = [];
             var cTrs = checkedTrs();
+
             if (cTrs.length == 0){
                 toastr.error('请选择数据!', '操作提示');
                 return;
             }
+
             for (var i=0;i<cTrs.length;i++){
                 var $tr = cTrs[i];
                 assignJoinData($tr, $tr.find('.userId').val());
@@ -358,11 +364,11 @@
                 },
                 success: function(data){
                     if (data.codeBool){
-                        //toastr.success(data.message,'操作成功')
+                        toastr.success(data.message,'操作成功')
                         //刷新页面前，把提示信息存入cookie
-                         $.cookie("cookie-msg", data.message);
+                        // $.cookie("cookie-msg", data.message);
                         //刷新页面
-                         location.reload();
+                        // location.reload();
                     }else {
                         toastr.error(data.message, '操作失败');
                     }
