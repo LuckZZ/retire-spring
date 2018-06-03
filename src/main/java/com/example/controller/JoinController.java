@@ -68,17 +68,13 @@ public class JoinController extends BaseController{
         Activity activity = activityService.findOne(activityId);
         if (login.getRole() == Role.admin){
             Page<User> datas = userService.findAllNoJoinCriteria(activityId, new JoinUserSearch(), page);
-            List<User> userList = assignJoinDraft(activityId, datas);
             assignModel(model, activity);
             model.addAttribute("datas", datas);
-            model.addAttribute("userList", userList);
             return "admin/join_no";
         }else if(login.getRole() == Role.grouper){
             Page<User> datas = userService.findAllNoJoinCriteria(activityId, new JoinUserSearch(String.valueOf(login.getGroup().getGroupId())), page);
-            List<User> userList = assignJoinDraft(activityId, datas);
             assignModel(model, activity);
             model.addAttribute("datas", datas);
-            model.addAttribute("userList", userList);
             return "grouper/join_no";
         }
         return Constant.NO_ACCESS_PAGE;
@@ -93,18 +89,14 @@ public class JoinController extends BaseController{
         assignModel(model, activity);
         if (login.getRole() == Role.admin){
             Page<User> datas = userService.findAllNoJoinCriteria(activityId, joinUserSearch, page);
-            List<User> userList = assignJoinDraft(activityId, datas);
             model.addAttribute("datas",datas);
-            model.addAttribute("userList",userList);
 //        搜索表单的值，再传入页面
             model.addAttribute("joinUserSearch",joinUserSearch);
             return "admin/join_no";
         }else if(login.getRole() == Role.grouper){
             joinUserSearch.setGroup(String.valueOf(login.getGroup().getGroupId()));
             Page<User> datas = userService.findAllNoJoinCriteria(activityId, joinUserSearch, page);
-            List<User> userList = assignJoinDraft(activityId, datas);
             model.addAttribute("datas",datas);
-            model.addAttribute("userList",userList);
 //        搜索表单的值，再传入页面
             model.addAttribute("joinUserSearch",joinUserSearch);
             return "grouper/join_no";
@@ -125,16 +117,12 @@ public class JoinController extends BaseController{
             if (type == 1 && value != null){
 //        根据工号
                 Page<User> datas = userService.findAllNoJoinByJobNum(activityId, value, page);
-                List<User> userList = assignJoinDraft(activityId, datas);
                 model.addAttribute("datas",datas);
-                model.addAttribute("userList",userList);
                 return "admin/join_no";
             }else if (type == 2 && value != null){
 //        根据姓名
                 Page<User> datas = userService.findAllNoJoinByName(activityId, value, page);
-                List<User> userList = assignJoinDraft(activityId, datas);
                 model.addAttribute("datas",datas);
-                model.addAttribute("userList",userList);
                 return "admin/join_no";
             }
         }else if(login.getRole() == Role.grouper){
@@ -142,22 +130,125 @@ public class JoinController extends BaseController{
             if (type == 1 && value != null){
 //        根据工号
                 Page<User> datas = userService.findAllNoJoinByJobNumWithGroupId(login.getGroup().getGroupId(),activityId, value, page);
-                List<User> userList = assignJoinDraft(activityId, datas);
                 model.addAttribute("datas",datas);
-                model.addAttribute("userList",userList);
                 return "grouper/join_no";
             }else if (type == 2 && value != null){
 //        根据姓名
                 Page<User> datas = userService.findAllNoJoinByNameWithGroupId(login.getGroup().getGroupId(), activityId, value, page);
-                List<User> userList = assignJoinDraft(activityId, datas);
                 model.addAttribute("datas",datas);
-                model.addAttribute("userList",userList);
                 return "grouper/join_no";
             }
         }
 
 //        重定向
         return "redirect:/join/joinNoView/"+activityId;
+    }
+
+    @RequestMapping(value = "/joinDraftView/{activityId}")
+    @LoggerManage(description = "报名草稿界面")
+    @Access(roles = Role.grouper)
+    public String joinDraftView(HttpSession session, @PathVariable Integer activityId, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+        Activity activity = activityService.findOne(activityId);
+        assignModel(model, activity);
+        if (login.getRole() == Role.admin){
+            Page<Join> datas = joinService.findAllCriteria(activityId, getDefaultInputs(activity.getActivityDefs().size()), "-1", JoinStatus.draft, new JoinUserSearch(), page);
+            model.addAttribute("datas", datas);
+            return "admin/join_draft";
+        }else if(login.getRole() == Role.grouper){
+            Page<Join> datas = joinService.findAllCriteria(activityId, getDefaultInputs(activity.getActivityDefs().size()), "-1", JoinStatus.draft, new JoinUserSearch(), page);
+            model.addAttribute("datas", datas);
+            return "grouper/join_draft";
+        }
+        return Constant.NO_ACCESS_PAGE;
+    }
+
+    @RequestMapping(value = "/joinDraftView/superSearch/{activityId}")
+    @LoggerManage(description = "已报名高级搜索界面")
+    @Access(roles = Role.grouper)
+    public String joinDraftView(HttpSession session, HttpServletRequest request, @PathVariable Integer activityId, @ModelAttribute(value = "joinUserSearch") JoinUserSearch joinUserSearch, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+        String[] inputDefs = request.getParameterValues("inputDefs");
+        String attend = request.getParameter("attend");
+
+        Activity activity = activityService.findOne(activityId);
+
+        if (login.getRole() == Role.admin){
+
+            Page<Join> datas = joinService.findAllCriteria(activityId, inputDefs, attend, JoinStatus.draft, joinUserSearch, page);
+
+            assignModel(model, activity);
+
+            model.addAttribute("datas", datas);
+
+            //        搜索表单的值，再传入页面
+            joinUserSearch.assignActivityDefSearches(activity.getActivityDefs());
+            List<ActivityDefSearch> activityDefSearches = joinUserSearch.getActivityDefSearches();
+            for (int i = 0; i < inputDefs.length; i++){
+                activityDefSearches.get(i).setOneInput(inputDefs[i]);
+            }
+            model.addAttribute("joinUserSearch",joinUserSearch);
+
+            return "admin/join_draft";
+        }else if(login.getRole() == Role.grouper){
+            joinUserSearch.setGroup(String.valueOf(login.getGroup().getGroupId()));
+            Page<Join> datas = joinService.findAllCriteria(activityId, inputDefs, attend, JoinStatus.draft, joinUserSearch, page);
+
+            assignModel(model, activity);
+
+            model.addAttribute("datas", datas);
+
+            //        搜索表单的值，再传入页面
+            joinUserSearch.assignActivityDefSearches(activity.getActivityDefs());
+            List<ActivityDefSearch> activityDefSearches = joinUserSearch.getActivityDefSearches();
+            for (int i = 0; i < inputDefs.length; i++){
+                activityDefSearches.get(i).setOneInput(inputDefs[i]);
+            }
+            model.addAttribute("joinUserSearch",joinUserSearch);
+
+            return "grouper/join_draft";
+        }
+        return Constant.NO_ACCESS_PAGE;
+    }
+
+
+    @RequestMapping(value = "/joinDraftView/{activityId}/{type}/{value}")
+    @LoggerManage(description = "报名草稿界面BySearch")
+    @Access(roles = Role.grouper)
+    public String joinDraftView(HttpSession session, @PathVariable Integer activityId, @PathVariable Integer type, @PathVariable String value, Model model, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
+        Activity activity = activityService.findOne(activityId);
+        assignModel(model, activity);
+        model.addAttribute("userCommSearch", new CommSearch(type, value));
+        model.addAttribute("searchType", SearchType.search);
+
+        if (login.getRole() == Role.admin){
+            if (type == 1 && value != null){
+//        根据工号
+                Page<Join> datas = joinService.findAllByActivityIdAndJobNum(activityId, value, JoinStatus.draft, page);
+                model.addAttribute("datas",datas);
+                return "admin/join_draft";
+            }else if (type == 2 && value != null){
+//        根据姓名
+                Page<Join> datas = joinService.findAllByActivityIdAndName(activityId, value, JoinStatus.draft, page);
+                model.addAttribute("datas",datas);
+                return "admin/join_draft";
+            }
+        }else if(login.getRole() == Role.grouper){
+            if (type == 1 && value != null){
+//        根据工号
+                Page<Join> datas = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId(), page);
+                model.addAttribute("datas",datas);
+                return "admin/join_draft";
+            }else if (type == 2 && value != null){
+//        根据姓名
+                Page<Join> datas = joinService.findAllByActivityIdAndNameWithGroupId(activityId, value, login.getGroup().getGroupId(), page);
+                model.addAttribute("datas",datas);
+                return "admin/join_draft";
+            }
+        }
+//        重定向
+        return "redirect:/join/joinDraftView/"+activityId;
     }
 
     @RequestMapping(value = "/joinOkView/{activityId}")
@@ -168,11 +259,11 @@ public class JoinController extends BaseController{
         Activity activity = activityService.findOne(activityId);
         assignModel(model, activity);
         if (login.getRole() == Role.admin){
-            Page<Join> datas = joinService.findAllCriteria(activityId, getDefaultInputs(activity.getActivityDefs().size()), "-1", new JoinUserSearch(), page);
+            Page<Join> datas = joinService.findAllCriteria(activityId, getDefaultInputs(activity.getActivityDefs().size()), "-1", JoinStatus.ultima, new JoinUserSearch(), page);
             model.addAttribute("datas", datas);
             return "admin/join_ok";
         }else if(login.getRole() == Role.grouper){
-            Page<Join> datas = joinService.findAllCriteria(activityId, getDefaultInputs(activity.getActivityDefs().size()), "-1", new JoinUserSearch(String.valueOf(login.getGroup().getGroupId())), page);
+            Page<Join> datas = joinService.findAllCriteria(activityId, getDefaultInputs(activity.getActivityDefs().size()), "-1", JoinStatus.ultima, new JoinUserSearch(String.valueOf(login.getGroup().getGroupId())), page);
             model.addAttribute("datas", datas);
             return "grouper/join_ok";
         }
@@ -190,7 +281,8 @@ public class JoinController extends BaseController{
         Activity activity = activityService.findOne(activityId);
 
         if (login.getRole() == Role.admin){
-            Page<Join> datas = joinService.findAllCriteria(activityId, inputDefs, attend, joinUserSearch, page);
+
+            Page<Join> datas = joinService.findAllCriteria(activityId, inputDefs, attend, JoinStatus.ultima, joinUserSearch, page);
 
             assignModel(model, activity);
 
@@ -207,7 +299,7 @@ public class JoinController extends BaseController{
             return "admin/join_ok";
         }else if(login.getRole() == Role.grouper){
             joinUserSearch.setGroup(String.valueOf(login.getGroup().getGroupId()));
-            Page<Join> datas = joinService.findAllCriteria(activityId, inputDefs, attend, joinUserSearch, page);
+            Page<Join> datas = joinService.findAllCriteria(activityId, inputDefs, attend, JoinStatus.ultima, joinUserSearch, page);
 
             assignModel(model, activity);
 
@@ -239,12 +331,12 @@ public class JoinController extends BaseController{
         if (login.getRole() == Role.admin){
             if (type == 1 && value != null){
 //        根据工号
-                Page<Join> datas = joinService.findAllByActivityIdAndJobNum(activityId, value, page);
+                Page<Join> datas = joinService.findAllByActivityIdAndJobNum(activityId, value, JoinStatus.ultima, page);
                 model.addAttribute("datas",datas);
                 return "admin/join_ok";
             }else if (type == 2 && value != null){
 //        根据姓名
-                Page<Join> datas = joinService.findAllByActivityIdAndName(activityId, value, page);
+                Page<Join> datas = joinService.findAllByActivityIdAndName(activityId, value, JoinStatus.ultima, page);
                 model.addAttribute("datas",datas);
                 return "admin/join_ok";
             }
@@ -306,10 +398,10 @@ public class JoinController extends BaseController{
     }
 
     @ResponseBody
-    @RequestMapping(value = "/joinDraftList", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/joinDraftMul", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @LoggerManage(description = "批量活动报名到草稿")
     @Access(roles = Role.grouper)
-    public Response joinDraftList(HttpSession session, @RequestBody String joinList) throws IOException {
+    public Response joinDraftMul(HttpSession session, @RequestBody String joinList) throws IOException {
 //      session
         Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
 
@@ -395,10 +487,10 @@ public class JoinController extends BaseController{
 
 
     @ResponseBody
-    @RequestMapping(value = "/joinUltimaList", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/joinUltimaMul", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @LoggerManage(description = "批量活动报名到提交")
     @Access(roles = Role.grouper)
-    public Response joinUltimaList(HttpSession session, @RequestBody String joinList) throws IOException {
+    public Response joinUltimaMul(HttpSession session, @RequestBody String joinList) throws IOException {
 //      session
         Login login = (Login) session.getAttribute(WebSecurityConfig.SESSION_KEY);
 
@@ -464,7 +556,7 @@ public class JoinController extends BaseController{
             if (login.getRole() == Role.grouper){
 //
                 Integer[] jIds = DataUtils.turn(joinIds);
-              if (!joinService.existsByJoinIdAndGroupId(jIds, login.getGroup().getGroupId())){
+              if (!joinService.existsByJoinIdAndGroupId(jIds, login.getGroup().getGroupId(), JoinStatus.ultima)){
                   return result(ExceptionMsg.RoleNoAccess);
               }
             }
@@ -523,7 +615,7 @@ public class JoinController extends BaseController{
      * @param page
      * @return
      */
-    private List<User> assignJoinDraft(Integer activityId, Page<User> page){
+/*    private List<User> assignJoinDraft(Integer activityId, Page<User> page){
         List<User> users = new ArrayList<>();
         for (User u : page) {
             List<Join> joins = joinService.findAllByActivityIdAndUserIdAndJoinStatus(activityId, u.getUserId(), JoinStatus.draft);
@@ -535,7 +627,7 @@ public class JoinController extends BaseController{
             users.add(u);
         }
         return users;
-    }
+    }*/
 
     /**
      *

@@ -5,7 +5,7 @@ package com.example.domain.enums;
  * Csdn blog：https://blog.csdn.net/Luck_ZZ
  */
 public enum JoinStatus {
-    draft("草稿"),ultima("最终");
+    draft("已保存"),ultima("已报名");
     private String name;
 
     private JoinStatus(String name) {

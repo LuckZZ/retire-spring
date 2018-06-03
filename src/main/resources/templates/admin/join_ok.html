@@ -23,7 +23,7 @@
         <ol class="zz-breadcrumb">
             <li><a href="/activity/activityList" class="am-icon-wpforms">活动管理</a></li>
             <li><a href="/activity/activityList">活动列表</a></li>
-            <li class="zz-active">活动已报名</li>
+            <li class="zz-active">已报名</li>
         </ol>
 
         <div class="row-content am-cf">
@@ -31,7 +31,7 @@
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
                         <div class="widget-head am-cf">
-                            <div class="widget-title am-cf" th:text="'活动已报名：'+${activity.activityName}">活动已报名</div>
+                            <div class="widget-title am-cf" th:text="|已报名：${activity.activityName}|">活动已报名</div>
                         </div>
                         <div class="widget-body  am-fr">
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
@@ -169,7 +169,9 @@
         // pageDiv 分页a标签
         $("#pageDiv a").on('click',function () {
             //Chrome56之后需要，把form加入document
-            $(document).append($userSearchFormClone);
+            // $(document).append($userSearchFormClone);
+            $("body").append($userSearchFormClone);
+            $userSearchFormClone.hide();
             var href = $(this).attr('href');
             $userSearchFormClone.attr("action",href);
             $userSearchFormClone.submit();

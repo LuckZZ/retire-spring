@@ -202,51 +202,51 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
 
     @Override
     public List<User> findAllNoJoinCriteria(Integer activityId, UserSearchForm userSearchForm) {
-        return userDao.findAll(noJionUserSpecification(userSearchForm, getJoinUserIds(activityId)));
+        return userDao.findAll(noJionUserSpecification(userSearchForm, getJoinAndSaveUserIds(activityId)));
     }
 
     @Override
     public Page<User> findAllNoJoinByJobNum(Integer activityId, String jobNum, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return userDao.findAllNoJoinByJobNum(Exist.yes, activityId, jobNum, JoinStatus.draft, pageable);
+        return userDao.findAllNoJoinByJobNum(Exist.yes, activityId, jobNum, pageable);
     }
 
     @Override
     public List<User> findAllNoJoinByJobNum(Integer activityId, String jobNum) {
-        return userDao.findAllNoJoinByJobNum(Exist.yes, activityId, jobNum, JoinStatus.draft);
+        return userDao.findAllNoJoinByJobNum(Exist.yes, activityId, jobNum);
     }
 
     @Override
     public Page<User> findAllNoJoinByName(Integer activityId, String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return userDao.findAllNoJoinByName(Exist.yes, activityId, name, JoinStatus.draft, pageable);
+        return userDao.findAllNoJoinByName(Exist.yes, activityId, name, pageable);
     }
 
     @Override
     public List<User> findAllNoJoinByName(Integer activityId, String name) {
-        return userDao.findAllNoJoinByName(Exist.yes, activityId, name, JoinStatus.draft);
+        return userDao.findAllNoJoinByName(Exist.yes, activityId, name);
     }
 
     @Override
     public Page<User> findAllNoJoinByJobNumWithGroupId(Integer groupId, Integer activityId, String jobNum, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return userDao.findAllNoJoinByJobNumWithGroupId(Exist.yes, groupId, activityId, jobNum, JoinStatus.draft, pageable);
+        return userDao.findAllNoJoinByJobNumWithGroupId(Exist.yes, groupId, activityId, jobNum, pageable);
     }
 
     @Override
     public List<User> findAllNoJoinByJobNumWithGroupId(Integer groupId, Integer activityId, String jobNum) {
-        return userDao.findAllNoJoinByJobNumWithGroupId(Exist.yes, groupId, activityId, jobNum, JoinStatus.draft);
+        return userDao.findAllNoJoinByJobNumWithGroupId(Exist.yes, groupId, activityId, jobNum);
     }
 
     @Override
     public Page<User> findAllNoJoinByNameWithGroupId(Integer groupId, Integer activityId, String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return userDao.findAllNoJoinByNameWithGroupId(Exist.yes, groupId, activityId, name, JoinStatus.draft, pageable);
+        return userDao.findAllNoJoinByNameWithGroupId(Exist.yes, groupId, activityId, name, pageable);
     }
 
     @Override
     public List<User> findAllNoJoinByNameWithGroupId(Integer groupId, Integer activityId, String name) {
-        return userDao.findAllNoJoinByNameWithGroupId(Exist.yes, groupId, activityId, name, JoinStatus.draft);
+        return userDao.findAllNoJoinByNameWithGroupId(Exist.yes, groupId, activityId, name);
     }
 
     @Override
@@ -258,7 +258,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Override
     public Page<User> findAllNoJoinCriteria(Integer activityId, UserSearchForm userSearchForm, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        Page<User> userPage = userDao.findAll(noJionUserSpecification(userSearchForm, getJoinUserIds(activityId)), pageable);
+        Page<User> userPage = userDao.findAll(noJionUserSpecification(userSearchForm, getJoinAndSaveUserIds(activityId)), pageable);
         return userPage;
     }
 
@@ -332,13 +332,15 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
         return specification;
     }
 
-    private List<Integer> getJoinUserIds(Integer activityId){
-        List<Join> joins = joinDao.findAllByActivity_ActivityIdAndUser_ExistAndJoinStatus(activityId, Exist.yes, JoinStatus.ultima);
+    private List<Integer> getJoinAndSaveUserIds(Integer activityId){
+        List<Join> joinOk = joinDao.findAllByActivity_ActivityIdAndUser_ExistAndJoinStatus(activityId, Exist.yes, JoinStatus.ultima);
+        List<Join> joinSave = joinDao.findAllByActivity_ActivityIdAndUser_ExistAndJoinStatus(activityId, Exist.yes, JoinStatus.draft);
 
-        List<Integer> joinUserIds = new ArrayList<>();
-        for (Join join : joins) {
-            joinUserIds.add(join.getUser().getUserId());
-        }
-        return joinUserIds;
+        List<Integer> joinAndSaveUserIds = new ArrayList<>();
+
+        joinOk.forEach(join->joinAndSaveUserIds.add(join.getUser().getUserId()));
+        joinSave.forEach(join->joinAndSaveUserIds.add(join.getUser().getUserId()));
+
+        return joinAndSaveUserIds;
     }
 }

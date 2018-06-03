@@ -61,8 +61,8 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     }
 
     @Override
-    public boolean existsByJoinIdAndGroupId(Integer[] joinIds, Integer groupId) {
-        long count = joinDao.countByJoinIdInAndUser_Group_GroupIdAndJoinStatus(joinIds, groupId, JoinStatus.ultima);
+    public boolean existsByJoinIdAndGroupId(Integer[] joinIds, Integer groupId, JoinStatus joinStatus) {
+        long count = joinDao.countByJoinIdInAndUser_Group_GroupIdAndJoinStatus(joinIds, groupId, joinStatus);
         if (count == joinIds.length){
             return true;
         }
@@ -161,25 +161,25 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     }
 
     @Override
-    public Page<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum, Integer page) {
+    public Page<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum, JoinStatus joinStatus, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndJoinStatus(activityId, Exist.yes, jobNum, JoinStatus.ultima, pageable);
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndJoinStatus(activityId, Exist.yes, jobNum, joinStatus, pageable);
     }
 
     @Override
-    public List<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum) {
-        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndJoinStatus(activityId, Exist.yes, jobNum, JoinStatus.ultima);
+    public List<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum, JoinStatus joinStatus) {
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndJoinStatus(activityId, Exist.yes, jobNum, joinStatus);
     }
 
     @Override
-    public Page<Join> findAllByActivityIdAndName(Integer activityId, String name, Integer page) {
+    public Page<Join> findAllByActivityIdAndName(Integer activityId, String name, JoinStatus joinStatus, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndJoinStatus(activityId, Exist.yes, name, JoinStatus.ultima, pageable);
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndJoinStatus(activityId, Exist.yes, name, joinStatus, pageable);
     }
 
     @Override
-    public List<Join> findAllByActivityIdAndName(Integer activityId, String name) {
-        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndJoinStatus(activityId, Exist.yes, name, JoinStatus.ultima);
+    public List<Join> findAllByActivityIdAndName(Integer activityId, String name, JoinStatus joinStatus) {
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndJoinStatus(activityId, Exist.yes, name, joinStatus);
     }
 
     @Override
@@ -205,16 +205,16 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     }
 
     @Override
-    public Page<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm, Integer page) {
+    public Page<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, JoinStatus joinStatus, UserSearchForm userSearchForm, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         List<Integer> joinIdByDef = selectJoinId(activityId, inputDefs);
-        return joinDao.findAll(joinSpecification(activityId, attend, userSearchForm, joinIdByDef), pageable);
+        return joinDao.findAll(joinSpecification(activityId, attend, joinStatus, userSearchForm, joinIdByDef), pageable);
     }
 
     @Override
-    public List<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm) {
+    public List<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, JoinStatus joinStatus, UserSearchForm userSearchForm) {
         List<Integer> joinIdByDef = selectJoinId(activityId, inputDefs);
-        return joinDao.findAll(joinSpecification(activityId, attend, userSearchForm, joinIdByDef));
+        return joinDao.findAll(joinSpecification(activityId, attend, joinStatus, userSearchForm, joinIdByDef));
     }
 
     @Override
@@ -262,7 +262,7 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
         return objectList;
     }
 
-   private Specification<Join> joinSpecification(Integer activityId, String attend, UserSearchForm userSearchForm, List<Integer> joinIdByDef){
+   private Specification<Join> joinSpecification(Integer activityId, String attend, JoinStatus joinStatus, UserSearchForm userSearchForm, List<Integer> joinIdByDef){
 
         Specification<Join> specification = new Specification<Join>() {
             @Override
@@ -291,7 +291,7 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
                     list.add(cb.equal(root.join("user").join("politics").get("politicsId").as(Integer.class), Integer.parseInt(userSearchForm.getPolitics())));
                 }
 //              活动状态
-                list.add(cb.equal(root.get("joinStatus").as(JoinStatus.class), JoinStatus.ultima));
+                list.add(cb.equal(root.get("joinStatus").as(JoinStatus.class), joinStatus));
 //                根据活动id筛选
                 list.add(cb.equal(root.join("activity").get("activityId").as(Integer.class), activityId));
 //                根据已报属性筛选

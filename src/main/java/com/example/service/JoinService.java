@@ -21,7 +21,7 @@ public interface JoinService extends BaseCrudService<Join,Integer>{
     boolean existsByActivityIdAndUserId(Integer activityId, Integer[] userIds);
 
     /*根据joinId和groupId，查看Join是否存在此条数据*/
-    boolean existsByJoinIdAndGroupId(Integer[] joinIds, Integer groupId);
+    boolean existsByJoinIdAndGroupId(Integer[] joinIds, Integer groupId, JoinStatus joinStatus);
 
     /*保存为草稿*/
     Join saveDraft(Integer userId, Integer activityId, String[] inputDefs, String attend, String other);
@@ -38,14 +38,14 @@ public interface JoinService extends BaseCrudService<Join,Integer>{
     void delete(Integer[] joinIds);
 
     /*根据工号查询已报名*/
-    Page<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum, Integer page);
+    Page<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum, JoinStatus joinStatus, Integer page);
 
-    List<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum);
+    List<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum, JoinStatus joinStatus);
 
     /*根据姓名查询已报名*/
-    Page<Join> findAllByActivityIdAndName(Integer activityId, String name, Integer page);
+    Page<Join> findAllByActivityIdAndName(Integer activityId, String name, JoinStatus joinStatus, Integer page);
 
-    List<Join> findAllByActivityIdAndName(Integer activityId, String name);
+    List<Join> findAllByActivityIdAndName(Integer activityId, String name, JoinStatus joinStatus);
 
     /*根据工号、组Id查询已报名*/
     Page<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId, Integer page);
@@ -58,9 +58,9 @@ public interface JoinService extends BaseCrudService<Join,Integer>{
     List<Join> findAllByActivityIdAndNameWithGroupId(Integer activityId, String name, Integer groupId);
 
     /*根据userSearchForm查询已报名*/
-    Page<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm, Integer page);
+    Page<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, JoinStatus joinStatus, UserSearchForm userSearchForm, Integer page);
 
-    List<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, UserSearchForm userSearchForm);
+    List<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, JoinStatus joinStatus, UserSearchForm userSearchForm);
 
     /*根据活动id，用户id，活动状态查询*/
     List<Join> findAllByActivityIdAndUserIdAndJoinStatus(Integer activityId, Integer userId, JoinStatus joinStatus);
