@@ -172,36 +172,36 @@ public class JoinServiceImpl extends BaseCrudServiceImpl<Join, Integer, JoinDao>
     }
 
     @Override
-    public Page<Join> findAllByActivityIdAndName(Integer activityId, String name, JoinStatus joinStatus, Integer page) {
+    public Page<Join> findAllByActivityIdAndNameContaining(Integer activityId, String name, JoinStatus joinStatus, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndJoinStatus(activityId, Exist.yes, name, joinStatus, pageable);
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameContainingAndJoinStatus(activityId, Exist.yes, name, joinStatus, pageable);
     }
 
     @Override
-    public List<Join> findAllByActivityIdAndName(Integer activityId, String name, JoinStatus joinStatus) {
-        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndJoinStatus(activityId, Exist.yes, name, joinStatus);
+    public List<Join> findAllByActivityIdAndNameContaining(Integer activityId, String name, JoinStatus joinStatus) {
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameContainingAndJoinStatus(activityId, Exist.yes, name, joinStatus);
     }
 
     @Override
-    public Page<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId, Integer page) {
+    public Page<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId, JoinStatus joinStatus, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupIdAndJoinStatus(activityId,Exist.yes,jobNum,groupId, JoinStatus.ultima, pageable);
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupIdAndJoinStatus(activityId,Exist.yes,jobNum,groupId, joinStatus, pageable);
     }
 
     @Override
-    public List<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId) {
-        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupIdAndJoinStatus(activityId,Exist.yes,jobNum,groupId, JoinStatus.ultima);
+    public List<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId, JoinStatus joinStatus) {
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupIdAndJoinStatus(activityId,Exist.yes,jobNum,groupId, joinStatus);
     }
 
     @Override
-    public Page<Join> findAllByActivityIdAndNameWithGroupId(Integer activityId, String name, Integer groupId, Integer page) {
+    public Page<Join> findAllByActivityIdAndNameContainingWithGroupId(Integer activityId, String name, Integer groupId, JoinStatus joinStatus, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupIdAndJoinStatus(activityId,Exist.yes,name,groupId, JoinStatus.ultima, pageable);
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameContainingAndUser_Group_GroupIdAndJoinStatus(activityId,Exist.yes,name,groupId, joinStatus, pageable);
     }
 
     @Override
-    public List<Join> findAllByActivityIdAndNameWithGroupId(Integer activityId, String name, Integer groupId) {
-        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupIdAndJoinStatus(activityId,Exist.yes,name,groupId, JoinStatus.ultima);
+    public List<Join> findAllByActivityIdAndNameContainingWithGroupId(Integer activityId, String name, Integer groupId, JoinStatus joinStatus) {
+        return joinDao.findAllByActivity_ActivityIdAndUser_ExistAndUser_NameContainingAndUser_Group_GroupIdAndJoinStatus(activityId,Exist.yes,name,groupId, joinStatus);
     }
 
     @Override

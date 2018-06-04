@@ -37,7 +37,7 @@ public interface GrouperService extends BaseCrudService<Grouper,Integer>{
     List<Grouper> findAllByJobNum(String jobNum);
 
     /*根据姓名，查询组长*/
-    Page<Grouper> findAllByName(String name, Integer page);
+    Page<Grouper> findAllByNameContaining(String name, Integer page);
 
     /*组长表工号是否存在*/
     boolean existsByJobNum(String jobNum);

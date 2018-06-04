@@ -42,7 +42,7 @@ public interface AdminService extends BaseCrudService<Admin,Integer>{
     List<Admin> findAllByJobNum(String jobNum);
 
     /*根姓名查询管理员*/
-    Page<Admin> findAllByName(String name, Integer page);
+    Page<Admin> findAllByNameContaining(String name, Integer page);
 
     /*修改管理员最近一次登陆*/
     int updateLastTime(String lastTime, Integer adminId);

@@ -184,7 +184,7 @@ public class ExcelController extends BaseController{
                 if (type == 1){
                     userList = userService.findAllNoJoinByJobNum(activityId, value);
                 }else if(type == 2){
-                    userList = userService.findAllNoJoinByName(activityId, value);
+                    userList = userService.findAllNoJoinByNameContaining(activityId, value);
                 }
             }else if("selected".equals(exportScope)){
                 String[] selectedChecked = request.getParameterValues("selectedChecked");
@@ -196,7 +196,7 @@ public class ExcelController extends BaseController{
                 if (type == 1){
                     userList = userService.findAllNoJoinByJobNumWithGroupId(login.getGroup().getGroupId() ,activityId, value);
                 }else if(type == 2){
-                    userList = userService.findAllNoJoinByNameWithGroupId(login.getGroup().getGroupId(), activityId, value);
+                    userList = userService.findAllNoJoinByNameContainingWithGroupId(login.getGroup().getGroupId(), activityId, value);
                 }
             }else if("selected".equals(exportScope)){
                 String[] selectedChecked = request.getParameterValues("selectedChecked");
@@ -315,7 +315,7 @@ public class ExcelController extends BaseController{
                 if (type == 1){
                     joinList = joinService.findAllByActivityIdAndJobNum(activityId, value, JoinStatus.draft);
                 }else if(type == 2){
-                    joinList = joinService.findAllByActivityIdAndName(activityId, value, JoinStatus.draft);
+                    joinList = joinService.findAllByActivityIdAndNameContaining(activityId, value, JoinStatus.draft);
                 }
             }else if("selected".equals(exportScope)){
                 String[] selectedChecked = request.getParameterValues("selectedChecked");
@@ -325,9 +325,9 @@ public class ExcelController extends BaseController{
         }else if(login.getRole() == Role.grouper){
             if("all".equals(exportScope)){
                 if (type == 1){
-                    joinList = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId());
+                    joinList = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId(), JoinStatus.draft);
                 }else if(type == 2){
-                    joinList = joinService.findAllByActivityIdAndNameWithGroupId(activityId, value, login.getGroup().getGroupId());
+                    joinList = joinService.findAllByActivityIdAndNameContainingWithGroupId(activityId, value, login.getGroup().getGroupId(), JoinStatus.draft);
                 }
             }else if("selected".equals(exportScope)){
                 String[] selectedChecked = request.getParameterValues("selectedChecked");
@@ -463,7 +463,7 @@ public class ExcelController extends BaseController{
                 if (type == 1){
                     joinList = joinService.findAllByActivityIdAndJobNum(activityId, value, JoinStatus.ultima);
                 }else if(type == 2){
-                    joinList = joinService.findAllByActivityIdAndName(activityId, value, JoinStatus.ultima);
+                    joinList = joinService.findAllByActivityIdAndNameContaining(activityId, value, JoinStatus.ultima);
                 }
             }else if("selected".equals(exportScope)){
                 String[] selectedChecked = request.getParameterValues("selectedChecked");
@@ -473,9 +473,9 @@ public class ExcelController extends BaseController{
         }else if(login.getRole() == Role.grouper){
             if("all".equals(exportScope)){
                 if (type == 1){
-                    joinList = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId());
+                    joinList = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId(), JoinStatus.ultima);
                 }else if(type == 2){
-                    joinList = joinService.findAllByActivityIdAndNameWithGroupId(activityId, value, login.getGroup().getGroupId());
+                    joinList = joinService.findAllByActivityIdAndNameContainingWithGroupId(activityId, value, login.getGroup().getGroupId(), JoinStatus.ultima);
                 }
             }else if("selected".equals(exportScope)){
                 String[] selectedChecked = request.getParameterValues("selectedChecked");

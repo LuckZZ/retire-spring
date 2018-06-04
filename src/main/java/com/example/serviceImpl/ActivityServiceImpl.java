@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Create by : Zhangxuemeng
@@ -70,9 +71,7 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     public Page<Activity> findAllNotDraft(Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         Page<Activity> activities = activityDao.findAllByActivityStatusNot(ActivityStatus.draft, pageable);
-        for (Activity activity : activities) {
-            activity = assignActivity(activity);
-        }
+        activities.forEach(activity -> activity = assignActivity(activity));
         return activities;
     }
 
@@ -80,29 +79,23 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
     public Page<Activity> findAllNotDraft(Integer page, Integer groupId) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
         Page<Activity> activities = activityDao.findAllByActivityStatusNot(ActivityStatus.draft, pageable);
-        for (Activity activity : activities) {
-            activity = assignActivityWithGroupId(groupId, activity);
-        }
+        activities.forEach(activity -> activity = assignActivityWithGroupId(groupId, activity));
         return activities;
     }
 
     @Override
-    public Page<Activity> findAllDraftByActivityName(String activityName, Integer page) {
+    public Page<Activity> findAllDraftByActivityNameContaining(String activityName, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        Page<Activity> activities = activityDao.findAllByActivityStatusAndActivityName(ActivityStatus.draft, activityName, pageable);
-        for (Activity activity : activities) {
-            activity = assignActivity(activity);
-        }
+        Page<Activity> activities = activityDao.findAllByActivityStatusAndActivityNameContaining(ActivityStatus.draft, activityName, pageable);
+        activities.forEach(activity -> activity = assignActivity(activity));
         return activities;
     }
 
     @Override
-    public Page<Activity> findAllNotDraftByActivityName(String activityName, Integer page) {
+    public Page<Activity> findAllNotDraftByActivityNameContaining(String activityName, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        Page<Activity> activities = activityDao.findAllByActivityStatusNotAndActivityName(ActivityStatus.draft, activityName, pageable);
-        for (Activity activity : activities) {
-            activity = assignActivity(activity);
-        }
+        Page<Activity> activities = activityDao.findAllByActivityStatusNotAndActivityNameContaining(ActivityStatus.draft, activityName, pageable);
+        activities.forEach(activity -> activity = assignActivity(activity));
         return activities;
     }
 
@@ -169,11 +162,10 @@ public class ActivityServiceImpl extends BaseCrudServiceImpl<Activity,Integer,Ac
      */
     @Override
     public Activity findOne(Integer activityId) {
-        if (activityId == null){
-            return null;
+        Activity activity = Optional.ofNullable(activityId).map(id -> activityDao.findOne(activityId)).orElse(null);
+        if (activity != null){
+            activity = assignActivity(activity);
         }
-        Activity activity = activityDao.findOne(activityId);
-        activity = assignActivity(activity);
         return activity;
     }
 

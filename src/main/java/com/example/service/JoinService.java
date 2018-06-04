@@ -43,19 +43,19 @@ public interface JoinService extends BaseCrudService<Join,Integer>{
     List<Join> findAllByActivityIdAndJobNum(Integer activityId, String jobNum, JoinStatus joinStatus);
 
     /*根据姓名查询已报名*/
-    Page<Join> findAllByActivityIdAndName(Integer activityId, String name, JoinStatus joinStatus, Integer page);
+    Page<Join> findAllByActivityIdAndNameContaining(Integer activityId, String name, JoinStatus joinStatus, Integer page);
 
-    List<Join> findAllByActivityIdAndName(Integer activityId, String name, JoinStatus joinStatus);
+    List<Join> findAllByActivityIdAndNameContaining(Integer activityId, String name, JoinStatus joinStatus);
 
     /*根据工号、组Id查询已报名*/
-    Page<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId, Integer page);
+    Page<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId, JoinStatus joinStatus, Integer page);
 
-    List<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId);
+    List<Join> findAllByActivityIdAndJobNumWithGroupId(Integer activityId, String jobNum, Integer groupId, JoinStatus joinStatus);
 
     /*根据姓名、组Id查询已报名*/
-    Page<Join> findAllByActivityIdAndNameWithGroupId(Integer activityId, String name, Integer groupId, Integer page);
+    Page<Join> findAllByActivityIdAndNameContainingWithGroupId(Integer activityId, String name, Integer groupId, JoinStatus joinStatus, Integer page);
 
-    List<Join> findAllByActivityIdAndNameWithGroupId(Integer activityId, String name, Integer groupId);
+    List<Join> findAllByActivityIdAndNameContainingWithGroupId(Integer activityId, String name, Integer groupId, JoinStatus joinStatus);
 
     /*根据userSearchForm查询已报名*/
     Page<Join> findAllCriteria(Integer activityId, String[] inputDefs, String attend, JoinStatus joinStatus, UserSearchForm userSearchForm, Integer page);

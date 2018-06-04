@@ -68,7 +68,7 @@ public class AdminController extends BaseController{
             return "admin/admin_list";
         }else if (type == 2 && value != null){
 //        根据姓名
-            Page<Admin> datas = adminService.findAllByName(value,page);
+            Page<Admin> datas = adminService.findAllByNameContaining(value,page);
             model.addAttribute("datas",datas);
             return "admin/admin_list";
         }

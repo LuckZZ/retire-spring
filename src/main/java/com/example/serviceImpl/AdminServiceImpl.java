@@ -15,7 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Create by : Zhangxuemeng
@@ -59,26 +62,28 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
 
     @Override
     public boolean canDelete(Integer[] adminIds) {
-        for (int i = 0; i < adminIds.length; i ++){
-            Admin admin = adminDao.findOne(adminIds[i]);
-            if (admin.getCanLogin() == CanLogin.yes)
-                return false;
+        List<Integer> list = Arrays.asList(adminIds);
+//      取出第一个为CanLogin.yes的对象
+        CanLogin canLogin = list.stream().map(i -> adminDao.findOne(i).getCanLogin()).
+                filter( c -> c.equals(CanLogin.yes)).
+                findFirst().orElse(null);
+        if (canLogin == null){
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Transactional
     @Override
     public void delete(Integer[] adminIds) {
+        List<Integer> list = Arrays.asList(adminIds);
 //        删除图片
-        for (int i = 0; i < adminIds.length; i ++){
-            Admin admin = adminDao.findOne(adminIds[i]);
+        list.forEach(adminId -> {
+            Admin admin = adminDao.getOne(adminId);
             FileUtils.deleteFile(filePicturesUrl+admin.getImgUrl());
-        }
+        });
 //        删除管理员
-        for (int i = 0; i < adminIds.length; i ++){
-            adminDao.delete(adminIds[i]);
-        }
+        list.forEach(adminId -> adminDao.delete(adminId));
     }
 
     @Transactional
@@ -106,9 +111,9 @@ public class AdminServiceImpl extends BaseCrudServiceImpl<Admin,Integer,AdminDao
     }
 
     @Override
-    public Page<Admin> findAllByName(String name, Integer page) {
+    public Page<Admin> findAllByNameContaining(String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return adminDao.findAllByName(name, pageable);
+        return adminDao.findAllByNameContaining(name, pageable);
     }
 
     @Transactional

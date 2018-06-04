@@ -120,7 +120,7 @@ public class UserController extends BaseController{
                 return "admin/user_list";
             }else if (type == 2 && value != null){
 //        根据姓名
-                Page<User> datas = userService.findAllByName(value,page);
+                Page<User> datas = userService.findAllByNameContaining(value,page);
                 model.addAttribute("datas",datas);
                 return "admin/user_list";
             }
@@ -135,7 +135,7 @@ public class UserController extends BaseController{
                 return "grouper/user_list";
             }else if (type == 2 && value != null){
 //        根据姓名
-                Page<User> datas = userService.findAllByByGroupIdAndName(groupId,value,page);
+                Page<User> datas = userService.findAllByGroupIdAndNameContaining(groupId,value,page);
                 model.addAttribute("datas",datas);
                 return "grouper/user_list";
             }

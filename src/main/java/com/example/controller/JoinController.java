@@ -121,7 +121,7 @@ public class JoinController extends BaseController{
                 return "admin/join_no";
             }else if (type == 2 && value != null){
 //        根据姓名
-                Page<User> datas = userService.findAllNoJoinByName(activityId, value, page);
+                Page<User> datas = userService.findAllNoJoinByNameContaining(activityId, value, page);
                 model.addAttribute("datas",datas);
                 return "admin/join_no";
             }
@@ -134,7 +134,7 @@ public class JoinController extends BaseController{
                 return "grouper/join_no";
             }else if (type == 2 && value != null){
 //        根据姓名
-                Page<User> datas = userService.findAllNoJoinByNameWithGroupId(login.getGroup().getGroupId(), activityId, value, page);
+                Page<User> datas = userService.findAllNoJoinByNameContainingWithGroupId(login.getGroup().getGroupId(), activityId, value, page);
                 model.addAttribute("datas",datas);
                 return "grouper/join_no";
             }
@@ -230,21 +230,21 @@ public class JoinController extends BaseController{
                 return "admin/join_draft";
             }else if (type == 2 && value != null){
 //        根据姓名
-                Page<Join> datas = joinService.findAllByActivityIdAndName(activityId, value, JoinStatus.draft, page);
+                Page<Join> datas = joinService.findAllByActivityIdAndNameContaining(activityId, value, JoinStatus.draft, page);
                 model.addAttribute("datas",datas);
                 return "admin/join_draft";
             }
         }else if(login.getRole() == Role.grouper){
             if (type == 1 && value != null){
 //        根据工号
-                Page<Join> datas = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId(), page);
+                Page<Join> datas = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId(), JoinStatus.draft, page);
                 model.addAttribute("datas",datas);
-                return "admin/join_draft";
+                return "grouper/join_draft";
             }else if (type == 2 && value != null){
 //        根据姓名
-                Page<Join> datas = joinService.findAllByActivityIdAndNameWithGroupId(activityId, value, login.getGroup().getGroupId(), page);
+                Page<Join> datas = joinService.findAllByActivityIdAndNameContainingWithGroupId(activityId, value, login.getGroup().getGroupId(), JoinStatus.draft, page);
                 model.addAttribute("datas",datas);
-                return "admin/join_draft";
+                return "grouper/join_draft";
             }
         }
 //        重定向
@@ -336,19 +336,19 @@ public class JoinController extends BaseController{
                 return "admin/join_ok";
             }else if (type == 2 && value != null){
 //        根据姓名
-                Page<Join> datas = joinService.findAllByActivityIdAndName(activityId, value, JoinStatus.ultima, page);
+                Page<Join> datas = joinService.findAllByActivityIdAndNameContaining(activityId, value, JoinStatus.ultima, page);
                 model.addAttribute("datas",datas);
                 return "admin/join_ok";
             }
         }else if(login.getRole() == Role.grouper){
             if (type == 1 && value != null){
 //        根据工号
-                Page<Join> datas = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId(), page);
+                Page<Join> datas = joinService.findAllByActivityIdAndJobNumWithGroupId(activityId, value, login.getGroup().getGroupId(), JoinStatus.ultima, page);
                 model.addAttribute("datas",datas);
                 return "grouper/join_ok";
             }else if (type == 2 && value != null){
 //        根据姓名
-                Page<Join> datas = joinService.findAllByActivityIdAndNameWithGroupId(activityId, value, login.getGroup().getGroupId(), page);
+                Page<Join> datas = joinService.findAllByActivityIdAndNameContainingWithGroupId(activityId, value, login.getGroup().getGroupId(), JoinStatus.ultima, page);
                 model.addAttribute("datas",datas);
                 return "grouper/join_ok";
             }

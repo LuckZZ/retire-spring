@@ -57,7 +57,7 @@ public interface AdminDao extends JpaRepository<Admin, Integer> {
     List<Admin> findAllByJobNum(String jobNum);
 
     /*根姓名查询管理员*/
-    Page<Admin> findAllByName(String name, Pageable pageable);
+    Page<Admin> findAllByNameContaining(String name, Pageable pageable);
 
     /*根据adminId修改邮箱和验证情况*/
     @Modifying(clearAutomatically=true)

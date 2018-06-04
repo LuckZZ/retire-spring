@@ -56,7 +56,7 @@ public class GroupController extends BaseController{
     @LoggerManage(description = "分组列表ByGroupName")
     public String groupListByGroupName(Model model, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
         model.addAttribute("userCommSearch", new CommSearch(1, value));
-        Page<Group> datas = groupService.findAllByGroupName(value, page);
+        Page<Group> datas = groupService.findAllByGroupNameContaining(value, page);
         model.addAttribute("datas",datas);
         return "admin/group_list";
     }
@@ -88,7 +88,7 @@ public class GroupController extends BaseController{
             return "admin/group_datail";
         }else if (type == 2 && value != null){
 //        根据姓名
-            Page<User> datas = userService.findAllByByGroupIdAndName(id, value, page);
+            Page<User> datas = userService.findAllByGroupIdAndNameContaining(id, value, page);
             model.addAttribute("datas",datas);
             return "admin/group_datail";
         }

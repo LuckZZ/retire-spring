@@ -45,8 +45,14 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         userAgeData.setContent(list);
 //        当前页数
         userAgeData.setNumber(page);
-//      总页数
-        userAgeData.setTotalPages(getToalPages(SearchType.JobNum, jobNum));
+
+        Map<ToalPages, Integer> map = getToalPages(SearchType.JobNum, jobNum);
+
+        //      总页数
+        userAgeData.setTotalPages(map.get(ToalPages.toalPages));
+
+        userAgeData.setTotalElements(map.get(ToalPages.totalElements));
+
         return userAgeData;
     }
 
@@ -58,8 +64,13 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         userAgeData.setContent(list);
 //        当前页数
         userAgeData.setNumber(page);
+
+        Map<ToalPages, Integer> map = getToalPages(SearchType.Name, name);
 //      总页数
-        userAgeData.setTotalPages(getToalPages(SearchType.Name, name));
+        userAgeData.setTotalPages(map.get(ToalPages.toalPages));
+
+        userAgeData.setTotalElements(map.get(ToalPages.totalElements));
+
         return userAgeData;
     }
 
@@ -68,7 +79,7 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         UserAgePage userAgeData = new UserAgePage();
         //        当前页数
         userAgeData.setNumber(page);
-        Map<String, Integer> map;
+        Map<ToalPages, Integer> map;
         if (ageRangeId != -1){
             AgeRange ageRange = ageRangeDao.findOne(ageRangeId);
             List<User> list = nativeQueryUserAgeByRange(exist, ageRange.getMinAge(), ageRange.getMaxAge(), page);
@@ -83,9 +94,11 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
             map = getToalPagesByRange(exist, -1, -1);
         }
         //      总页数
-        userAgeData.setTotalPages(map.get("toalPages"));
+        userAgeData.setTotalPages(map.get(ToalPages.toalPages));
+        //      总条数
+        userAgeData.setTotalElements(map.get(ToalPages.totalElements));
 //          平均年龄
-        userAgeData.setAvgAge(map.get("avgAge"));
+        userAgeData.setAvgAge(map.get(ToalPages.avgAge));
 
         return userAgeData;
     }
@@ -117,7 +130,7 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         if (searchType == SearchType.JobNum){
             sql.append(" WHERE u.job_num='"+value+"' ");
         }else if(searchType == SearchType.Name){
-            sql.append(" WHERE u.name='"+value+"' ");
+            sql.append(" WHERE u.name like '%"+value+"%' ");
         }else {
             sql.append(" WHERE u.exist="+Exist.yes.ordinal()+" ");
         }
@@ -157,7 +170,7 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         return convert(objecArraytList);
     }
 
-    private int getToalPages(SearchType searchType, String value){
+    private Map<ToalPages, Integer> getToalPages(SearchType searchType, String value){
         EntityManager em = emf.createEntityManager();
 //        定义sql
         StringBuilder sql = new StringBuilder();
@@ -166,7 +179,7 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         if (searchType == SearchType.JobNum){
             sql.append(" WHERE u.job_num='"+value+"' ");
         }else if(searchType == SearchType.Name){
-            sql.append(" WHERE u.name='"+value+"' ");
+            sql.append(" WHERE u.name like '%"+value+"%' ");
         }else {
             sql.append(" WHERE u.exist="+Exist.yes.ordinal()+" ");
         }
@@ -178,7 +191,11 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         em.close();
         Object obj =  objecArraytList.get(0);
         int toalPages = Integer.parseInt(obj.toString())/10+1;
-        return toalPages;
+        int totalElements = Integer.parseInt(obj.toString());
+        Map<ToalPages, Integer> map = new HashMap();
+        map.put(ToalPages.toalPages,toalPages);
+        map.put(ToalPages.totalElements,totalElements);
+        return map;
     }
 
     /**
@@ -192,7 +209,7 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
      HAVING age BETWEEN 3 AND 5
      ) u
      */
-    private Map<String, Integer> getToalPagesByRange(Exist exist, Integer minAge, Integer maxAge){
+    private Map<ToalPages, Integer> getToalPagesByRange(Exist exist, Integer minAge, Integer maxAge){
         EntityManager em = emf.createEntityManager();
 //        定义sql
         StringBuilder sql = new StringBuilder();
@@ -220,15 +237,17 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         em.close();
         Object[] obj =  (Object[]) objecArraytList.get(0);
         int toalPages = Integer.parseInt(obj[0] == null ? "0" : obj[0].toString())/10+1;
+        int totalElements = Integer.parseInt(obj[0] == null ? "0" : obj[0].toString());
         int avgAge = 0;
         if (exist == Exist.yes){
             avgAge = Integer.parseInt(obj[1] == null ? "0" : obj[1].toString());
         }else if(exist == Exist.no){
             avgAge = Integer.parseInt(obj[2] == null ? "0" : obj[2].toString());
         }
-        Map<String, Integer> map = new HashMap();
-        map.put("toalPages",toalPages);
-        map.put("avgAge",avgAge);
+        Map<ToalPages, Integer> map = new HashMap();
+        map.put(ToalPages.toalPages,toalPages);
+        map.put(ToalPages.totalElements,totalElements);
+        map.put(ToalPages.avgAge,avgAge);
         return map;
     }
 
@@ -263,4 +282,9 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
     enum SearchType{
         No, JobNum, Name;
     }
+
+    enum ToalPages{
+        toalPages, totalElements, avgAge;
+    }
+
 }

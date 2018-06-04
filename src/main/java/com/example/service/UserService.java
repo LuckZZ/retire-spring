@@ -42,7 +42,7 @@ public interface UserService extends BaseCrudService<User,Integer>{
     List<User> findAllByJobNum(String jobNum);
 
     /*根据用户名查询用户*/
-    Page<User> findAllByName(String name, Integer page);
+    Page<User> findAllByNameContaining(String name, Integer page);
 
     List<User> findAllByName(String name);
 
@@ -50,7 +50,7 @@ public interface UserService extends BaseCrudService<User,Integer>{
     Page<User> findAllByGroupIdAndJobNum(Integer groupId, String jobNum, Integer page);
 
     /*根据组号、用户名查询用户*/
-    Page<User> findAllByByGroupIdAndName(Integer groupId,String name, Integer page);
+    Page<User> findAllByGroupIdAndNameContaining(Integer groupId, String name, Integer page);
 
     /*根据userSearchForm查询用户*/
     Page<User> findAllUserCriteria(Integer page, UserSearchForm userSearchForm);
@@ -68,9 +68,9 @@ public interface UserService extends BaseCrudService<User,Integer>{
     List<User> findAllNoJoinByJobNum(Integer activityId, String jobNum);
 
     /*根据用户名查询未报名用户*/
-    Page<User> findAllNoJoinByName(Integer activityId, String name, Integer page);
+    Page<User> findAllNoJoinByNameContaining(Integer activityId, String name, Integer page);
 
-    List<User> findAllNoJoinByName(Integer activityId, String name);
+    List<User> findAllNoJoinByNameContaining(Integer activityId, String name);
 
     /*根据组id、工号查询未报名用户*/
     Page<User> findAllNoJoinByJobNumWithGroupId(Integer groupId, Integer activityId, String jobNum, Integer page);
@@ -78,9 +78,9 @@ public interface UserService extends BaseCrudService<User,Integer>{
     List<User> findAllNoJoinByJobNumWithGroupId(Integer groupId, Integer activityId, String jobNum);
 
     /*根据组id、工号查询未报名用户*/
-    Page<User> findAllNoJoinByNameWithGroupId(Integer groupId, Integer activityId, String name, Integer page);
+    Page<User> findAllNoJoinByNameContainingWithGroupId(Integer groupId, Integer activityId, String name, Integer page);
 
-    List<User> findAllNoJoinByNameWithGroupId(Integer groupId, Integer activityId, String name);
+    List<User> findAllNoJoinByNameContainingWithGroupId(Integer groupId, Integer activityId, String name);
 
     /*根据userIds查询用户*/
     List<User> findAllByUserIds(Integer[] userIds);

@@ -23,10 +23,10 @@ public interface ActivityService extends BaseCrudService<Activity,Integer>{
     Page<Activity> findAllNotDraft(Integer page, Integer groupId);
 
     /*根据活动名称查询草稿活动*/
-    Page<Activity> findAllDraftByActivityName(String activityName, Integer page);
+    Page<Activity> findAllDraftByActivityNameContaining(String activityName, Integer page);
 
     /*根据活动名称查询非草稿活动*/
-    Page<Activity> findAllNotDraftByActivityName(String activityName, Integer page);
+    Page<Activity> findAllNotDraftByActivityNameContaining(String activityName, Integer page);
 
     int activityPublish(Integer activityId);
 

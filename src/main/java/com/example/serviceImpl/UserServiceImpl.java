@@ -77,24 +77,18 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     @Transactional
     @Override
     public void delete(Integer[] userIds) {
+        List<Integer> list = Arrays.asList(userIds);
 //       删除组长表
-        for (int i = 0; i < userIds.length; i ++){
-            grouperDao.deleteByUserId(userIds[i]);
-        }
+        list.forEach(id -> grouperDao.deleteByUserId(id));
         //       删除报名表
-        for (int i = 0; i < userIds.length; i ++){
-            joinDao.deleteAllByUser_UserId(userIds[i]);
-        }
+        list.forEach(id -> joinDao.deleteAllByUser_UserId(id));
         //        删除图片
-        for (int i = 0; i < userIds.length; i ++){
-//            userDao.delete(userIds[i]);
-            User user = userDao.findOne(userIds[i]);
+        list.forEach(id -> {
+            User user = userDao.findOne(id);
             FileUtils.deleteFile(filePicturesUrl+user.getImgUrl());
-        }
+        });
 //        删除组员表
-        for (int i = 0; i < userIds.length; i ++){
-            userDao.delete(userIds[i]);
-        }
+        list.forEach(id -> userDao.delete(id));
     }
 
     @Transactional
@@ -121,7 +115,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
 
     @Override
     public List<User> findAllByName(String name) {
-        return userDao.findAllByName(name);
+        return userDao.findAllByNameContaining(name);
     }
 
     @Transactional
@@ -137,9 +131,9 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     }
 
     @Override
-    public Page<User> findAllByName(String name, Integer page) {
+    public Page<User> findAllByNameContaining(String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return userDao.findAllByName(name,pageable);
+        return userDao.findAllByNameContaining(name,pageable);
     }
 
     @Transactional
@@ -194,9 +188,9 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     }
 
     @Override
-    public Page<User> findAllByByGroupIdAndName(Integer groupId, String name, Integer page) {
+    public Page<User> findAllByGroupIdAndNameContaining(Integer groupId, String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        Page<User> datas = userDao.findAllByGroup_GroupIdAndName(groupId,name,pageable);
+        Page<User> datas = userDao.findAllByGroup_GroupIdAndNameContaining(groupId,name,pageable);
         return datas;
     }
 
@@ -217,14 +211,14 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     }
 
     @Override
-    public Page<User> findAllNoJoinByName(Integer activityId, String name, Integer page) {
+    public Page<User> findAllNoJoinByNameContaining(Integer activityId, String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return userDao.findAllNoJoinByName(Exist.yes, activityId, name, pageable);
+        return userDao.findAllNoJoinByNameLike(Exist.yes, activityId, "%"+name+"%", pageable);
     }
 
     @Override
-    public List<User> findAllNoJoinByName(Integer activityId, String name) {
-        return userDao.findAllNoJoinByName(Exist.yes, activityId, name);
+    public List<User> findAllNoJoinByNameContaining(Integer activityId, String name) {
+        return userDao.findAllNoJoinByNameLike(Exist.yes, activityId, "%"+name+"%");
     }
 
     @Override
@@ -239,14 +233,14 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     }
 
     @Override
-    public Page<User> findAllNoJoinByNameWithGroupId(Integer groupId, Integer activityId, String name, Integer page) {
+    public Page<User> findAllNoJoinByNameContainingWithGroupId(Integer groupId, Integer activityId, String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return userDao.findAllNoJoinByNameWithGroupId(Exist.yes, groupId, activityId, name, pageable);
+        return userDao.findAllNoJoinByNameLikeWithGroupId(Exist.yes, groupId, activityId, "%"+name+"%", pageable);
     }
 
     @Override
-    public List<User> findAllNoJoinByNameWithGroupId(Integer groupId, Integer activityId, String name) {
-        return userDao.findAllNoJoinByNameWithGroupId(Exist.yes, groupId, activityId, name);
+    public List<User> findAllNoJoinByNameContainingWithGroupId(Integer groupId, Integer activityId, String name) {
+        return userDao.findAllNoJoinByNameLikeWithGroupId(Exist.yes, groupId, activityId, "%"+name+"%");
     }
 
     @Override

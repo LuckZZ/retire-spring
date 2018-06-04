@@ -6,7 +6,6 @@ import com.example.comm.config.WebSecurityConfig;
 import com.example.domain.bean.CommSearch;
 import com.example.domain.bean.Login;
 import com.example.domain.entity.Activity;
-import com.example.domain.enums.ActivityStatus;
 import com.example.domain.enums.Role;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
@@ -95,7 +94,7 @@ public class ActivityController extends BaseController{
 //    @Access(roles = Role.grouper)
     public String activityListByActivityName(Model model, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
         model.addAttribute("commSearch", new CommSearch(1, value));
-        Page<Activity> datas = activityService.findAllNotDraftByActivityName(value, page);
+        Page<Activity> datas = activityService.findAllNotDraftByActivityNameContaining(value, page);
         model.addAttribute("datas",datas);
         return "admin/activity_list";
     }
@@ -104,7 +103,7 @@ public class ActivityController extends BaseController{
     @LoggerManage(description = "草稿列表ByGroupName")
     public String draftByActivityName(Model model, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
         model.addAttribute("commSearch", new CommSearch(1, value));
-        Page<Activity> datas = activityService.findAllDraftByActivityName(value, page);
+        Page<Activity> datas = activityService.findAllDraftByActivityNameContaining(value, page);
         model.addAttribute("datas",datas);
         return "admin/draft_list";
     }

@@ -68,7 +68,7 @@ public class GrouperController extends BaseController{
             return "admin/grouper_list";
         }else if (type == 2 && value != null){
 //        根据姓名
-            Page<Grouper> datas = grouperService.findAllByName(value,page);
+            Page<Grouper> datas = grouperService.findAllByNameContaining(value,page);
             model.addAttribute("datas",datas);
             return "admin/grouper_list";
         }

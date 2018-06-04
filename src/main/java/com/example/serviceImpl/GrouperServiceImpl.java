@@ -9,6 +9,7 @@ import com.example.domain.enums.CanLogin;
 import com.example.domain.enums.Rank;
 import com.example.domain.enums.Verify;
 import com.example.service.GrouperService;
+import com.example.utils.DataUtils;
 import com.example.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -58,7 +60,7 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
         }else if (oldRank == Rank.user){
 //            以前是组员，现在设置为组长
             newRank = Rank.grouper;
-            grouperDao.save(new Grouper(user,getPasswordMD5("123456"), CanLogin.no));
+            grouperDao.save(new Grouper(user, DataUtils.getPasswordMD5("123456"), CanLogin.no));
         }
 //            更改用户rank字段
         userDao.updateRank(newRank,userId);
@@ -92,15 +94,11 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
     @Transactional
     @Override
     public void remove(Integer[] grouperIds) {
-        for (Integer grouperId : grouperIds){
-            Integer userId = new Integer(grouperDao.findOne(grouperId).getUser().getUserId());
-            //            设置user的rank
-            userDao.updateRank(Rank.user,userId);
-        }
-        for (Integer grouperId : grouperIds){
-            //            删除组长
-            grouperDao.delete(grouperId);
-        }
+        List<Integer> list = Arrays.asList(grouperIds);
+        //            设置user的rank
+        list.forEach(id -> userDao.updateRank(Rank.user, grouperDao.findOne(id).getUser().getUserId()));
+        //            删除组长
+        list.forEach(id -> grouperDao.delete(id));
      }
 
     @Override
@@ -115,9 +113,9 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
     }
 
     @Override
-    public Page<Grouper> findAllByName(String name, Integer page) {
+    public Page<Grouper> findAllByNameContaining(String name, Integer page) {
         Pageable pageable = new PageRequest(page, Constant.PAGESIZE);
-        return grouperDao.findAllByUser_Name(name, pageable);
+        return grouperDao.findAllByUser_NameContaining(name, pageable);
     }
 
     @Override
@@ -128,16 +126,6 @@ public class GrouperServiceImpl extends BaseCrudServiceImpl<Grouper,Integer,Grou
     @Override
     public List<Grouper> findAllByJobNumAndPassword(String jobNum, String password) {
         return grouperDao.findAllByUser_JobNumAndPassword(jobNum, password);
-    }
-
-    /**
-     * 密码加密后，字符串
-     * @param password
-     * @return
-     */
-    private String getPasswordMD5(String password){
-        String str = MD5Util.encrypt(password+ Constant.PASSWORD_SALT);
-        return str;
     }
 
     @Transactional

@@ -39,9 +39,9 @@ public interface JoinDao extends JpaRepository<Join,Integer>,JpaSpecificationExe
     List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndJoinStatus(Integer activityId, Exist exist, String jobNum, JoinStatus joinStatus);
 
     /*根据姓名查询报名用户*/
-    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndJoinStatus(Integer activityId, Exist exist, String name, JoinStatus joinStatus, Pageable pageable);
+    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameContainingAndJoinStatus(Integer activityId, Exist exist, String name, JoinStatus joinStatus, Pageable pageable);
 
-    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndJoinStatus(Integer activityId, Exist exist, String name, JoinStatus joinStatus);
+    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameContainingAndJoinStatus(Integer activityId, Exist exist, String name, JoinStatus joinStatus);
 
     /*根据工号、组Id查询报名用户*/
     Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupIdAndJoinStatus(Integer activityId, Exist exist, String jobNum, Integer groupId, JoinStatus joinStatus, Pageable pageable);
@@ -49,9 +49,9 @@ public interface JoinDao extends JpaRepository<Join,Integer>,JpaSpecificationExe
     List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndUser_Group_GroupIdAndJoinStatus(Integer activityId, Exist exist, String jobNum, Integer groupId, JoinStatus joinStatus);
 
     /*根据姓名、组Id查询报名用户*/
-    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupIdAndJoinStatus(Integer activityId, Exist exist, String name, Integer groupId, JoinStatus joinStatus, Pageable pageable);
+    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameContainingAndUser_Group_GroupIdAndJoinStatus(Integer activityId, Exist exist, String name, Integer groupId, JoinStatus joinStatus, Pageable pageable);
 
-    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameAndUser_Group_GroupIdAndJoinStatus(Integer activityId, Exist exist, String name, Integer groupId, JoinStatus joinStatus);
+    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_NameContainingAndUser_Group_GroupIdAndJoinStatus(Integer activityId, Exist exist, String name, Integer groupId, JoinStatus joinStatus);
 
     /*根据活动Id查询已报活动人数*/
     long countByActivity_ActivityIdAndUser_ExistAndJoinStatus(Integer activityId, Exist exist, JoinStatus joinStatus);

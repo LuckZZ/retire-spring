@@ -17,6 +17,6 @@ public interface GroupService extends BaseCrudService<Group,Integer>{
 
     int updateGroupName(String groupName, Integer groupId);
 
-    Page<Group> findAllByGroupName(String groupName, Integer page);
+    Page<Group> findAllByGroupNameContaining(String groupName, Integer page);
 
 }

@@ -22,6 +22,6 @@ public interface GroupDao extends JpaRepository<Group,Integer> {
     @Query("update Group set groupName=:groupName where groupId=:groupId")
     int updateGroupName(@Param("groupName") String groupName, @Param("groupId") Integer groupId);
 
-    Page<Group> findAllByGroupName(String groupName, Pageable pageable);
+    Page<Group> findAllByGroupNameContaining(String groupName, Pageable pageable);
 
 }

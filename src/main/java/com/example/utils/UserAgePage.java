@@ -15,6 +15,8 @@ public class UserAgePage {
     private List<User> content = new ArrayList<>();
 //    总页数
     private int totalPages;
+    //    总条数
+    private int totalElements;
 //    当前页数
     private int number;
 //    平均年龄
@@ -50,5 +52,13 @@ public class UserAgePage {
 
     public void setAvgAge(int avgAge) {
         this.avgAge = avgAge;
+    }
+
+    public int getTotalElements() {
+        return totalElements;
+    }
+
+    public void setTotalElements(int totalElements) {
+        this.totalElements = totalElements;
     }
 }

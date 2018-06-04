@@ -52,6 +52,9 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     @Query(value = "update tb_user set group_id=?1 where user_id=?2", nativeQuery = true)
     int updateGroupByUseId(Integer groupId, Integer userId);
 
+    /*统计所有人数*/
+    long countByGroup_GroupId(Integer groupId);
+
     /*根据存在类型统计人数*/
     long countByExist(Exist exist);
 
@@ -61,7 +64,7 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     Page<User> findAllByGroup_GroupIdAndJobNum(Integer groupId, String jobNum, Pageable pageable);
 
     /*根据组号、姓名查询用户*/
-    Page<User> findAllByGroup_GroupIdAndName(Integer groupId, String name, Pageable pageable);
+    Page<User> findAllByGroup_GroupIdAndNameContaining(Integer groupId, String name, Pageable pageable);
 
     /*根据组号查询用户*/
     Page<User> findAllByGroup_GroupIdAndExist(Integer groupId, Exist exist, Pageable pageable);
@@ -72,9 +75,9 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     List<User> findAllByJobNum(String jobNum);
 
     /*根据姓名查询用户*/
-    Page<User> findAllByName(String name, Pageable pageable);
+    Page<User> findAllByNameContaining(String name, Pageable pageable);
 
-    List<User> findAllByName(String name);
+    List<User> findAllByNameContaining(String name);
 
     /*根据工号查询未报名用户*/
     @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
@@ -84,11 +87,11 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     List<User> findAllNoJoinByJobNum(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
 
     /*根据用户名查询未报名用户*/
-    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.name=:name")
-    Page<User> findAllNoJoinByName(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("name")String name, Pageable pageable);
+    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.name like :name")
+    Page<User> findAllNoJoinByNameLike(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("name")String name, Pageable pageable);
 
-    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
-    List<User> findAllNoJoinByName(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
+    @Query("select u from User u where u.exist=:exist and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.name like :name")
+    List<User> findAllNoJoinByNameLike(@Param("exist")Exist exist, @Param("activityId")Integer activityId, @Param("name")String name);
 
     /*根据组id，工号查询未报名用户*/
     @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
@@ -98,9 +101,9 @@ public interface UserDao extends JpaRepository<User,Integer>, JpaSpecificationEx
     List<User> findAllNoJoinByJobNumWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
 
     /*根据组id，姓名查询未报名用户*/
-    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.name=:name")
-    Page<User> findAllNoJoinByNameWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("name")String name, Pageable pageable);
+    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.name like :name")
+    Page<User> findAllNoJoinByNameLikeWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("name")String name, Pageable pageable);
 
-    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.jobNum=:jobNum")
-    List<User> findAllNoJoinByNameWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("jobNum")String jobNum);
+    @Query("select u from User u where u.exist=:exist and u.group.groupId=:groupId and u not in (select j.user from Join j where j.activity.activityId=:activityId) and u.name like :name")
+    List<User> findAllNoJoinByNameLikeWithGroupId(@Param("exist")Exist exist, @Param("groupId")Integer groupId, @Param("activityId")Integer activityId, @Param("name")String name);
 }

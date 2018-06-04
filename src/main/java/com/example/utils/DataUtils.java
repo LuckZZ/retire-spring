@@ -5,6 +5,7 @@ import com.example.comm.Constant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Create by : Zhangxuemeng
@@ -18,11 +19,8 @@ public class DataUtils {
      * @return
      */
     public static Integer[] turn(String[] strs){
-        Integer[] ints = new Integer[strs.length];
-        for (int i = 0; i < strs.length; i++) {
-            ints[i] = new Integer(strs[i]);
-        }
-        return ints;
+        List<Integer>  list = Arrays.stream(strs).map(Integer::valueOf).collect(Collectors.toList());
+        return list.toArray(new Integer[list.size()]);
     }
 
     /**
