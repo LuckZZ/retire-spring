@@ -110,12 +110,12 @@
 
 
 		<!--msm-kryo-serializer memcached共享需要的jar-->
-		<dependency>
+	<!--	<dependency>
 			<groupId>de.javakaffee.msm</groupId>
 			<artifactId>msm-kryo-serializer</artifactId>
 			<version>1.9.7</version>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency>-->
 
 	</dependencies>
 
