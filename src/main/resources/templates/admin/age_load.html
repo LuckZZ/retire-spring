@@ -5,7 +5,7 @@
 <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black">
     <tbody>
     <tr th:each="ageRange:${ageRanges}">
-        <td th:text="|${ageRange.minAge}-${ageRange.maxAge}岁|">50-60岁</td>
+        <td th:text="${ageRange.minAge eq ageRange.maxAge} ? ${ageRange.minAge}+'岁' : ${ageRange.minAge}+'-'+${ageRange.maxAge}+'岁'">50-60岁</td>
         <td>
             <div class="tpl-table-black-operation">
                 <a th:attr="data-id=${ageRange.ageRangeId}" href="javascript:;" class="tpl-table-black-operation-del one-del">
