@@ -112,7 +112,7 @@ $(function () {
                 remote:"此活动名已存在"
             },
             maxAge:{
-                compareVal:"最大年龄必须大于最小年龄"
+                compareVal:"最大年龄必须不小于最小年龄"
             },
             oldPassword:{
                 rangelength:"密码6-10位"
@@ -134,10 +134,10 @@ $(function () {
         return date1 < date2;
     };
 
-    //数值比较，v1<v2返回true
+    //数值比较，v1<=v2返回true
     $.validator.methods.compareVal = function(value, element, param) {
         var v1 = $(param).val();
         var v2 = value;
-        return v1 < v2;
+        return v1 <= v2;
     };
 });

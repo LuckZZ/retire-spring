@@ -5,7 +5,7 @@
     <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
         <select data-am-selected="{btnSize: 'sm',maxHeight: 200}" id="head-select-age">
             <option value="-1">所有</option>
-            <option th:each="ageRange:${ageRanges}" th:value="${ageRange.ageRangeId}" th:text="|${ageRange.minAge}-${ageRange.maxAge}岁|">80-90岁</option>
+            <option th:each="ageRange:${ageRanges}" th:value="${ageRange.ageRangeId}" th:text="${ageRange.minAge eq ageRange.maxAge} ? ${ageRange.minAge}+'岁' : ${ageRange.minAge}+'-'+${ageRange.maxAge}+'岁'">80-90岁</option>
         </select>
         <span class="am-input-group-btn">
             <button id="head-select-btn2" class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
