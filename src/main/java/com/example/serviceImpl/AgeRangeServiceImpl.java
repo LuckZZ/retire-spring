@@ -4,6 +4,7 @@ import com.example.dao.AgeRangeDao;
 import com.example.domain.entity.*;
 import com.example.domain.enums.Exist;
 import com.example.domain.enums.Gender;
+import com.example.domain.enums.Rank;
 import com.example.service.AgeRangeService;
 import com.example.utils.UserAgePage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Create by : Zhangxuemeng
@@ -57,6 +55,12 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
     }
 
     @Override
+    public List<User> findAllUserAndAgeByJobNum(String jobNum) {
+        List<User> list = nativeQueryUserAge(SearchType.JobNum, jobNum, -1);
+        return list;
+    }
+
+    @Override
     public UserAgePage findAllUserAndAgeByName(String name, Integer page) {
         UserAgePage userAgeData = new UserAgePage();
         List<User> list = nativeQueryUserAge(SearchType.Name, name, page);
@@ -72,6 +76,12 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         userAgeData.setTotalElements(map.get(ToalPages.totalElements));
 
         return userAgeData;
+    }
+
+    @Override
+    public List<User> findAllUserAndAgeByName(String name) {
+        List<User> list = nativeQueryUserAge(SearchType.Name, name, -1);
+        return list;
     }
 
     @Override
@@ -103,6 +113,28 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         return userAgeData;
     }
 
+    @Override
+    public List<User> findAllByAgeRange(Exist exist, Integer ageRangeId) {
+        List<User> list = null;
+        if (ageRangeId != -1){
+            AgeRange ageRange = ageRangeDao.findOne(ageRangeId);
+            list = nativeQueryUserAgeByRange(exist, ageRange.getMinAge(), ageRange.getMaxAge(), -1);
+        }else {
+//            选择所有
+            list = nativeQueryUserAgeByRange(exist, -1, -1, -1);
+        }
+        return list;
+    }
+
+    @Override
+    public List<User> findAllByUserIds(Integer[] userIds) {
+        if (userIds.length > 0){
+            List<User> list = nativeQueryUserAge(userIds, -1);
+            return list;
+        }
+        return null;
+    }
+
     /**
      * SELECT user_id, job_num, NAME, gender, group_id, duty_id, department_id, birth, work_time, retire_time, pass_time,
      (YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age
@@ -114,6 +146,7 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
      LEFT JOIN tb_group g ON u.group_id=g.group_id
      LEFT JOIN tb_duty du ON u.duty_id=du.duty_id
      LEFT JOIN tb_department de ON u.department_id=de.department_id
+     page不等于-1才进行分页限制
      * @return
      */
     private List<User> nativeQueryUserAge(SearchType searchType, String value, Integer page){
@@ -121,12 +154,15 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
 //        定义sql
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT u.user_id, u.job_num, u.name, u.gender, g.group_name, du.duty_name, de.department_name, u.birth, u.work_time, u.retire_time, u.pass_time, u.exist, ");
+        sql.append(" u.rank, na.nation_name, u.tel1, u.tel2, u.tel3, u.mate, u.address, po.politics_name, other,");
         sql.append(" (YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age,  ");
         sql.append(" (YEAR(pass_time)-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(pass_time, '%m%d')) AS pass_age ");
         sql.append(" FROM tb_user u ");
         sql.append(" LEFT JOIN tb_group g ON u.group_id=g.group_id ");
         sql.append(" LEFT JOIN tb_duty du ON u.duty_id=du.duty_id ");
         sql.append(" LEFT JOIN tb_department de ON u.department_id=de.department_id ");
+        sql.append(" LEFT JOIN tb_nation na ON u.nation_id=na.nation_id ");
+        sql.append(" LEFT JOIN tb_politics po ON u.politics_id=po.politics_id ");
         if (searchType == SearchType.JobNum){
             sql.append(" WHERE u.job_num='"+value+"' ");
         }else if(searchType == SearchType.Name){
@@ -135,7 +171,10 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
             sql.append(" WHERE u.exist="+Exist.yes.ordinal()+" ");
         }
 
-        sql.append(" LIMIT "+(page*10)+",10 ");
+        if (page != -1){
+            sql.append(" LIMIT "+(page*10)+",10 ");
+        }
+
         //创建原生SQL查询QUERY实例
         Query query =  em.createNativeQuery(sql.toString());
         //执行查询，返回的是对象数组(Object[])列表,
@@ -145,22 +184,80 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         return convert(objecArraytList);
     }
 
-    private List<User> nativeQueryUserAgeByRange(Exist exist, Integer minAge, Integer maxAge, Integer page){
+    private List<User> nativeQueryUserAge(Integer[] userIds, Integer page){
         EntityManager em = emf.createEntityManager();
 //        定义sql
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT u.user_id, u.job_num, u.name, u.gender, g.group_name, du.duty_name, de.department_name, u.birth, u.work_time, u.retire_time, u.pass_time, u.exist,");
+        sql.append(" SELECT u.user_id, u.job_num, u.name, u.gender, g.group_name, du.duty_name, de.department_name, u.birth, u.work_time, u.retire_time, u.pass_time, u.exist, ");
+        sql.append(" u.rank, na.nation_name, u.tel1, u.tel2, u.tel3, u.mate, u.address, po.politics_name, other,");
         sql.append(" (YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age,  ");
         sql.append(" (YEAR(pass_time)-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(pass_time, '%m%d')) AS pass_age ");
         sql.append(" FROM tb_user u ");
         sql.append(" LEFT JOIN tb_group g ON u.group_id=g.group_id ");
         sql.append(" LEFT JOIN tb_duty du ON u.duty_id=du.duty_id ");
         sql.append(" LEFT JOIN tb_department de ON u.department_id=de.department_id ");
+        sql.append(" LEFT JOIN tb_nation na ON u.nation_id=na.nation_id ");
+        sql.append(" LEFT JOIN tb_politics po ON u.politics_id=po.politics_id ");
+
+        sql.append(" WHERE u.user_id in ( ");
+
+        for (int i = 0; i < userIds.length; i++) {
+            if (i == userIds.length-1){
+                sql.append(userIds[i]);
+            }else{
+                sql.append(userIds[i]+",");
+            }
+        }
+        sql.append(" ) ");
+
+        if (page != -1){
+            sql.append(" LIMIT "+(page*10)+",10 ");
+        }
+
+        //创建原生SQL查询QUERY实例
+        Query query =  em.createNativeQuery(sql.toString());
+        //执行查询，返回的是对象数组(Object[])列表,
+        //每一个对象数组存的是相应的实体属性
+        List objecArraytList = query.getResultList();
+        em.close();
+        return convert(objecArraytList);
+    }
+
+    /**
+     * page不等于-1，才对分页限制
+     * @param exist
+     * @param minAge
+     * @param maxAge
+     * @param page
+     * @return
+     */
+    private List<User> nativeQueryUserAgeByRange(Exist exist, Integer minAge, Integer maxAge, Integer page){
+        EntityManager em = emf.createEntityManager();
+//        定义sql
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT u.user_id, u.job_num, u.name, u.gender, g.group_name, du.duty_name, de.department_name, u.birth, u.work_time, u.retire_time, u.pass_time, u.exist,");
+        sql.append(" u.rank, na.nation_name, u.tel1, u.tel2, u.tel3, u.mate, u.address, po.politics_name, other,");
+        sql.append(" (YEAR(NOW())-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(NOW(), '%m%d')) AS age,  ");
+        sql.append(" (YEAR(pass_time)-YEAR(birth)-1) + ( DATE_FORMAT(birth, '%m%d') <= DATE_FORMAT(pass_time, '%m%d')) AS pass_age ");
+        sql.append(" FROM tb_user u ");
+        sql.append(" LEFT JOIN tb_group g ON u.group_id=g.group_id ");
+        sql.append(" LEFT JOIN tb_duty du ON u.duty_id=du.duty_id ");
+        sql.append(" LEFT JOIN tb_department de ON u.department_id=de.department_id ");
+        sql.append(" LEFT JOIN tb_nation na ON u.nation_id=na.nation_id ");
+        sql.append(" LEFT JOIN tb_politics po ON u.politics_id=po.politics_id ");
         sql.append(" WHERE u.exist="+exist.ordinal()+" ");
         if (minAge != -1 && maxAge!=-1){
-            sql.append("  HAVING age BETWEEN "+minAge+" AND "+maxAge+" ");
+            if (exist == Exist.yes){
+                sql.append(" HAVING age BETWEEN "+minAge+" AND "+maxAge+" ");
+            }else if(exist == Exist.no){
+                sql.append(" HAVING pass_age BETWEEN "+minAge+" AND "+maxAge+" ");
+            }
         }
-        sql.append(" LIMIT "+(page*10)+",10 ");
+
+        if (page != -1){
+            sql.append(" LIMIT "+(page*10)+",10 ");
+        }
+
         //创建原生SQL查询QUERY实例
         Query query =  em.createNativeQuery(sql.toString());
         //执行查询，返回的是对象数组(Object[])列表,
@@ -190,7 +287,14 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         List objecArraytList = query.getResultList();
         em.close();
         Object obj =  objecArraytList.get(0);
-        int toalPages = Integer.parseInt(obj.toString())/10+1;
+
+        int toalPages = 0;
+        if((obj != null) && Integer.parseInt(obj.toString())%10 == 0){
+            toalPages = Integer.parseInt(obj.toString())/10;
+        }else if ((obj != null) && Integer.parseInt(obj.toString())%10 != 0){
+            toalPages = Integer.parseInt(obj.toString())/10+1;
+        }
+
         int totalElements = Integer.parseInt(obj.toString());
         Map<ToalPages, Integer> map = new HashMap();
         map.put(ToalPages.toalPages,toalPages);
@@ -236,7 +340,12 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
         List objecArraytList = query.getResultList();
         em.close();
         Object[] obj =  (Object[]) objecArraytList.get(0);
-        int toalPages = Integer.parseInt(obj[0] == null ? "0" : obj[0].toString())/10+1;
+        int toalPages = 0;
+        if((obj[0] != null) && Integer.parseInt(obj[0].toString())%10 == 0){
+            toalPages = Integer.parseInt(obj[0].toString())/10;
+        }else if ((obj[0] != null) && Integer.parseInt(obj[0].toString())%10 != 0){
+            toalPages = Integer.parseInt(obj[0].toString())/10+1;
+        }
         int totalElements = Integer.parseInt(obj[0] == null ? "0" : obj[0].toString());
         int avgAge = 0;
         if (exist == Exist.yes){
@@ -268,10 +377,19 @@ public class AgeRangeServiceImpl extends BaseCrudServiceImpl<AgeRange,Integer,Ag
             user.setRetireTime(obj[9] == null ? "" : obj[9].toString());
             user.setPassTime(obj[10] == null ? "" : obj[10].toString());
             user.setExist(Exist.values()[Integer.parseInt(obj[11] == null ? "" : obj[11].toString())]);
+            user.setRank(Rank.values()[Integer.parseInt(obj[12] == null ? "" : obj[12].toString())]);
+            user.setNation(new Nation(obj[13] == null ? "" : obj[13].toString()));
+            user.setTel1(obj[14] == null ? "" : obj[14].toString());
+            user.setTel2(obj[15] == null ? "" : obj[15].toString());
+            user.setTel3(obj[16] == null ? "" : obj[16].toString());
+            user.setMate(obj[17] == null ? "" : obj[17].toString());
+            user.setAddress(obj[18] == null ? "" : obj[18].toString());
+            user.setPolitics(new Politics(obj[19] == null ? "" : obj[19].toString()));
+            user.setOther(obj[20] == null ? "" : obj[20].toString());
             if (user.getExist() == Exist.yes){
-                user.setAge(obj[12] == null ? "" : obj[12].toString());
+                user.setAge(obj[21] == null ? "" : obj[21].toString());
             }else if (user.getExist() == Exist.no){
-                user.setAge(obj[13] == null ? "" : obj[13].toString());
+                user.setAge(obj[22] == null ? "" : obj[22].toString());
             }
             lists.add(user);
         }

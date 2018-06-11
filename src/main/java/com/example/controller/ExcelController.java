@@ -14,15 +14,18 @@ import com.example.domain.entity.Activity;
 import com.example.domain.entity.ActivityDef;
 import com.example.domain.entity.Join;
 import com.example.domain.entity.User;
+import com.example.domain.enums.Exist;
 import com.example.domain.enums.JoinStatus;
 import com.example.domain.enums.Role;
 import com.example.domain.result.ExceptionMsg;
 import com.example.domain.result.Response;
 import com.example.service.ActivityService;
+import com.example.service.AgeRangeService;
 import com.example.service.JoinService;
 import com.example.service.UserService;
 import com.example.utils.DataUtils;
 import com.example.utils.DateUtils;
+import com.example.utils.UserAgePage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -53,6 +56,9 @@ public class ExcelController extends BaseController{
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private AgeRangeService ageRangeService;
 
     @ResponseBody
     @RequestMapping("/exportUser")
@@ -515,6 +521,55 @@ public class ExcelController extends BaseController{
         }
 
         export(map,"已报名用户","已报名用户信息",beanList,list,request,response);
+
+        return result(ExceptionMsg.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping("/exportAgeBy/{type}/{value}")
+    @LoggerManage(description = "导出年龄统计表")
+    public Response exportAgeBy(@PathVariable Integer type, @PathVariable String value, ModelMap map, HttpServletRequest request, HttpServletResponse response){
+
+        String exportScope = request.getParameter("exportScope");
+
+        String[] item = request.getParameterValues("item");
+
+        List<User> userList = new ArrayList<>();
+
+        if("all".equals(exportScope)){
+
+            if (type == 1 && value != null){
+//        根据工号
+                userList = ageRangeService.findAllUserAndAgeByJobNum(value);
+            }else if (type == 2 && value != null){
+//        根据姓名
+                userList = ageRangeService.findAllUserAndAgeByName(value);
+            }else if(type == 3 && value != null){
+//        在世
+                userList = ageRangeService.findAllByAgeRange(Exist.yes, Integer.parseInt(value));
+            }else if(type == 4 && value != null){
+//         去世
+                userList = ageRangeService.findAllByAgeRange(Exist.no, Integer.parseInt(value));
+            }
+
+        }else if("selected".equals(exportScope)){
+            String[] selectedChecked = request.getParameterValues("selectedChecked");
+            userList = ageRangeService.findAllByUserIds(DataUtils.turn(selectedChecked));
+        }
+
+        List<ExcelExportEntity> beanList = assignBeanList(item);
+
+        beanList.add(new ExcelExportEntity("年龄", "age"));
+
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        for (User u : userList){
+            Map<String, Object> row= addRow(u, item);
+            row.put("age", u.getAge());
+            list.add(row);
+        }
+
+        export(map,"年龄统计","年龄统计",beanList,list,request,response);
 
         return result(ExceptionMsg.SUCCESS);
     }

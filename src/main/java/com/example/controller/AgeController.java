@@ -49,6 +49,9 @@ public class AgeController extends BaseController {
     @RequestMapping("/ageList/{type}/{value}")
     @LoggerManage(description = "年龄统计列表BySearch")
     public String ageListByType(Model model, @PathVariable Integer type, @PathVariable String value, @RequestParam(value = "page", defaultValue = "0") Integer page){
+        List<AgeRange> ageRanges = ageRangeService.findAll();
+        model.addAttribute("ageRanges",ageRanges);
+
         model.addAttribute("userCommSearch", new CommSearch(type, value));
         if (type == 1 && value != null){
 //        根据工号
@@ -84,14 +87,6 @@ public class AgeController extends BaseController {
         String maxAge = request.getParameter("maxAge");
         ageRangeService.save(Integer.parseInt(minAge), Integer.parseInt(maxAge));
         return result(ExceptionMsg.AgeAddSuccess);
-    }
-
-    @RequestMapping("/ageSelect")
-    @LoggerManage(description = "年龄统计选择")
-    public String test(Model model){
-        List<AgeRange> ageRanges = ageRangeService.findAll();
-        model.addAttribute("ageRanges",ageRanges);
-        return "/admin/age_select_load";
     }
 
     @RequestMapping("/delHtml")

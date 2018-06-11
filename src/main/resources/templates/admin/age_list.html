@@ -61,20 +61,35 @@
                             </div>
 
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3" id="input-age" style="display:none;">
-
+                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                    <select data-am-selected="{btnSize: 'sm',maxHeight: 200}" id="head-select-age">
+                                        <option th:selected="(((${userCommSearch.type} eq '3') or (${userCommSearch.type} eq '4')) and ( ${userCommSearch.value} eq '-1')) ?true : false" value="-1">所有</option>
+                                        <option th:selected="(((${userCommSearch.type} eq '3') or (${userCommSearch.type} eq '4')) and ( ${userCommSearch.value} eq ${ageRange.ageRangeId})) ?true : false" th:each="ageRange:${ageRanges}" th:value="${ageRange.ageRangeId}" th:text="${ageRange.minAge eq ageRange.maxAge} ? ${ageRange.minAge}+'岁' : ${ageRange.minAge}+'-'+${ageRange.maxAge}+'岁'">80-90岁</option>
+                                    </select>
+                                    <span class="am-input-group-btn">
+            <button id="head-select-btn2" class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
+          </span>
+                                </div>
                             </div>
 
                             <div class="am-u-sm-12">
                                 <div class="am-fr">
                                     平均年龄：<span th:text="((${userCommSearch.type} eq '1') or (${userCommSearch.type} eq '2')) ? '无' : ${datas.avgAge}"> </span>
+                                    <a type="button" class="am-btn am-btn-sm" id="excel-user">导出</a>
                                 </div>
                             </div>
+
+                            <!--<div class="am-u-sm-12">
+                                <div class="am-fr">
+                                    平均年龄：<span th:text="((${userCommSearch.type} eq '1') or (${userCommSearch.type} eq '2')) ? '无' : ${datas.avgAge}"> </span>
+                                </div>
+                            </div>-->
 
                             <div class="am-u-sm-12">
                                 <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                                     <thead>
                                     <tr>
-                                        <!--<th><input type="checkbox"/></th>-->
+                                        <th><input type="checkbox" /></th>
                                         <th>序号</th>
                                         <th>工号</th>
                                         <th>姓名</th>
@@ -90,7 +105,7 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="user,iterStat:${datas.content}" th:class="(${user.exist.toString()} eq 'yes')?'':'pass-user'">
-                                        <!--<td><input type="checkbox" th:value="${user.userId}" /></td>-->
+                                        <td><input type="checkbox" th:value="${user.userId}" /></td>
                                         <!--<td th:text="${user.userId}">1</td>-->
                                         <td th:text="${iterStat.count}+${datas.number*10}">序号1</td>
                                         <td th:text="${user.jobNum}">123456</td>
@@ -162,7 +177,11 @@
     </div>
 </div>
 
+<!--alert-->
+<div th:replace="fragments/alert::alert_excel"></div>
+
 <div th:replace="fragments/footer::js"></div>
+
 </body>
 <!--jquery验证-->
 <script th:src="@{/js/jquery.validate.min.js}"></script>
@@ -174,9 +193,6 @@
 
 <script>
     $(function () {
-        //页面加载完成时执行
-        //加载input-age内容
-        $("#input-age").load('/age/ageSelect');
         switchSearchDiv();
 
         //是否参加change事件
@@ -212,8 +228,8 @@
                 var myform = $("#addAgeForm");
                 //ajax提交form
                 formAjaxNoReload(myform,"/age/save");
-                //加载input-age内容
-                $("#input-age").load('/age/ageSelect');
+                //刷新页面
+                location.reload();
             }
         });
 
@@ -225,8 +241,8 @@
 
         //设置删除年龄范围模态框关闭时，加载input-age内容
         $('#deleteAge-modal').on('close.modal.amui', function(){
-            //加载input-age内容
-            $("#input-age").load('/age/ageSelect');
+            //刷新页面
+            location.reload();
         });
 
 
@@ -241,6 +257,49 @@
                 window.location.href="/age/ageList";
             }
         });
+
+        $("#head-select-btn2").on('click',function(){
+            var key = $("#head-select-key").val();
+            var input = $("#head-select-age").val();
+            if (input != ''){
+                window.location.href="/age/ageList/"+key+"/"+input;
+            }
+            if(input == ''){
+                window.location.href="/age/ageList";
+            }
+        });
+
+        // 导出数据
+        $("#excel-user").on('click',function(){
+            //    打开模态框
+            $('#uer-excel-modal').modal();
+        });
+
+        var keyClone = $("#head-select-key").clone();
+        var inputClone = $("#head-select-input").clone();
+        var ageClone = $("#head-select-age").clone();
+
+        $("#uer-excel-modal").find('[data-am-modal-confirm]').off('click.confirm.modal.amui').on('click', function() {
+            var $form =  $('#export-user-form');
+            var $hideForm = $('#hide-form');
+            var uId = checkedIds();
+            for (i=0;i<uId.length;i++){
+                $hideForm.append("<input type='hidden' name='selectedChecked' value='"+ uId[i] +"'>");
+            }
+            var key = keyClone.val();
+            var inp = inputClone.val().trim();
+            var age = ageClone.val().trim();
+            if (key=="1" || key=="2"){
+                $form.attr('action','/excel/exportAgeBy/'+key+"/"+inp);
+            }else if(key=="3" || key=="4"){
+                $form.attr('action','/excel/exportAgeBy/'+key+"/"+age);
+            }
+
+            $form.submit();
+            //清除添加的元素
+            $hideForm.empty();
+        });
+
     });
 
     //把内容加载到模态框
