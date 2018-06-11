@@ -327,13 +327,12 @@ public class UserServiceImpl extends BaseCrudServiceImpl<User, Integer, UserDao>
     }
 
     private List<Integer> getJoinAndSaveUserIds(Integer activityId){
-        List<Join> joinOk = joinDao.findAllByActivity_ActivityIdAndUser_ExistAndJoinStatus(activityId, Exist.yes, JoinStatus.ultima);
-        List<Join> joinSave = joinDao.findAllByActivity_ActivityIdAndUser_ExistAndJoinStatus(activityId, Exist.yes, JoinStatus.draft);
+
+        List<Join> joinOk = joinDao.findAllByActivity_ActivityIdAndUser_Exist(activityId, Exist.yes);
 
         List<Integer> joinAndSaveUserIds = new ArrayList<>();
 
         joinOk.forEach(join->joinAndSaveUserIds.add(join.getUser().getUserId()));
-        joinSave.forEach(join->joinAndSaveUserIds.add(join.getUser().getUserId()));
 
         return joinAndSaveUserIds;
     }

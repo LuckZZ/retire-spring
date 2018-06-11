@@ -22,16 +22,12 @@ public interface JoinDao extends JpaRepository<Join,Integer>,JpaSpecificationExe
     /*在userIds集合中查询符合条件个数，可以用于判断userIds大小是否等于查询的个数*/
     long countByActivity_ActivityIdAndUser_UserIdInAndJoinStatus(Integer activityId, Integer[] userIds, JoinStatus joinStatus);
 
-    /*根据joinId和groupId，查看Join是否存在此条数据*/
-//    boolean existsByJoinIdAndUser_Group_GroupIdAndJoinStatus(Integer joinId, Integer groupId, JoinStatus joinStatus);
-
     /*在joinIds集合中查询符合条件个数，可以用于判断joinIds大小是否等于查询的个数*/
     long countByJoinIdInAndUser_Group_GroupIdAndJoinStatus(Integer[] joinIds, Integer groupId, JoinStatus joinStatus);
 
     /*查询报名用户*/
-    Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndJoinStatus(Integer activityId, Exist exist, JoinStatus joinStatus, Pageable pageable);
 
-    List<Join> findAllByActivity_ActivityIdAndUser_ExistAndJoinStatus(Integer activityId, Exist exist, JoinStatus joinStatus);
+    List<Join> findAllByActivity_ActivityIdAndUser_Exist(Integer activityId, Exist exist);
 
     /*根据工号查询报名用户*/
     Page<Join> findAllByActivity_ActivityIdAndUser_ExistAndUser_JobNumAndJoinStatus(Integer activityId, Exist exist, String jobNum, JoinStatus joinStatus, Pageable pageable);
