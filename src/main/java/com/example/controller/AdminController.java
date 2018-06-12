@@ -100,6 +100,10 @@ public class AdminController extends BaseController{
         if(adminService.existsByJobNum(admin.getJobNum())){
             return  result(ExceptionMsg.JobNumUsed);
         }
+
+//        密码加密
+        String password = admin.getPassword();
+        admin.setPassword(DataUtils.getPasswordMD5(password));
         adminService.save(admin);
         return result(ExceptionMsg.AdminAddSuccess);
     }
