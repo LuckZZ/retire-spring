@@ -92,7 +92,7 @@
                                                         </div>
                                                         <ul class="am-dropdown-content">
                                                             <li><a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-canLogin" th:text="(${admin.canLogin.toString()} eq 'yes')?'禁止登陆':'允许登陆'">是否允许登陆</a></li>
-                                                            <li ><a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-resetPwd" >重置密码</a></li>
+                                                            <!--<li ><a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-resetPwd" >重置密码</a></li>-->
                                                             <li ><a th:attr="data-id=${admin.adminId}" href="javascript:;" class="one-update" >修改基本信息</a></li>
                                                         </ul>
                                                     </div>
@@ -239,7 +239,7 @@
 
 
         //重置密码,打开模态框
-        $(".one-resetPwd").on('click',function(){
+/*        $(".one-resetPwd").on('click',function(){
             var id = $(this).data('id');
             //为表单adminId赋值
             $("#adminId").val(id);
@@ -261,16 +261,16 @@
         $('#updatePwd-modal').on('close.modal.amui', function(){
             //重置表单
             $("#updatePwdForm")[0].reset();
-        });
+        });*/
 
         //密码验证
-        $("#updatePwdForm").validate({
+     /*   $("#updatePwdForm").validate({
             submitHandler:function(form){
                 var myform = $("#updatePwdForm");
                 //ajax提交form
                 formAjaxNoReload(myform,"/admin/update/2");
             }
-        });
+        });*/
 
     });
 </script>

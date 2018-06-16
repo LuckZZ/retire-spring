@@ -247,10 +247,11 @@ public class AdminController extends BaseController{
             return result(ExceptionMsg.AdminUpdSuccess);
         }else if(typeId == 2){
 //            修改密码
-            logger.info("修改密码");
+          /*  logger.info("修改密码");
             String password = request.getParameter("password");
             adminService.updatePassword(DataUtils.getPasswordMD5(password),Integer.parseInt(adminId));
-            return result(ExceptionMsg.ResetPwdSuccess);
+            return result(ExceptionMsg.ResetPwdSuccess);*/
+            return result(ExceptionMsg.FAILED);
         }
         return result(ExceptionMsg.FAILED);
     }
